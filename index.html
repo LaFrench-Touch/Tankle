@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>TANKLE — Devine le char</title>
+<style>
+:root{
+  --olive:#4b5320;
+  --olive-dark:#33391a;
+  --sand:#cdb98a;
+  --sand-light:#e9dfc6;
+  --rust:#a8462c;
+  --ink:#1c1d16;
+  --steel:#7c8471;
+  --ok:#5c7a3a;
+  --warn:#b8862e;
+  --bad:#3a3a36;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--ink);
+  background-image:
+    linear-gradient(135deg, rgba(75,83,32,0.18) 1px, transparent 1px),
+    linear-gradient(45deg, rgba(75,83,32,0.10) 1px, transparent 1px);
+  background-size:28px 28px;
+  font-family:'Courier New', monospace;
+  color:var(--sand-light);
+  min-height:100vh;
+}
+.wrap{max-width:820px;margin:0 auto;padding:28px 16px 60px;}
+header{text-align:center;margin-bottom:18px;}
+.crest{
+  display:inline-block;
+  border:3px solid var(--sand);
+  padding:10px 26px;
+  position:relative;
+}
+.crest::before,.crest::after{
+  content:"";position:absolute;width:10px;height:10px;
+  border:2px solid var(--rust);top:-6px;left:-6px;
+}
+.crest::after{left:auto;right:-6px;}
+h1{
+  font-family:'Courier New', monospace;
+  font-weight:900;
+  letter-spacing:10px;
+  font-size:2.4em;
+  margin:0;
+  color:var(--sand-light);
+  text-shadow:2px 2px 0 var(--olive-dark);
+}
+.sub{letter-spacing:3px;color:var(--steel);font-size:.78em;margin-top:6px;text-transform:uppercase;}
+.intro{
+  max-width:560px;margin:14px auto 22px;text-align:center;
+  font-size:.85em;color:var(--sand);line-height:1.5;
+}
+.searchbox{position:relative;max-width:480px;margin:0 auto 22px;}
+input#guessInput{
+  width:100%;
+  background:var(--olive-dark);
+  border:2px solid var(--olive);
+  color:var(--sand-light);
+  padding:12px 14px;
+  font-family:inherit;
+  font-size:1em;
+  letter-spacing:1px;
+  outline:none;
+}
+input#guessInput:focus{border-color:var(--rust);}
+.suggest{
+  position:absolute;top:100%;left:0;right:0;
+  background:var(--olive-dark);
+  border:2px solid var(--olive);
+  border-top:none;
+  max-height:220px;overflow-y:auto;
+  z-index:20;
+}
+.suggest div{padding:8px 14px;cursor:pointer;font-size:.9em;}
+.suggest div:hover{background:var(--olive);}
+.tries{text-align:center;color:var(--steel);font-size:.8em;letter-spacing:2px;margin-bottom:14px;}
+table#board{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;}
+thead th{
+  font-size:.62em;letter-spacing:1px;color:var(--steel);
+  text-transform:uppercase;padding:4px 2px;font-weight:700;
+}
+td.cell{
+  background:var(--olive-dark);
+  border:2px solid var(--olive);
+  text-align:center;
+  padding:10px 4px;
+  font-size:.78em;
+  font-weight:700;
+  color:var(--sand-light);
+  position:relative;
+  animation:flip .4s ease;
+}
+@keyframes flip{from{transform:rotateX(90deg);opacity:0;}to{transform:rotateX(0);opacity:1;}}
+td.cell.ok{background:var(--ok);border-color:var(--ok);}
+td.cell.warn{background:var(--warn);border-color:var(--warn);color:var(--ink);}
+td.cell.bad{background:var(--bad);border-color:#52544a;color:var(--steel);}
+td.cell .arrow{display:block;font-size:1.1em;margin-top:1px;}
+.name-cell{display:flex;align-items:center;justify-content:center;gap:6px;}
+.flag{font-size:1.1em;}
+#message{
+  text-align:center;margin-top:18px;padding:14px;
+  border:2px dashed var(--sand);
+  font-size:.9em;display:none;
+}
+#message.win{display:block;background:rgba(92,122,58,0.25);border-color:var(--ok);}
+#message.lose{display:block;background:rgba(168,70,44,0.25);border-color:var(--rust);}
+#message b{display:block;letter-spacing:2px;margin-bottom:6px;font-size:1.1em;}
+.legend{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
+  margin-top:24px;font-size:.7em;color:var(--steel);
+}
+.legend span{display:inline-flex;align-items:center;gap:6px;}
+.swatch{width:12px;height:12px;display:inline-block;border:1px solid var(--steel);}
+button#newGame{
+  display:block;margin:18px auto 0;
+  background:var(--rust);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;
+  text-transform:uppercase;
+}
+button#newGame:hover{background:#8e3a24;}
+.session-bar{
+  display:flex;justify-content:center;gap:24px;
+  font-size:.72em;letter-spacing:1px;color:var(--sand);
+  margin-bottom:10px;text-transform:uppercase;
+}
+.session-bar b{color:var(--sand-light);}
+.round-dots{display:flex;justify-content:center;gap:8px;margin-bottom:16px;}
+.round-dots span{
+  width:10px;height:10px;border:2px solid var(--steel);display:inline-block;
+}
+.round-dots span.done{background:var(--ok);border-color:var(--ok);}
+.round-dots span.zero{background:var(--bad);border-color:var(--bad);}
+.round-dots span.current{border-color:var(--rust);}
+button#nextRound{
+  display:none;margin:18px auto 0;
+  background:var(--olive);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;
+  text-transform:uppercase;
+}
+button#nextRound:hover{background:#5d6829;}
+#sessionSummary{
+  display:none;text-align:center;margin-top:18px;padding:18px;
+  border:2px solid var(--rust);background:rgba(168,70,44,0.12);
+}
+#sessionSummary b{display:block;letter-spacing:3px;font-size:1.2em;margin-bottom:10px;}
+#sessionSummary .scoreTotal{font-size:1.6em;color:var(--sand-light);margin:6px 0 12px;}
+#sessionSummary table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.78em;}
+#sessionSummary td,#sessionSummary th{padding:5px 4px;border-bottom:1px solid var(--olive);text-align:center;}
+.scoreboard{margin-top:36px;}
+.scoreboard h2{
+  text-align:center;font-size:.9em;letter-spacing:3px;color:var(--sand);
+  text-transform:uppercase;margin-bottom:12px;
+}
+table#scoreTable{width:100%;border-collapse:collapse;font-size:.78em;}
+table#scoreTable th{
+  text-align:center;color:var(--steel);text-transform:uppercase;
+  font-size:.72em;letter-spacing:1px;padding:6px 4px;border-bottom:2px solid var(--olive);
+}
+table#scoreTable td{
+  text-align:center;padding:7px 4px;border-bottom:1px solid var(--olive-dark);
+}
+table#scoreTable tr:hover td{background:rgba(75,83,32,0.25);}
+select.tankSelect{
+  width:100%;background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px;
+}
+.scoreEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:14px;}
+.hintBox{
+  display:none;text-align:center;margin:0 0 16px;padding:10px;
+  border:1px dashed var(--steel);
+}
+.hintBox .hintLabel{font-size:.7em;letter-spacing:1px;color:var(--steel);text-transform:uppercase;margin-bottom:8px;}
+.hintBox button{
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);padding:7px 12px;margin:3px;
+  font-family:inherit;font-size:.75em;cursor:pointer;text-transform:uppercase;letter-spacing:1px;
+}
+.hintBox button:hover{background:var(--olive);}
+.hintBox .hintResult{margin-top:8px;font-size:.85em;color:var(--sand-light);}
+.sessionRow{cursor:pointer;}
+.sessionRow:hover td{background:rgba(75,83,32,0.3);}
+.roundDetailRow td{padding:4px 6px 4px 24px;font-size:.85em;color:var(--sand);text-align:left;border-bottom:1px solid var(--olive-dark);}
+.footnote{text-align:center;color:var(--steel);font-size:.62em;margin-top:30px;letter-spacing:1px;}
+@media(max-width:640px){
+  h1{font-size:1.5em;letter-spacing:5px;}
+  thead th{font-size:.5em;}
+  td.cell{font-size:.62em;padding:7px 2px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="crest"><h1>TANKLE</h1></div>
+    <div class="sub">Tankopedia // Daily Recon Challenge</div>
+  </header>
+  <div class="intro">
+    Une partie = 5 manches. Devine chaque char inconnu en 6 tentatives maximum.
+    Plus tu trouves vite, plus tu marques de points (1000 pts en 1 coup, jusqu'à 100 pts au 6e essai, 0 si non trouvé).
+  </div>
+
+  <div class="session-bar">
+    <span>Manche <b id="roundLabel">1 / 5</b></span>
+    <span>Score session : <b id="sessionScoreLabel">0</b></span>
+  </div>
+  <div class="round-dots" id="roundDots"></div>
+
+  <div class="searchbox">
+    <input id="guessInput" type="text" placeholder="Tape le nom d'un char... (ex: IS-7, E 100, Object 140)" autocomplete="off">
+    <div class="suggest" id="suggest"></div>
+  </div>
+  <div class="tries" id="tries">TENTATIVES : 0 / 6</div>
+  <div class="hintBox" id="hintBox">
+    <div class="hintLabel">Indice disponible — choisis-en un (une seule fois) :</div>
+    <button data-hint="speed">Vitesse max</button>
+    <button data-hint="caliber">Calibre</button>
+    <button data-hint="dispersion">Dispersion à 100m</button>
+    <div class="hintResult" id="hintResult"></div>
+  </div>
+
+  <table id="board">
+    <thead>
+      <tr>
+        <th>Char</th><th>Nation</th><th>Type</th><th>Tier</th><th>Dégâts / tir</th><th>Premium</th>
+      </tr>
+    </thead>
+    <tbody id="boardBody"></tbody>
+  </table>
+
+  <div id="message"></div>
+  <button id="nextRound">Manche suivante</button>
+  <button id="newGame">Nouvelle partie</button>
+
+  <div id="sessionSummary"></div>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--ok);"></span> Correct</span>
+    <span><span class="swatch" style="background:var(--bad);"></span> Faux</span>
+    <span>↑ / ↓ Tier ou Dégâts réels plus haut / plus bas</span>
+  </div>
+
+  <div class="scoreboard">
+    <h2>Tableau des scores personnels</h2>
+    <div id="scoreboardContent"></div>
+  </div>
+
+  <div class="footnote">Jeu fan-made non officiel — données indicatives inspirées de la Tankopedia World of Tanks (api.worldoftanks.eu)</div>
+</div>
+
+<script>
+// ---- Jeu de données (sous-ensemble curé, inspiré de la Tankopedia WoT) ----
+// nation, type, tier, dmg = dégâts moyens par tir (obus standard)
+const TANKS = [
+  {name:"AMX 50 100", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:280, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"KR-1", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:11, dmg:530, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Object 907", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Patton the Tank", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:400, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Object 777 Version II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Tiger 131", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:6, dmg:220, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"T20", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:7, dmg:160, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"110", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:false, speed:47, caliber:null, dispersion:null},
+  {name:"Projekt ION", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:8, dmg:460, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"TS-54", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:280, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Object 701", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"SU-8", nation:"URSS", flag:"🇷🇺", type:"Artillerie", tier:6, dmg:500, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"MT-25", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:6, dmg:85, premium:false, speed:62, caliber:null, dispersion:null},
+  {name:"AMX 12 t", nation:"France", flag:"🇫🇷", type:"Léger", tier:6, dmg:115, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Comet", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:7, dmg:140, premium:false, speed:52, caliber:null, dispersion:null},
+  {name:"Nashorn", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:6, dmg:220, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"WZ-111 model 1-4", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"T30", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:450, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"ERAC 105 Proto", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:320, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"XM69 Hacker", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:11, dmg:410, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"A46", nation:"UK", flag:"🇬🇧", type:"Léger", tier:6, dmg:105, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Type 71", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:10, dmg:430, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"VK 36.01 (H)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:6, dmg:135, premium:false, speed:51, caliber:null, dispersion:null},
+  {name:"Conqueror FL", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:400, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"Spähpanzer SP I C", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:7, dmg:220, premium:false, speed:58, caliber:null, dispersion:null},
+  {name:"59-16", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:6, dmg:85, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Saryuda", nation:"Japon", flag:"🇯🇵", type:"TD", tier:9, dmg:500, premium:true, speed:36, caliber:null, dispersion:null},
+  {name:"ST-II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"AMX 50 B", nation:"France", flag:"🇫🇷", type:"Lourd", tier:10, dmg:420, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"KV-1S", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:120, premium:false, speed:43, caliber:null, dispersion:null},
+  {name:"LPT-67 Šelma", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:9, dmg:11, premium:false, speed:62, caliber:null, dispersion:null},
+  {name:"Rheinmetall Panzerwagen", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:10, dmg:320, premium:false, speed:75, caliber:null, dispersion:null},
+  {name:"WZ-131", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:7, dmg:180, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"M-VI-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:320, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"HWK 12", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Lorraine 155 mle. 50", nation:"France", flag:"🇫🇷", type:"Artillerie", tier:7, dmg:630, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"T-10", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Ares 90 C", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:11, dmg:105, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"AMX ELC 901", nation:"France", flag:"🇫🇷", type:"Léger", tier:6, dmg:240, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"SU-14-2", nation:"URSS", flag:"🇷🇺", type:"Artillerie", tier:8, dmg:440, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"TBT", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:490, premium:true, speed:36, caliber:null, dispersion:null},
+  {name:"AT 8", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:140, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"LT-432", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:8, dmg:180, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"Obsidian", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:200, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"Gorilla", nation:"USA", flag:"🇺🇸", type:"TD", tier:11, dmg:800, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"LHMTV", nation:"UK", flag:"🇬🇧", type:"Léger", tier:8, dmg:135, premium:false, speed:63, caliber:null, dispersion:null},
+  {name:"M-V-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:360, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"WZ-111 Alpine Tiger", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-43", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:7, dmg:200, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"K-91", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"T28 Concept", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:320, premium:true, speed:29, caliber:null, dispersion:null},
+  {name:"Tiger-Maus", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:530, premium:true, speed:32, caliber:null, dispersion:null},
+  {name:"SU-101", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:320, premium:false, speed:54, caliber:null, dispersion:null},
+  {name:"AMX AC mle. 46", nation:"France", flag:"🇫🇷", type:"TD", tier:7, dmg:240, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"BZ-75", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:650, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Projet Louis", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:125, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"Crusader", nation:"UK", flag:"🇬🇧", type:"Léger", tier:6, dmg:60, premium:false, speed:63, caliber:null, dispersion:null},
+  {name:"Object 416", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"IS-4", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:false, speed:43, caliber:null, dispersion:null},
+  {name:"Cobra", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:360, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Vickers MBT Mk. 3", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"KV-4 KTTS", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:360, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"IS-2-II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:230, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"T71 CMCD P", nation:"USA", flag:"🇺🇸", type:"Léger", tier:7, dmg:150, premium:true, speed:64, caliber:null, dispersion:null},
+  {name:"FV3805", nation:"UK", flag:"🇬🇧", type:"Artillerie", tier:9, dmg:400, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"STA-1", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:8, dmg:240, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"Bat.-Châtillon 12 t", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:170, premium:false, speed:68, caliber:null, dispersion:null},
+  {name:"T95", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:360, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"Object 430U", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:440, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"IS-3A Peregrine", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Bat.-Châtillon Bourrasque", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:360, premium:true, speed:62, caliber:null, dispersion:null},
+  {name:"SU-152", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:390, premium:false, speed:43, caliber:null, dispersion:null},
+  {name:"IS-7", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:490, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"XM57", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:630, premium:true, speed:24, caliber:null, dispersion:null},
+  {name:"Pudel", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:135, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"KV-13", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:7, dmg:110, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Panther II", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:135, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"Chrysler K GF", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Object 140", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:340, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"LTS-85", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:8, dmg:300, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"Taschenratte", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:11, dmg:510, premium:false, speed:18, caliber:null, dispersion:null},
+  {name:"PTZ-78", nation:"Chine", flag:"🇨🇳", type:"TD", tier:11, dmg:760, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"AltProto AMX 30", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:300, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"T25 AT", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:280, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"Object 704", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:750, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Charioteer Nomad", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:390, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"116-F3", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:530, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"E 100", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:530, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"M4A3E8 Thunderbolt VII", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"T110E5", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:false, speed:37, caliber:null, dispersion:null},
+  {name:"M60", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:390, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"T-34-85M", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:180, premium:true, speed:53, caliber:null, dispersion:null},
+  {name:"Somua SM", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:37, caliber:null, dispersion:null},
+  {name:"A-43", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:115, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"VK 45.02 (P) Ausf. A", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:280, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"T34 FL", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Charioteer", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:230, premium:false, speed:52, caliber:null, dispersion:null},
+  {name:"Conqueror", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:280, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"IS-2M", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"T 54D", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"T23E3", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:7, dmg:115, premium:true, speed:56, caliber:null, dispersion:null},
+  {name:"IS-2", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"AMX 13 57 GF", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:90, premium:true, speed:61, caliber:null, dispersion:null},
+  {name:"Emil I", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:8, dmg:320, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Ho-Ri 2", nation:"Japon", flag:"🇯🇵", type:"TD", tier:8, dmg:360, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"212A", nation:"URSS", flag:"🇷🇺", type:"Artillerie", tier:9, dmg:440, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"SU-100M1", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:250, premium:false, speed:54, caliber:null, dispersion:null},
+  {name:"Bat.-Châtillon 155 55", nation:"France", flag:"🇫🇷", type:"Artillerie", tier:9, dmg:460, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"SDP 44 Burza", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:6, dmg:240, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Prototipo 6", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:300, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Yong Bing", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:440, premium:true, speed:33, caliber:null, dispersion:null},
+  {name:"Jagdpanther II", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:240, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"AE Phase I", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"DBV-152", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:10, dmg:800, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"IS-6 FL", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"WZ-120G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:9, dmg:560, premium:true, speed:47, caliber:null, dispersion:null},
+  {name:"Konštrukta T-34/100", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:7, dmg:220, premium:false, speed:54, caliber:null, dispersion:null},
+  {name:"Object 244", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:180, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 51 FL", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:400, premium:true, speed:33, caliber:null, dispersion:null},
+  {name:"Kranvagn", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:10, dmg:440, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"T-150", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:230, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"AMX 30 B", nation:"France", flag:"🇫🇷", type:"Moyen", tier:10, dmg:390, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"AMX 13 75", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:125, premium:false, speed:61, caliber:null, dispersion:null},
+  {name:"CS-44", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:7, dmg:240, premium:false, speed:57, caliber:null, dispersion:null},
+  {name:"Concept 1B", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Object 430 Version II", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:320, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"40TP Habicha", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:135, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"ZŤS Vz.63-1 Ogar", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:9, dmg:350, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-34-3", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Kampfpanzer 07 RH", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:200, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 49 FL", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"SMV CC-56", nation:"Italie", flag:"🇮🇹", type:"TD", tier:7, dmg:240, premium:false, speed:31, caliber:null, dispersion:null},
+  {name:"Rheinmetall Skorpion", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Type 5 Chi-Ri", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:7, dmg:130, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"AMX 65 t", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"P.43 ter", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:7, dmg:240, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"CS-63", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:10, dmg:390, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"ISU-152", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:700, premium:false, speed:43, caliber:null, dispersion:null},
+  {name:"AS-XX 40 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:11, dmg:410, premium:false, speed:66, caliber:null, dispersion:null},
+  {name:"White Dragon", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:200, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"T57 Heavy", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Vz. 44-1", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:7, dmg:250, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Type 5 Ka-Ri", nation:"Japon", flag:"🇯🇵", type:"TD", tier:8, dmg:500, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"K-91 Version II", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:300, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"E 75 TS", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Vercingétorix", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:400, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"CC-46 Pancernik", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:9, dmg:650, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Leopard 1", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:10, dmg:420, premium:false, speed:70, caliber:null, dispersion:null},
+  {name:"VK 28.01 mit 10,5 cm L/28", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:6, dmg:350, premium:true, speed:64, caliber:null, dispersion:null},
+  {name:"Type 61", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:9, dmg:240, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"Schwertwal", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:700, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Type 59 G", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Vz. 64 Blesk", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:8, dmg:5, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"KV-4 Kreslavskiy", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"XM66F", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Charlemagne", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Black Prince", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Cromwell", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:75, premium:false, speed:64, caliber:null, dispersion:null},
+  {name:"SDP 58 Kilana", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:8, dmg:600, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"FV601 Saladin", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:150, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"STG", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-34-2", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"VK 168.01 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:440, premium:true, speed:20, caliber:null, dispersion:null},
+  {name:"Object 252U", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"IS-3", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"KV-85", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:160, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"Object 780", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:530, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Rambo", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:360, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"O-I", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:300, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"Tiger I", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:280, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Object 252U Defender", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"M41 Walker Bulldog", nation:"USA", flag:"🇺🇸", type:"Léger", tier:8, dmg:170, premium:false, speed:68, caliber:null, dispersion:null},
+  {name:"AMX 50 120", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:340, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"M-VI-Y (120)", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"T77", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"SPHT", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:420, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"FV230 Canopener", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:420, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"IS-2", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:7, dmg:250, premium:false, speed:37, caliber:null, dispersion:null},
+  {name:"AMX 13 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:170, premium:false, speed:68, caliber:null, dispersion:null},
+  {name:"AMX 13 F3 AM", nation:"France", flag:"🇫🇷", type:"Artillerie", tier:6, dmg:500, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Object 261", nation:"URSS", flag:"🇷🇺", type:"Artillerie", tier:10, dmg:520, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"FV215b", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:400, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"Ho-Ri 3", nation:"Japon", flag:"🇯🇵", type:"TD", tier:10, dmg:700, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Mäuschen", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:440, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"Rhm.-Borsig Waffenträger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"FV224 Chopper", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:230, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"Black Prince II", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Object 268 Version V", nation:"URSS", flag:"🇷🇺", type:"TD", tier:10, dmg:750, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"M12", nation:"USA", flag:"🇺🇸", type:"Artillerie", tier:7, dmg:420, premium:false, speed:39, caliber:null, dispersion:null},
+  {name:"AC 4 Experimental", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:150, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Type 68", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:9, dmg:360, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"AAT60", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:44, caliber:null, dispersion:null},
+  {name:"Centurion Action X", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:390, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"Schwarzpanzer 58", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"VK 100.01 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:320, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"T32", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"FV4025 Contriver", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:11, dmg:440, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"Vz. 71 Tesák", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:10, dmg:16, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"M-III-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"WZ-132-1", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:10, dmg:390, premium:false, speed:70, caliber:null, dispersion:null},
+  {name:"Kpz. 3 GST Turm", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:400, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Sherman VC Firefly", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:150, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"M41D", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:8, dmg:170, premium:true, speed:68, caliber:null, dispersion:null},
+  {name:"VK 30.02 (D)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:7, dmg:135, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Chrysler MTC 2TC", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:360, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"ISU-122-2", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"45TP Habicha", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Strv 74", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:6, dmg:150, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"Mittlerer Kpz. Pr. 68 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:400, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Ares 90", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:105, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"WZ-120-1G FT FL", nation:"Chine", flag:"🇨🇳", type:"TD", tier:8, dmg:440, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"FV4202 FL", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"IS-M", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"FV215b (183)", nation:"UK", flag:"🇬🇧", type:"TD", tier:10, dmg:1150, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"Škoda T 45", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:7, dmg:220, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Triumphant", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"TT-130M", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:490, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"M48A2 Räumpanzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:280, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Ares 75", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:56, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"ST-I", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Object 268 Version 4", nation:"URSS", flag:"🇷🇺", type:"TD", tier:10, dmg:650, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Kampfpanzer 07 P(E)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:410, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Divine Valor", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:650, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Twin Guardians", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:420, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"AT 15", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:230, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"Object 257", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"SU-100Y", nation:"URSS", flag:"🇷🇺", type:"TD", tier:6, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Chimera", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:440, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Peerless", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"FV304", nation:"UK", flag:"🇬🇧", type:"Artillerie", tier:6, dmg:280, premium:false, speed:72, caliber:null, dispersion:null},
+  {name:"KV-3", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:300, premium:false, speed:32, caliber:null, dispersion:null},
+  {name:"Aufklärungspanzer Panther", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:7, dmg:135, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"IS-3-II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:320, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"T25 Pilot Number 1", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Crusader 5.5-in. SP", nation:"UK", flag:"🇬🇧", type:"Artillerie", tier:7, dmg:450, premium:false, speed:14, caliber:null, dispersion:null},
+  {name:"T92 HMC", nation:"USA", flag:"🇺🇸", type:"Artillerie", tier:10, dmg:750, premium:false, speed:32, caliber:null, dispersion:null},
+  {name:"Object 452K", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:560, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"BZ-58", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:7, dmg:220, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"ELC EVEN 90 FL", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:220, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"M46 Patton", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:280, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"AMX 50 Foch", nation:"France", flag:"🇫🇷", type:"TD", tier:9, dmg:400, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"KV-122", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"Type 62", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:7, dmg:180, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"M46 Patton FL", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:390, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"Conqueror Gun Carriage", nation:"UK", flag:"🇬🇧", type:"Artillerie", tier:10, dmg:720, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"Emil II", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:9, dmg:360, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"M103", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"E 77", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:460, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Leopard 120 Verbessert", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:11, dmg:440, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"BZ-79", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:11, dmg:690, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"M4A1 FL 10", nation:"France", flag:"🇫🇷", type:"Moyen", tier:6, dmg:135, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"Vz. 68 Squall", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:8, dmg:8, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"T-54", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:300, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"AMX AC mle. 48", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:300, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"TS-60", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"G.W. E 100", nation:"Allemagne", flag:"🇩🇪", type:"Artillerie", tier:10, dmg:640, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"T34 B", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"WZ-111-1G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:8, dmg:440, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"P.44 Pantera", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:240, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"KPz 3 Projekt 07 HK", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:360, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 49 Liberté", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Hirschkäfer", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:11, dmg:600, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 45", nation:"France", flag:"🇫🇷", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"E 50", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:280, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"TS-5", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:400, premium:true, speed:26, caliber:null, dispersion:null},
+  {name:"Achilles", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:150, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"Carro d'assalto P.88", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"M18 Hellcat", nation:"USA", flag:"🇺🇸", type:"TD", tier:6, dmg:135, premium:false, speed:72, caliber:null, dispersion:null},
+  {name:"AT 15A", nation:"UK", flag:"🇬🇧", type:"TD", tier:7, dmg:150, premium:true, speed:20, caliber:null, dispersion:null},
+  {name:"ARL V39", nation:"France", flag:"🇫🇷", type:"TD", tier:6, dmg:240, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"IS-5 (Object 730)", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"T26E4 SuperPershing", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"M4A1 Revalorisé", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Leo", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:7, dmg:150, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Panther mit 8,8 cm L/71", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:280, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"53TP Markowskiego", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:320, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"FV4201 Chieftain Proto", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:400, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"King Tiger (Captured)", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:7, dmg:240, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Chieftain/T95", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:240, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"50TP Tyszkiewicza", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:9, dmg:420, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Semovente M43 Bassotto", nation:"Italie", flag:"🇮🇹", type:"TD", tier:6, dmg:240, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Löwe", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Škoda T 25", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:6, dmg:110, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"Strv m/42-57 Alt A.2", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:6, dmg:150, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Object 705", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:440, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"TVP VTU Koncept", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:8, dmg:220, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"T-54 first prototype", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:44, caliber:null, dispersion:null},
+  {name:"FCM 50 t", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:240, premium:true, speed:51, caliber:null, dispersion:null},
+  {name:"T110E4", nation:"USA", flag:"🇺🇸", type:"TD", tier:10, dmg:750, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"FV1066 Senlac", nation:"UK", flag:"🇬🇧", type:"Léger", tier:8, dmg:180, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"KV-4", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:300, premium:false, speed:32, caliber:null, dispersion:null},
+  {name:"B.U.G.I.", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:150, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"UDES 14 Alt 5", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:250, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"E 50 Ausf. M", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:10, dmg:390, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Super Hellcat", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:240, premium:true, speed:72, caliber:null, dispersion:null},
+  {name:"Type 4 Heavy", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:9, dmg:550, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"Controcarro 3 Minotauro", nation:"Italie", flag:"🇮🇹", type:"TD", tier:10, dmg:530, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Object 703 Version II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"59-Patton", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:280, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"TVP T 50/51", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:10, dmg:320, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"50TP Resilient", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Ikv 65 Alt II", nation:"Suède", flag:"🇸🇪", type:"TD", tier:6, dmg:240, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"T-54 ltwt.", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:9, dmg:250, premium:false, speed:69, caliber:null, dispersion:null},
+  {name:"M4A3E2 Sherman Jumbo", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:110, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Mars", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Škoda T 50", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:9, dmg:300, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Coccodrillo", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:470, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-50-2", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:6, dmg:85, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"T69", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:175, premium:false, speed:52, caliber:null, dispersion:null},
+  {name:"TNH 105/1000", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:8, dmg:320, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Strv S1 FL", nation:"Suède", flag:"🇸🇪", type:"TD", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-44-100", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"Sentinelle", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:390, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Strv 103B", nation:"Suède", flag:"🇸🇪", type:"TD", tier:10, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"AMX 13 105", nation:"France", flag:"🇫🇷", type:"Léger", tier:10, dmg:390, premium:false, speed:68, caliber:null, dispersion:null},
+  {name:"STA-2", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"SDP 60 Gonkiewicza", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:9, dmg:700, premium:false, speed:42, caliber:null, dispersion:null},
+  {name:"KV-4 Turchaninov", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:300, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Progetto M35 mod. 46", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Windhund", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:320, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Type 59 First Warrior", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"S-51", nation:"URSS", flag:"🇷🇺", type:"Artillerie", tier:7, dmg:440, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Bofors Tornvagn", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Lorraine 120 Alby", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:400, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Panzer 58 Mutz", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Hotchkiss EBR", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:170, premium:false, speed:70, caliber:null, dispersion:null},
+  {name:"NC 70 Błyskawica", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:10, dmg:800, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"G.W. Tiger (P)", nation:"Allemagne", flag:"🇩🇪", type:"Artillerie", tier:8, dmg:500, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Stinger", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"GSOR 1006 Scheme 7", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:280, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"A43 BP prototype", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:150, premium:true, speed:20, caliber:null, dispersion:null},
+  {name:"STG Guard", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T37", nation:"USA", flag:"🇺🇸", type:"Léger", tier:6, dmg:115, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Udarniy", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"T54 Heavy Tank", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:450, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"ARL 44", nation:"France", flag:"🇫🇷", type:"Lourd", tier:6, dmg:240, premium:false, speed:37, caliber:null, dispersion:null},
+  {name:"T28 Prototype", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:360, premium:false, speed:32, caliber:null, dispersion:null},
+  {name:"Löwe FL", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"TS-6", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:460, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"Caernarvon", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:150, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"CS-59", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:9, dmg:320, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Waffenträger auf Pz. IV", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:490, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"ST-62 Version 2", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"FSV Scheme A", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:7, dmg:135, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"8,8 cm Pak 43 Jagdtiger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:240, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"KJPZ TIII Jäger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:450, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Rheinmetall Skorpion G", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"TL-7", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:360, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"TOG II*", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:150, premium:true, speed:14, caliber:null, dispersion:null},
+  {name:"M24E2 Super Chaffee", nation:"USA", flag:"🇺🇸", type:"Léger", tier:6, dmg:115, premium:true, speed:56, caliber:null, dispersion:null},
+  {name:"MBT-B", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"GSOR the TANK", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Chi-To SP", nation:"Japon", flag:"🇯🇵", type:"TD", tier:7, dmg:320, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"O-Ni", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:7, dmg:340, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"Type 64", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:6, dmg:115, premium:true, speed:72, caliber:null, dispersion:null},
+  {name:"Felice", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:480, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"IS-6 B", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"BZ-72-1", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:560, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"IS", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:180, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"T110E5 CL", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:true, speed:37, caliber:null, dispersion:null},
+  {name:"Centurion Mk. I", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:150, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Stitch", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:330, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Leox", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:410, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"Object 590", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:320, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"Centurion St. Gloriana", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:7, dmg:150, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-44-100 Igrovoy", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"T32 FL", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Kanonenjagdpanzer 2", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:370, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Bat.-Châtillon 25 t AP", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:280, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Terrifiant", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:500, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Alembic", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"Heavy Tank No. VI", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:220, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Pz.Kpfw. VII", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:560, premium:false, speed:33, caliber:null, dispersion:null},
+  {name:"Churchill St. Gloriana", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:140, premium:true, speed:25, caliber:null, dispersion:null},
+  {name:"T-103", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"M-II-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:7, dmg:240, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Vz. 60S Dravec", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:10, dmg:450, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Bat.-Châtillon 25 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:10, dmg:390, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"T-34-85", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:160, premium:false, speed:54, caliber:null, dispersion:null},
+  {name:"T-100 LT", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:10, dmg:300, premium:false, speed:72, caliber:null, dispersion:null},
+  {name:"TITT Rozanov", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:200, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"Type 57", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:320, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Kunze Panzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:390, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"Type 4 Chi-To", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:6, dmg:125, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"SU-100", nation:"URSS", flag:"🇷🇺", type:"TD", tier:6, dmg:250, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"T95/FV4201 Chieftain", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"SU-14-1", nation:"URSS", flag:"🇷🇺", type:"Artillerie", tier:7, dmg:380, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"SMV CC-64 Vipera", nation:"Italie", flag:"🇮🇹", type:"TD", tier:8, dmg:400, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"VK 45.02 (P) Ausf. B", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:360, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Škoda T 17", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:7, dmg:80, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"LTG", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:7, dmg:160, premium:false, speed:63, caliber:null, dispersion:null},
+  {name:"WZ-131G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:6, dmg:200, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Fauteur", nation:"France", flag:"🇫🇷", type:"Lourd", tier:11, dmg:400, premium:false, speed:36, caliber:null, dispersion:null},
+  {name:"LTTB", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:8, dmg:180, premium:false, speed:68, caliber:null, dispersion:null},
+  {name:"Manticore", nation:"UK", flag:"🇬🇧", type:"Léger", tier:10, dmg:390, premium:false, speed:68, caliber:null, dispersion:null},
+  {name:"VK 30.01 (D)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:6, dmg:110, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"M4A3E8 Fury", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"AT 7", nation:"UK", flag:"🇬🇧", type:"TD", tier:7, dmg:150, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"M36 Jackson", nation:"USA", flag:"🇺🇸", type:"TD", tier:6, dmg:160, premium:false, speed:42, caliber:null, dispersion:null},
+  {name:"Executor", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:11, dmg:480, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"T803", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:11, dmg:410, premium:false, speed:37, caliber:null, dispersion:null},
+  {name:"WZ-113G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:10, dmg:750, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Ferdinand FL", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"K-91-PT", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:390, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"Turtle Mk. I", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:330, premium:true, speed:25, caliber:null, dispersion:null},
+  {name:"Sherman Firefly Saunders", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:150, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Maus", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:490, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"M46 Patton KR", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"T28", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:360, premium:false, speed:22, caliber:null, dispersion:null},
+  {name:"Lorraine 50 t", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:400, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"T54E1", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:280, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"BZ-166", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:420, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Panzer 58 FL", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Jagdtiger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:490, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"T30 FL", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:750, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"FV207", nation:"UK", flag:"🇬🇧", type:"Artillerie", tier:8, dmg:400, premium:false, speed:29, caliber:null, dispersion:null},
+  {name:"Object 140 CL", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"WZ-111 model 6", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:360, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"ISU-152K", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:750, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Strv 107-12", nation:"Suède", flag:"🇸🇪", type:"TD", tier:11, dmg:390, premium:false, speed:51, caliber:null, dispersion:null},
+  {name:"leKpz Borkenkäfer", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:11, dmg:330, premium:false, speed:75, caliber:null, dispersion:null},
+  {name:"BZT-70", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:850, premium:true, speed:28, caliber:null, dispersion:null},
+  {name:"Bretagne Panther", nation:"France", flag:"🇫🇷", type:"Moyen", tier:6, dmg:135, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Panther", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:7, dmg:135, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"Bat.-Châtillon 155 58", nation:"France", flag:"🇫🇷", type:"Artillerie", tier:10, dmg:460, premium:false, speed:62, caliber:null, dispersion:null},
+  {name:"DZT-159", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"G.W. Panther", nation:"Allemagne", flag:"🇩🇪", type:"Artillerie", tier:7, dmg:600, premium:false, speed:46, caliber:null, dispersion:null},
+  {name:"T26E5 Patriot", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"FV4004 Conway", nation:"UK", flag:"🇬🇧", type:"TD", tier:9, dmg:400, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"M4A3E8 Sherman", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"WZ-114", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:530, premium:true, speed:33, caliber:null, dispersion:null},
+  {name:"HWK 30", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"T-54 FL", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:320, premium:true, speed:56, caliber:null, dispersion:null},
+  {name:"AMX Canon d'assaut 105", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"CS-52 C", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"WZ-113-II", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:320, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-62A", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Tiger II FL", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:360, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"M-IV-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Gryphon", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:420, premium:true, speed:43, caliber:null, dispersion:null},
+  {name:"WZ-111 model 1-4 FL", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:490, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Tiger II", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:280, premium:false, speed:38, caliber:null, dispersion:null},
+  {name:"VK 28.01", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:6, dmg:70, premium:false, speed:64, caliber:null, dispersion:null},
+  {name:"Chrysler K", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Challenger", nation:"UK", flag:"🇬🇧", type:"TD", tier:7, dmg:150, premium:false, speed:52, caliber:null, dispersion:null},
+  {name:"Rinoceronte", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:10, dmg:490, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Kpz. Erich Konzept I", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:400, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"Brennos", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"ISU-130", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:490, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Pz.Kpfw. IV Schmalturm", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:6, dmg:135, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 49", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Buryan", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:520, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Super Conqueror", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:400, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"AMX 50 Foch (155)", nation:"France", flag:"🇫🇷", type:"TD", tier:10, dmg:750, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Nemesis", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:420, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Sturer Emil", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:300, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"T78", nation:"USA", flag:"🇺🇸", type:"TD", tier:6, dmg:240, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Chieftain Mk. 6", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:400, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"STK-2", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:11, dmg:470, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"113 Beijing Opera", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:440, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"50TP prototyp", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Lätt Stridsfordon 120", nation:"Suède", flag:"🇸🇪", type:"TD", tier:9, dmg:420, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Serpente", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:400, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Type 95 Ji-Ro", nation:"Japon", flag:"🇯🇵", type:"TD", tier:6, dmg:150, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"ISU-122S", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:390, premium:true, speed:43, caliber:null, dispersion:null},
+  {name:"AMX 13 57", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:90, premium:true, speed:61, caliber:null, dispersion:null},
+  {name:"Hurricane", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"SDT-58 Vlkodav", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:9, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T 55A", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:320, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-34-1", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:7, dmg:160, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Jagdpanzer E 100", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:1050, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"TL-1 LPC", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:280, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Primo Victoria", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"T-44 FL", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:56, caliber:null, dispersion:null},
+  {name:"121B", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Panhard EBR 75 (FL 10)", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:175, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Strv 81", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"SZDV Vz. 50", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:8, dmg:390, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"M44", nation:"USA", flag:"🇺🇸", type:"Artillerie", tier:6, dmg:500, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"WZ-132A", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:9, dmg:250, premium:false, speed:64, caliber:null, dispersion:null},
+  {name:"Wz. 64GC Bzyg", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:10, dmg:800, premium:true, speed:36, caliber:null, dispersion:null},
+  {name:"T-34-2G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:7, dmg:250, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Kanonenjagdpanzer", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:240, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"T71 CMCD", nation:"USA", flag:"🇺🇸", type:"Léger", tier:7, dmg:135, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"T-54 first prototype FL", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:44, caliber:null, dispersion:null},
+  {name:"AHT-7", nation:"USA", flag:"🇺🇸", type:"TD", tier:10, dmg:900, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Char Murat", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:390, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Vz. 55 Gothic Warrior", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:10, dmg:490, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Lion", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:420, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"SU-130PM", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:520, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"112", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"TNH T Vz. 51", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"UDES 03 Alt 3", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:9, dmg:360, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"T-22 medium", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Strv 103-0", nation:"Suède", flag:"🇸🇪", type:"TD", tier:9, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"VK 45.03", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:240, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Object 265T", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 54", nation:"France", flag:"🇫🇷", type:"Lourd", tier:10, dmg:400, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Vz. 58 Medvěd", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:440, premium:true, speed:36, caliber:null, dispersion:null},
+  {name:"WT auf E 100 Phönix", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:560, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Type 59", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Predatore", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:320, premium:true, speed:62, caliber:null, dispersion:null},
+  {name:"Strv 103-0 FL", nation:"Suède", flag:"🇸🇪", type:"TD", tier:9, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Kirovets-1", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:42, caliber:null, dispersion:null},
+  {name:"Caliban", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:600, premium:true, speed:33, caliber:null, dispersion:null},
+  {name:"UDES 15/16", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:10, dmg:440, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Sherman Firefly", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:110, premium:false, speed:36, caliber:null, dispersion:null},
+  {name:"leKpz M 41 90 mm", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:72, caliber:null, dispersion:null},
+  {name:"Panhard AMD 178B", nation:"France", flag:"🇫🇷", type:"Léger", tier:6, dmg:55, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Object 752", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Concept No. 5", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:460, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Type 5 Heavy", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:10, dmg:700, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"CS-67 Szakal", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:11, dmg:420, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"Cromwell B", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:135, premium:true, speed:64, caliber:null, dispersion:null},
+  {name:"FV227 Conceiver", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:230, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"Stridsyxa", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:350, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Fantôme", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:360, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Object 430", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:390, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Kanonenjagdpanzer 105", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:390, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"M47 Iron Arnie", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Tortoise", nation:"UK", flag:"🇬🇧", type:"TD", tier:9, dmg:280, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"Ferdinand", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:280, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"M4A3(76)W Sherman", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"Panhard EBR 105", nation:"France", flag:"🇫🇷", type:"Léger", tier:10, dmg:390, premium:false, speed:70, caliber:null, dispersion:null},
+  {name:"Chi-Se", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:330, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Prototipo Standard B", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:240, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"M6", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:6, dmg:115, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Staghound Mk. III", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:90, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"O-Ho", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:370, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"Object 274a", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:320, premium:true, speed:58, caliber:null, dispersion:null},
+  {name:"KV-2", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:300, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"M40/M43", nation:"USA", flag:"🇺🇸", type:"Artillerie", tier:8, dmg:420, premium:false, speed:39, caliber:null, dispersion:null},
+  {name:"KV-2 (R)", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:700, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"AMBT", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:360, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Leichter Kpz. 70 (K)", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"T42", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:280, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"Churchill VII", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:135, premium:false, speed:25, caliber:null, dispersion:null},
+  {name:"Object 283", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:360, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Black Rock", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:11, dmg:420, premium:true, speed:43, caliber:null, dispersion:null},
+  {name:"E 50 FL", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:390, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"113", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:440, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Object Kust", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:550, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"ASTRON Rex 105 mm", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:52, caliber:null, dispersion:null},
+  {name:"Ziqiang", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:200, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"IMT", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:360, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Jagdpanzer IV", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:6, dmg:150, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"Jagdpanzer E 90", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:750, premium:true, speed:28, caliber:null, dispersion:null},
+  {name:"Centurion Mk. 7/1", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:230, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Ashigaru", nation:"Japon", flag:"🇯🇵", type:"TD", tier:10, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"T34", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Char de transition", nation:"France", flag:"🇫🇷", type:"Lourd", tier:6, dmg:240, premium:true, speed:37, caliber:null, dispersion:null},
+  {name:"Loza's M4-A2 Sherman", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:115, premium:true, speed:51, caliber:null, dispersion:null},
+  {name:"121", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:10, dmg:440, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"Ho-Ri 1", nation:"Japon", flag:"🇯🇵", type:"TD", tier:9, dmg:500, premium:false, speed:32, caliber:null, dispersion:null},
+  {name:"Ares 85", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:56, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"FV4202", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Jade Coil", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:320, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"M56 Scorpion", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:240, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"K-2", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"T29", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"IS-6", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Type 3 Ju-Nu", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:150, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Pawlack Tank", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:6, dmg:150, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"Hummel", nation:"Allemagne", flag:"🇩🇪", type:"Artillerie", tier:6, dmg:480, premium:false, speed:42, caliber:null, dispersion:null},
+  {name:"Jagdtiger Prototype", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Caernarvon Action X", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:230, premium:true, speed:36, caliber:null, dispersion:null},
+  {name:"Jagdpanther", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:240, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"T95E2", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:56, caliber:null, dispersion:null},
+  {name:"VK 30.01 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:6, dmg:120, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"AT-FV230 Breaker", nation:"UK", flag:"🇬🇧", type:"TD", tier:11, dmg:480, premium:false, speed:20, caliber:null, dispersion:null},
+  {name:"Type 4 Ju-To", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:7, dmg:280, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"VK 75.01 (K)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:490, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"WZ-111 model 5A", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:490, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Centurion Mk. 5/1 RAAC", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Excalibur", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:150, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"56TP", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Vz. 55", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:10, dmg:490, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Progetto C50 mod. 66", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:9, dmg:320, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"Object 432U", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:11, dmg:450, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"M26 Pershing", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"Šotek", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:8, dmg:250, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Carro da Combattimento 45 t", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:400, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Nergal", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:350, premium:true, speed:24, caliber:null, dispersion:null},
+  {name:"KV-5", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"Miel", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:360, premium:true, speed:62, caliber:null, dispersion:null},
+  {name:"GSOR 3301 AVR FS", nation:"UK", flag:"🇬🇧", type:"Léger", tier:9, dmg:230, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Object 705A", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:650, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"T95E6", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:400, premium:true, speed:56, caliber:null, dispersion:null},
+  {name:"Churchill Gun Carrier", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:140, premium:false, speed:26, caliber:null, dispersion:null},
+  {name:"T21", nation:"USA", flag:"🇺🇸", type:"Léger", tier:6, dmg:115, premium:false, speed:57, caliber:null, dispersion:null},
+  {name:"WZ-111G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:9, dmg:560, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"M6A2E1", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:29, caliber:null, dispersion:null},
+  {name:"E 25", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:135, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"GSR 3301 Setter", nation:"UK", flag:"🇬🇧", type:"Léger", tier:7, dmg:75, premium:false, speed:63, caliber:null, dispersion:null},
+  {name:"T26E5", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Object 277", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:490, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"LTC II", nation:"USA", flag:"🇺🇸", type:"Léger", tier:9, dmg:200, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"Monkey King", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"SU-122-44", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:390, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"BZ-68", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:530, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"T-44", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:220, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"Gonsalo", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:440, premium:true, speed:37, caliber:null, dispersion:null},
+  {name:"T92", nation:"USA", flag:"🇺🇸", type:"Léger", tier:8, dmg:150, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"BZ-74-1", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:420, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"ST-66", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:300, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Object 168 German", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:340, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"BZ-58-2", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:520, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Char Futur 4", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:390, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"EMIL 1951", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Object 268", nation:"URSS", flag:"🇷🇺", type:"TD", tier:10, dmg:750, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"Panther/M10", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:7, dmg:135, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"H3", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:true, speed:46, caliber:null, dispersion:null},
+  {name:"leKpz M 41 90 mm GF", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:72, caliber:null, dispersion:null},
+  {name:"G.W. Tiger", nation:"Allemagne", flag:"🇩🇪", type:"Artillerie", tier:9, dmg:500, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"Spähpanzer Ru 251", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:9, dmg:240, premium:false, speed:70, caliber:null, dispersion:null},
+  {name:"P.43 bis", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:6, dmg:110, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"BZ-176", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:650, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"VCS 6x6 TS 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:250, premium:true, speed:80, caliber:null, dispersion:null},
+  {name:"T49", nation:"USA", flag:"🇺🇸", type:"Léger", tier:9, dmg:270, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Dicker Max", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:6, dmg:300, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"VK 30.02 (M)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:6, dmg:135, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"ELC EVEN 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:220, premium:true, speed:70, caliber:null, dispersion:null},
+  {name:"112 FL", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"KB-52", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:340, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"VK 72.01 (K)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:750, premium:true, speed:33, caliber:null, dispersion:null},
+  {name:"T-832", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Churchill Crocodile", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:140, premium:true, speed:25, caliber:null, dispersion:null},
+  {name:"WZ-132", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:8, dmg:200, premium:false, speed:64, caliber:null, dispersion:null},
+  {name:"GSOR 1010 FB", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:360, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Leopard Prototyp A", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:300, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"E 75", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:360, premium:false, speed:40, caliber:null, dispersion:null},
+  {name:"T26E3 Eagle 7", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:7, dmg:240, premium:true, speed:48, caliber:null, dispersion:null},
+  {name:"FV4005 Stage II", nation:"UK", flag:"🇬🇧", type:"TD", tier:10, dmg:1150, premium:false, speed:32, caliber:null, dispersion:null},
+  {name:"STB-1", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:10, dmg:360, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Progetto M40 mod. 65", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:360, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"T25/2", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:240, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"Object 260", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Lorraine 40 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:300, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"T-34-85 Rudy", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:180, premium:true, speed:54, caliber:null, dispersion:null},
+  {name:"Object 259A", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:420, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"FV226 Contradictious", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:360, premium:true, speed:36, caliber:null, dispersion:null},
+  {name:"FV201 (A45)", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:true, speed:31, caliber:null, dispersion:null},
+  {name:"WZ-111", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Tiger (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:220, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"T26E4 SuperPershing FL", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"T71 DA", nation:"USA", flag:"🇺🇸", type:"Léger", tier:7, dmg:115, premium:false, speed:64, caliber:null, dispersion:null},
+  {name:"Progetto CC55 mod. 54", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:320, premium:false, speed:45, caliber:null, dispersion:null},
+  {name:"114 SP2", nation:"Chine", flag:"🇨🇳", type:"TD", tier:10, dmg:650, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Tiger II Kuromorimine", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:240, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"WZ-111 Qilin", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:490, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Jagdtiger FL", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:560, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"Kame", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:9, dmg:330, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"T-34-85 Rudy", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:180, premium:true, speed:54, caliber:null, dispersion:null},
+  {name:"AMX Chasseur de chars", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:240, premium:true, speed:57, caliber:null, dispersion:null},
+  {name:"SDP wz 66 Grom", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:8, dmg:800, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"XM551 Sheridan", nation:"USA", flag:"🇺🇸", type:"Léger", tier:10, dmg:390, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"60TP Lewandowskiego", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:10, dmg:750, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"Škoda T 56", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:8, dmg:460, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"OCP Peacekeeper", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"M54 Renegade", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"FV217 Badger", nation:"UK", flag:"🇬🇧", type:"TD", tier:10, dmg:480, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"SMV CC-67", nation:"Italie", flag:"🇮🇹", type:"TD", tier:8, dmg:320, premium:false, speed:35, caliber:null, dispersion:null},
+  {name:"WZ-132 FL", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:8, dmg:250, premium:true, speed:64, caliber:null, dispersion:null},
+  {name:"WZ-120-1G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:8, dmg:440, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"ShPTK-TVP 100", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:8, dmg:250, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Strv S1", nation:"Suède", flag:"🇸🇪", type:"TD", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Ikv 90 Typ B", nation:"Suède", flag:"🇸🇪", type:"TD", tier:7, dmg:240, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"IS-3A", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"M4A1 Revalorisé FL", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:390, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"AMX AC mle. 48 FL", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:400, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Ashbringer", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:10, dmg:750, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"Lorraine 155 mle. 51", nation:"France", flag:"🇫🇷", type:"Artillerie", tier:8, dmg:630, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Krupp-Steyr Waffenträger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:240, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"AMX 30 1er prototype", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:240, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"CS-53", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:300, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"CS-52 LIS", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:320, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"DZT-159 Dragon's Soul", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:440, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"T26E5 FL", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Char Mle. 75", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:200, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"Škoda T 27", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:8, dmg:240, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"M48A5 Patton", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:390, premium:false, speed:48, caliber:null, dispersion:null},
+  {name:"Lansen C", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:320, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Toro", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:9, dmg:360, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"SFAC 105", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:390, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"UDES 03", nation:"Suède", flag:"🇸🇪", type:"TD", tier:8, dmg:280, premium:false, speed:70, caliber:null, dispersion:null},
+  {name:"A-44", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:7, dmg:100, premium:false, speed:59, caliber:null, dispersion:null},
+  {name:"AMX M4 mle. 51", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:400, premium:false, speed:33, caliber:null, dispersion:null},
+  {name:"GSOR 1008", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:320, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Indien-Panzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:240, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"M41 Walker Bulldog FL", nation:"USA", flag:"🇺🇸", type:"Léger", tier:8, dmg:175, premium:true, speed:68, caliber:null, dispersion:null},
+  {name:"AMX 67 Imbattable", nation:"France", flag:"🇫🇷", type:"Lourd", tier:11, dmg:440, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"E 65 Zwilling", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:280, premium:true, speed:38, caliber:null, dispersion:null},
+  {name:"122 TM", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:400, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"CS-53/56 Wojtek", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Strv K", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:9, dmg:420, premium:true, speed:45, caliber:null, dispersion:null},
+  {name:"Object 263", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:440, premium:false, speed:55, caliber:null, dispersion:null},
+  {name:"Kampfpanzer 50 t", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:320, premium:true, speed:60, caliber:null, dispersion:null},
+  {name:"Stone Sentinel", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:360, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"UDES 16", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:9, dmg:360, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Panzer 58", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:null, dispersion:null},
+  {name:"AMX 50 Foch B", nation:"France", flag:"🇫🇷", type:"TD", tier:10, dmg:400, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"Crusher", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:350, premium:true, speed:24, caliber:null, dispersion:null},
+  {name:"SU-122V", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:440, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Panhard AML Lynx 6x6", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:175, premium:false, speed:58, caliber:null, dispersion:null},
+  {name:"Bisonte C45", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:360, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Forest Spirit", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:520, premium:true, speed:65, caliber:null, dispersion:null},
+  {name:"Controcarro 1 Mk. 2", nation:"Italie", flag:"🇮🇹", type:"TD", tier:9, dmg:400, premium:false, speed:30, caliber:null, dispersion:null},
+  {name:"Object 279 early", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:true, speed:35, caliber:null, dispersion:null},
+  {name:"M53/M55", nation:"USA", flag:"🇺🇸", type:"Artillerie", tier:9, dmg:420, premium:false, speed:56, caliber:null, dispersion:null},
+  {name:"Grille 15", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:750, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"VK 168.01 Mauerbrecher", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:440, premium:true, speed:20, caliber:null, dispersion:null},
+  {name:"M47 Patton Improved", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"FV229 Contender", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:320, premium:false, speed:34, caliber:null, dispersion:null},
+  {name:"Panhard EBR 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:240, premium:false, speed:65, caliber:null, dispersion:null},
+  {name:"Type 63", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:null, dispersion:null},
+  {name:"SDP 57 Gowika", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:7, dmg:320, premium:false, speed:50, caliber:null, dispersion:null},
+  {name:"IS-2 shielded", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:30, caliber:null, dispersion:null},
+  {name:"M103M", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:360, premium:true, speed:34, caliber:null, dispersion:null},
+  {name:"T110E3", nation:"USA", flag:"🇺🇸", type:"TD", tier:10, dmg:750, premium:false, speed:24, caliber:null, dispersion:null},
+  {name:"WZ-120", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:250, premium:false, speed:60, caliber:null, dispersion:null},
+  {name:"Škoda T 40", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:6, dmg:220, premium:true, speed:50, caliber:null, dispersion:null},
+  {name:"Type 58", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:6, dmg:160, premium:false, speed:55, caliber:null, dispersion:null},
+];
+
+let secret = null;
+let guesses = [];
+const MAX_TRIES = 6;
+let finished = false;
+
+const ROUNDS_PER_GAME = 5;
+const SCORE_TABLE = [1000, 820, 640, 460, 280, 100]; // index = tries-1
+let round = 1;
+let roundResults = []; // {name, flag, tries, score, win}
+let sessionScore = 0;
+let usedTanksThisSession = [];
+let history = [];
+
+function pickSecret(){
+  // évite de retomber sur un char déjà sorti dans la même partie
+  const pool = TANKS.filter(t => !usedTanksThisSession.includes(t.name));
+  const source = pool.length ? pool : TANKS;
+  return source[Math.floor(Math.random()*source.length)];
+}
+
+function scoreForTries(tries){
+  if(tries < 1 || tries > MAX_TRIES) return 0;
+  return SCORE_TABLE[tries-1];
+}
+
+function renderRoundDots(){
+  const wrap = document.getElementById("roundDots");
+  wrap.innerHTML = "";
+  for(let i=1;i<=ROUNDS_PER_GAME;i++){
+    const dot = document.createElement("span");
+    if(i < round){
+      const r = roundResults[i-1];
+      dot.className = r && r.win ? "done" : "zero";
+    } else if(i === round){
+      dot.className = "current";
+    }
+    wrap.appendChild(dot);
+  }
+}
+
+function updateSessionBar(){
+  document.getElementById("roundLabel").textContent = `${round} / ${ROUNDS_PER_GAME}`;
+  document.getElementById("sessionScoreLabel").textContent = sessionScore;
+  renderRoundDots();
+}
+
+function startSession(){
+  round = 1;
+  roundResults = [];
+  sessionScore = 0;
+  usedTanksThisSession = [];
+  document.getElementById("sessionSummary").style.display = "none";
+  document.getElementById("sessionSummary").innerHTML = "";
+  startRound();
+}
+
+function startRound(){
+  secret = pickSecret();
+  usedTanksThisSession.push(secret.name);
+  guesses = [];
+  finished = false;
+  hintUsed = false;
+  document.getElementById("boardBody").innerHTML = "";
+  document.getElementById("message").className = "";
+  document.getElementById("message").innerHTML = "";
+  document.getElementById("nextRound").style.display = "none";
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").disabled = false;
+  document.getElementById("hintResult").textContent = "";
+  document.querySelectorAll(".hintBox button[data-hint]").forEach(b => b.disabled = false);
+  document.getElementById("hintBox").style.display = "none";
+  updateTries();
+  updateSessionBar();
+}
+
+let hintUsed = false;
+
+function updateHintBox(){
+  const box = document.getElementById("hintBox");
+  if(!finished && guesses.length >= 3 && !hintUsed){
+    box.style.display = "block";
+  } else if(hintUsed){
+    box.style.display = "block"; // reste affiché avec le résultat
+  } else {
+    box.style.display = "none";
+  }
+}
+
+document.querySelectorAll(".hintBox button[data-hint]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if(hintUsed || finished) return;
+    hintUsed = true;
+    const kind = btn.dataset.hint;
+    const resultEl = document.getElementById("hintResult");
+    let label = "", value = "";
+    if(kind === "speed"){
+      label = "Vitesse max";
+      value = (secret.speed != null) ? `${secret.speed} km/h` : "Donnée indisponible pour ce char";
+    } else if(kind === "caliber"){
+      label = "Calibre";
+      value = (secret.caliber != null) ? `${secret.caliber} mm` : "Donnée indisponible pour ce char";
+    } else if(kind === "dispersion"){
+      label = "Dispersion à 100m";
+      value = (secret.dispersion != null) ? `${secret.dispersion} m` : "Donnée indisponible pour ce char";
+    }
+    resultEl.textContent = `${label} : ${value}`;
+    document.querySelectorAll(".hintBox button[data-hint]").forEach(b => b.disabled = true);
+  });
+});
+
+function updateTries(){
+  document.getElementById("tries").textContent = `TENTATIVES : ${guesses.length} / ${MAX_TRIES}`;
+}
+
+function compareNumeric(g,s){
+  if(g===s) return {cls:"ok", arrow:""};
+  return {cls:"bad", arrow: g<s ? "↑" : "↓"};
+}
+
+function renderGuess(tank){
+  const tr = document.createElement("tr");
+
+  const tdName = document.createElement("td");
+  const nameFound = tank.name === secret.name;
+  tdName.className = "cell " + (nameFound ? "ok" : "bad");
+  tdName.innerHTML = `<div class="name-cell"><span class="flag">${tank.flag}</span>${tank.name}</div>`;
+  tr.appendChild(tdName);
+
+  const tdNation = document.createElement("td");
+  const nationOk = tank.nation === secret.nation;
+  tdNation.className = "cell " + (nationOk?"ok":"bad");
+  tdNation.textContent = tank.nation;
+  tr.appendChild(tdNation);
+
+  const tdType = document.createElement("td");
+  const typeOk = tank.type === secret.type;
+  tdType.className = "cell " + (typeOk?"ok":"bad");
+  tdType.textContent = tank.type;
+  tr.appendChild(tdType);
+
+  const tdTier = document.createElement("td");
+  const tcmp = compareNumeric(tank.tier, secret.tier);
+  tdTier.className = "cell " + tcmp.cls;
+  tdTier.innerHTML = `${tank.tier}` + (tcmp.arrow?`<span class="arrow">${tcmp.arrow}</span>`:"");
+  tr.appendChild(tdTier);
+
+  const tdDmg = document.createElement("td");
+  const dcmp = compareNumeric(tank.dmg, secret.dmg);
+  tdDmg.className = "cell " + dcmp.cls;
+  tdDmg.innerHTML = `${tank.dmg}` + (dcmp.arrow?`<span class="arrow">${dcmp.arrow}</span>`:"");
+  tr.appendChild(tdDmg);
+
+  const tdPrem = document.createElement("td");
+  const premOk = tank.premium === secret.premium;
+  tdPrem.className = "cell " + (premOk?"ok":"bad");
+  tdPrem.textContent = tank.premium ? "Oui" : "Non";
+  tr.appendChild(tdPrem);
+
+  document.getElementById("boardBody").prepend(tr);
+}
+
+function endRound(win){
+  finished = true;
+  updateHintBox();
+  document.getElementById("guessInput").disabled = true;
+  const tries = guesses.length;
+  const points = win ? scoreForTries(tries) : 0;
+  sessionScore += points;
+  roundResults.push({name: secret.name, flag: secret.flag, tries: win ? tries : MAX_TRIES, score: points, win});
+
+  const msg = document.getElementById("message");
+  msg.className = win ? "win" : "lose";
+  if(win){
+    msg.innerHTML = `<b>CIBLE NEUTRALISÉE — +${points} PTS</b>Bravo, c'était bien le ${secret.flag} <b style="display:inline">${secret.name}</b>, en ${tries} tentative(s).`;
+  } else {
+    msg.innerHTML = `<b>RECON ÉCHOUÉE — +0 PT</b>Le char recherché était le ${secret.flag} <b style="display:inline">${secret.name}</b> (Tier ${secret.tier}, ${secret.type}).`;
+  }
+
+  updateSessionBar();
+
+  if(round < ROUNDS_PER_GAME){
+    document.getElementById("nextRound").style.display = "block";
+  } else {
+    finishSession();
+  }
+}
+
+function goToNextRound(){
+  round += 1;
+  startRound();
+}
+
+function finishSession(){
+  const box = document.getElementById("sessionSummary");
+  const rows = roundResults.map((r,i) => `
+    <tr>
+      <td>Manche ${i+1}</td>
+      <td>${r.flag} ${r.name}</td>
+      <td>${r.win ? r.tries : "—"}</td>
+      <td>${r.score}</td>
+    </tr>`).join("");
+  box.innerHTML = `
+    <b>PARTIE TERMINÉE</b>
+    <div class="scoreTotal">${sessionScore} PTS</div>
+    <table>
+      <thead><tr><th>Manche</th><th>Char</th><th>Essais</th><th>Points</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+  box.style.display = "block";
+
+  saveSessionToHistory();
+}
+
+function normalize(str){
+  return str.toLowerCase().replace(/[\s\-]+/g, "");
+}
+
+function submitGuess(name){
+  if(finished) return;
+  const target = normalize(name);
+  const tank = TANKS.find(t => normalize(t.name) === target);
+  if(!tank){
+    flashInput();
+    return;
+  }
+  guesses.push(tank);
+  renderGuess(tank);
+  updateTries();
+  updateHintBox();
+  document.getElementById("guessInput").value = "";
+  document.getElementById("suggest").innerHTML = "";
+
+  if(tank.name === secret.name){
+    endRound(true);
+  } else if(guesses.length >= MAX_TRIES){
+    endRound(false);
+  }
+}
+
+function flashInput(){
+  const inp = document.getElementById("guessInput");
+  inp.style.borderColor = "var(--rust)";
+  setTimeout(()=>{ inp.style.borderColor = "var(--olive)"; }, 300);
+}
+
+const input = document.getElementById("guessInput");
+const suggestBox = document.getElementById("suggest");
+
+input.addEventListener("input", ()=>{
+  const v = input.value.trim();
+  const nv = normalize(v);
+  suggestBox.innerHTML = "";
+  if(!v) return;
+  const matches = TANKS.filter(t => normalize(t.name).includes(nv)).slice(0,8);
+  matches.forEach(t=>{
+    const div = document.createElement("div");
+    div.innerHTML = `${t.flag} ${t.name}`;
+    div.onclick = ()=>{ submitGuess(t.name); };
+    suggestBox.appendChild(div);
+  });
+});
+
+input.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    submitGuess(input.value);
+  }
+});
+
+document.getElementById("nextRound").addEventListener("click", goToNextRound);
+document.getElementById("newGame").addEventListener("click", startSession);
+
+// ---- Tableau des scores personnels (persistant via window.storage) ----
+
+async function loadHistory(){
+  try{
+    const res = await window.storage.get("tankle_history", false);
+    history = res && res.value ? JSON.parse(res.value) : [];
+  } catch(e){
+    history = [];
+  }
+  renderScoreboard();
+}
+
+async function saveSessionToHistory(){
+  const entry = {
+    date: new Date().toLocaleString("fr-FR"),
+    total: sessionScore,
+    rounds: roundResults.map(r => ({name:r.name, flag:r.flag, tries:r.win?r.tries:null, score:r.score})),
+  };
+  history.unshift(entry);
+  try{
+    await window.storage.set("tankle_history", JSON.stringify(history), false);
+  } catch(e){
+    console.error("Impossible de sauvegarder l'historique:", e);
+  }
+  renderScoreboard();
+}
+
+function renderScoreboard(){
+  const wrap = document.getElementById("scoreboardContent");
+  if(!history.length){
+    wrap.innerHTML = `<div class="scoreEmpty">Aucune partie terminée pour l'instant. Termine une partie de 5 manches pour l'ajouter ici.</div>`;
+    return;
+  }
+  let rowsHtml = "";
+  history.forEach((session, idx) => {
+    rowsHtml += `
+      <tr class="sessionRow" data-session="${idx}">
+        <td>${session.date}</td>
+        <td><b>${session.total}</b></td>
+        <td style="color:var(--steel);font-size:.75em;">▾ voir le détail</td>
+      </tr>
+      <tr class="roundDetailRows" id="detailRows-${idx}" style="display:none;">
+        <td colspan="3" style="padding:0;">
+          <table style="width:100%;border-collapse:collapse;">
+            ${session.rounds.map((r,i) => `
+              <tr class="roundDetailRow">
+                <td style="width:18%;">Manche ${i+1}</td>
+                <td>${r.flag} ${r.name}</td>
+                <td style="width:30%;text-align:right;">${r.tries ? `${r.tries} essai(s) — ` : "non trouvé — "}${r.score} pts</td>
+              </tr>`).join("")}
+          </table>
+        </td>
+      </tr>`;
+  });
+  wrap.innerHTML = `
+    <table id="scoreTable">
+      <thead><tr><th>Date</th><th>Score total</th><th></th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+  `;
+
+  wrap.querySelectorAll(".sessionRow").forEach(row => {
+    row.addEventListener("click", () => {
+      const idx = row.dataset.session;
+      const detail = document.getElementById(`detailRows-${idx}`);
+      const isOpen = detail.style.display !== "none";
+      detail.style.display = isOpen ? "none" : "table-row";
+      row.querySelector("td:last-child").textContent = isOpen ? "▾ voir le détail" : "▴ masquer";
+    });
+  });
+}
+
+startSession();
+loadHistory();
+</script>
+</body>
+</html>
