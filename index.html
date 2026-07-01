@@ -286,11 +286,41 @@ button.modeBtn{
 }
 button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-color:var(--rust);}
 .dailyBar{
-  display:flex;justify-content:center;gap:20px;
+  display:flex;justify-content:center;gap:20px;flex-wrap:wrap;
   font-size:.75em;letter-spacing:1px;color:var(--sand);
   margin-bottom:16px;text-transform:uppercase;
 }
 .dailyBar b{color:var(--sand-light);}
+#dailyDoneMark{color:var(--ok);font-weight:900;margin-left:4px;}
+button#dailyReturnBtn{
+  display:none;margin:0 auto 14px;
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);padding:7px 14px;font-family:inherit;
+  letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
+}
+button#dailyReturnBtn:hover{background:var(--olive);}
+.dailyHistoryBox{
+  margin:0 0 20px;padding:14px 16px;
+  border:1px solid var(--border-color);background:rgba(75,83,32,0.08);
+}
+.dailyHistoryBox h4{
+  font-size:.72em;letter-spacing:2px;color:var(--steel);text-transform:uppercase;
+  margin:0 0 10px;text-align:center;
+}
+.dailyHistRow{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 4px;border-bottom:1px solid var(--olive-dark);font-size:.8em;
+}
+.dailyHistRow:last-child{border-bottom:none;}
+.dailyHistRow .dhDate{color:var(--sand);width:80px;}
+.dailyHistRow .dhStat{color:var(--sand-light);flex:1;text-align:center;}
+.dailyHistRow button{
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);padding:4px 10px;
+  font-family:inherit;font-size:.72em;cursor:pointer;text-transform:uppercase;
+}
+.dailyHistRow button:hover{background:var(--olive);}
+.dailyHistEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:8px;}
 .dailyResult{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -364,14 +394,24 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </header>
 
   <div class="mode-bar">
-    <button class="modeBtn" data-mode="daily">Défi du jour</button>
+    <button class="modeBtn" data-mode="daily">Défi du jour <span id="dailyDoneMark" style="display:none;">✓</span></button>
     <button class="modeBtn active" data-mode="standard">Mode Standard</button>
   </div>
 
   <div class="dailyBar" id="dailyBar" style="display:none;">
     <span>Défi du <b id="dailyDateLabel">--/--</b></span>
-    <span>⏱ <b id="dailyTimer">00:00</b></span>
-    <span>Tentatives : <b id="dailyTriesLabel">0</b></span>
+    <span id="dailyStreakWrap">🔥 Série : <b id="dailyStreakLabel">0</b></span>
+    <span id="dailyLiveStats">⏱ <b id="dailyTimer">00:00</b> · Tentatives : <b id="dailyTriesLabel">0</b></span>
+    <span id="dailyCountdownWrap" style="display:none;">Prochain défi dans <b id="dailyCountdownLabel">--</b></span>
+    <span id="dailyReplayLabel" style="display:none;color:var(--warn);font-weight:700;">MODE ENTRAÎNEMENT</span>
+  </div>
+  <div style="text-align:center;">
+    <button id="dailyReturnBtn" style="display:none;">↩ Revenir au défi du jour</button>
+  </div>
+
+  <div class="dailyHistoryBox" id="dailyHistoryBox" style="display:none;">
+    <h4>Historique (30 derniers jours)</h4>
+    <div id="dailyHistoryList"></div>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -968,17 +1008,20 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   const canvas = document.createElement("canvas");
   const rows = roundResults;
   const W = 520, PAD = 24, ROWH = 36, HEADERH = 100;
-  canvas.width = W;
-  canvas.height = HEADERH + rows.length * ROWH + 60;
+  const H = HEADERH + rows.length * ROWH + 60;
+  const SCALE = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+  canvas.width = W * SCALE;
+  canvas.height = H * SCALE;
   const ctx = canvas.getContext("2d");
+  ctx.scale(SCALE, SCALE);
 
   // Fond
   ctx.fillStyle = cssVar("--ink");
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, W, H);
   // Bordure
   ctx.strokeStyle = cssVar("--rust");
   ctx.lineWidth = 2;
-  ctx.strokeRect(2, 2, canvas.width-4, canvas.height-4);
+  ctx.strokeRect(2, 2, W-4, H-4);
 
   // Titre
   ctx.fillStyle = cssVar("--sand");
@@ -998,7 +1041,7 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   rows.forEach((r, i) => {
     const y = HEADERH + i * ROWH + 24;
     const stars = r.tries === 1 ? " ★★" : r.tries === 2 ? " ★" : "";
-    const col = r.tries === 1 ? "#a8462c" : (r.tries === 2 ? "#5c7a3a" : "#7c8471");
+    const col = r.tries === 1 ? cssVar("--rust") : (r.tries === 2 ? cssVar("--ok") : cssVar("--steel"));
     ctx.fillStyle = col;
     ctx.font = "bold 13px 'Courier New', monospace";
     ctx.textAlign = "left";
@@ -1015,7 +1058,7 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   ctx.textAlign = "center";
   ctx.fillStyle = cssVar("--olive");
   ctx.font = "10px 'Courier New', monospace";
-  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, canvas.height - 12);
+  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, H - 12);
 
   // Téléchargement
   const a = document.createElement("a");
@@ -1174,12 +1217,16 @@ let dailyGuesses = [];
 let dailyElapsedMs = 0;
 let dailyFinished = false;
 let dailyTimerHandle = null;
+let dailyCountdownHandle = null;
 let dailyDateStr = "";
+let dailyIsReplay = false;
 
-function todayDateStr(){
-  const d = new Date();
+const DAILY_HISTORY_KEY = "tankle_daily_history_v1";
+
+function formatDateStr(d){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 }
+function todayDateStr(){ return formatDateStr(new Date()); }
 
 function hashStr(s){
   let h = 0;
@@ -1199,28 +1246,119 @@ function formatTime(ms){
   return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
 }
 
-function dailyStorageKey(){ return "tankle_daily_" + dailyDateStr; }
+function dailyStorageKey(dateStr){ return "tankle_daily_" + dateStr; }
 
 function saveDailyState(){
+  if(dailyIsReplay) return; // le mode entraînement ne persiste pas
   const state = {
     guessNames: dailyGuesses.map(g => g.name),
     elapsedMs: dailyElapsedMs,
     finished: dailyFinished,
   };
-  try{ localStorage.setItem(dailyStorageKey(), JSON.stringify(state)); } catch(e){}
+  try{ localStorage.setItem(dailyStorageKey(dailyDateStr), JSON.stringify(state)); } catch(e){}
 }
 
-function loadDailyState(){
+function loadDailyState(dateStr){
   try{
-    const raw = localStorage.getItem(dailyStorageKey());
+    const raw = localStorage.getItem(dailyStorageKey(dateStr));
     return raw ? JSON.parse(raw) : null;
   } catch(e){ return null; }
+}
+
+// ---- Historique / série / décompte ----
+function loadDailyHistory(){
+  try{
+    const raw = localStorage.getItem(DAILY_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e){ return []; }
+}
+function saveDailyHistoryList(list){
+  try{ localStorage.setItem(DAILY_HISTORY_KEY, JSON.stringify(list)); } catch(e){}
+}
+function recordDailyCompletion(dateStr, tries, elapsedMs){
+  const hist = loadDailyHistory();
+  const idx = hist.findIndex(h => h.date === dateStr);
+  const entry = { date: dateStr, tries, elapsedMs };
+  if(idx >= 0) hist[idx] = entry; else hist.push(entry);
+  hist.sort((a,b) => a.date < b.date ? 1 : -1); // du plus récent au plus ancien
+  saveDailyHistoryList(hist);
+  return hist;
+}
+function computeStreak(hist){
+  const set = new Set(hist.map(h => h.date));
+  let streak = 0;
+  let cursor = new Date();
+  let cursorStr = formatDateStr(cursor);
+  if(!set.has(cursorStr)){
+    cursor.setDate(cursor.getDate() - 1);
+    cursorStr = formatDateStr(cursor);
+  }
+  while(set.has(cursorStr)){
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+    cursorStr = formatDateStr(cursor);
+  }
+  return streak;
+}
+function msUntilNextMidnight(){
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 0, 0, 0, 0);
+  return next - now;
+}
+function formatCountdown(ms){
+  const totalSec = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(totalSec/3600);
+  const m = Math.floor((totalSec%3600)/60);
+  const s = totalSec%60;
+  return `${String(h).padStart(2,"0")}h${String(m).padStart(2,"0")}m${String(s).padStart(2,"0")}s`;
+}
+
+function refreshDailyDoneMark(){
+  const hist = loadDailyHistory();
+  const doneToday = hist.some(h => h.date === todayDateStr());
+  document.getElementById("dailyDoneMark").style.display = doneToday ? "inline" : "none";
+}
+
+function startDailyCountdown(){
+  if(dailyCountdownHandle){ clearInterval(dailyCountdownHandle); dailyCountdownHandle = null; }
+  const tick = () => {
+    document.getElementById("dailyCountdownLabel").textContent = formatCountdown(msUntilNextMidnight());
+  };
+  tick();
+  dailyCountdownHandle = setInterval(tick, 1000);
+}
+function stopDailyCountdown(){
+  if(dailyCountdownHandle){ clearInterval(dailyCountdownHandle); dailyCountdownHandle = null; }
+}
+
+function renderDailyHistory(){
+  const hist = loadDailyHistory().slice(0, 30);
+  const wrap = document.getElementById("dailyHistoryList");
+  if(!hist.length){
+    wrap.innerHTML = `<div class="dailyHistEmpty">Aucun défi terminé pour l'instant.</div>`;
+    return;
+  }
+  wrap.innerHTML = hist.map(h => {
+    const d = new Date(h.date + "T00:00:00");
+    const label = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
+    return `
+      <div class="dailyHistRow">
+        <span class="dhDate">${label}</span>
+        <span class="dhStat">${formatTime(h.elapsedMs)} — ${h.tries} essai(s)</span>
+        <button data-replay-date="${h.date}">Rejouer</button>
+      </div>`;
+  }).join("");
+  wrap.querySelectorAll("button[data-replay-date]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      startDailyMode(btn.dataset.replayDate, true);
+    });
+  });
 }
 
 function setUIModeVisibility(mode){
   const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries"];
   const standardOnlyClass = document.querySelector(".session-bar");
-  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn"];
+  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyReturnBtn"];
   if(mode === "standard"){
     if(standardOnlyClass) standardOnlyClass.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
@@ -1229,30 +1367,46 @@ function setUIModeVisibility(mode){
     document.getElementById("hintBox3").style.display = "none";
     document.getElementById("nextRound").style.display = "none";
     document.getElementById("message").style.display = "";
+    stopDailyCountdown();
   } else {
     if(standardOnlyClass) standardOnlyClass.style.display = "none";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = "none"; });
-    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; }); // dailyResult affiché seulement si fini
+    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; }); // réaffichés sélectivement ensuite
     document.getElementById("dailyBar").style.display = "flex";
+    document.getElementById("dailyHistoryBox").style.display = "block";
     document.getElementById("message").style.display = "none";
     document.getElementById("message").innerHTML = "";
   }
 }
 
-function startDailyMode(){
+function startDailyMode(dateStrOverride, isReplay){
+  isReplay = !!isReplay;
   if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
-  dailyDateStr = todayDateStr();
+  stopDailyCountdown();
+
+  dailyIsReplay = isReplay;
+  dailyDateStr = dateStrOverride || todayDateStr();
+  const isToday = dailyDateStr === todayDateStr();
   dailySecret = pickDailyTank(dailyDateStr);
   secret = dailySecret; // réutilise le rendu générique (renderGuess, filterPoolByConstraints...)
 
-  const d = new Date();
+  const d = new Date(dailyDateStr + "T00:00:00");
   document.getElementById("dailyDateLabel").textContent = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
 
-  const saved = loadDailyState();
   document.getElementById("boardBody").innerHTML = "";
   document.getElementById("dailyResult").style.display = "none";
   document.getElementById("dailyResult").innerHTML = "";
   document.getElementById("dailyScreenshotBtn").style.display = "none";
+  document.getElementById("dailyReturnBtn").style.display = isReplay ? "block" : "none";
+  document.getElementById("dailyReplayLabel").style.display = isReplay ? "inline" : "none";
+  document.getElementById("dailyStreakWrap").style.display = isReplay ? "none" : "inline";
+  if(!isReplay){
+    document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
+  }
+  document.getElementById("dailyHistoryBox").style.display = "block";
+  renderDailyHistory();
+
+  const saved = isReplay ? null : loadDailyState(dailyDateStr); // le replay repart toujours de zéro
 
   if(saved){
     dailyGuesses = (saved.guessNames || []).map(n => TANKS.find(t => t.name === n)).filter(Boolean);
@@ -1277,6 +1431,8 @@ function startDailyMode(){
   if(dailyFinished){
     showDailyResult();
   } else {
+    document.getElementById("dailyLiveStats").style.display = "inline";
+    document.getElementById("dailyCountdownWrap").style.display = "none";
     dailyTimerHandle = setInterval(() => {
       dailyElapsedMs += 1000;
       updateDailyTimerDisplay();
@@ -1284,6 +1440,8 @@ function startDailyMode(){
     }, 1000);
     document.getElementById("guessInput").focus();
   }
+
+  refreshDailyDoneMark();
 }
 
 function updateDailyTries(){
@@ -1308,6 +1466,10 @@ function submitDailyGuess(tank){
     if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
     document.getElementById("guessInput").disabled = true;
     saveDailyState();
+    if(!dailyIsReplay){
+      recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs);
+      refreshDailyDoneMark();
+    }
     showDailyResult();
   } else {
     saveDailyState();
@@ -1336,8 +1498,9 @@ function showDailyResult(){
       <td>${squares}</td>
     </tr>`;
   }).join("");
+  const title = dailyIsReplay ? "ENTRAÎNEMENT RÉUSSI" : "DÉFI DU JOUR RÉUSSI";
   box.innerHTML = `
-    <b>DÉFI DU JOUR RÉUSSI</b>
+    <b>${title}</b>
     <div class="scoreTotal">${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)</div>
     <table>
       <thead><tr><th>Essai</th><th>Résultat</th></tr></thead>
@@ -1346,21 +1509,38 @@ function showDailyResult(){
   `;
   box.style.display = "block";
   document.getElementById("dailyScreenshotBtn").style.display = "block";
+
+  document.getElementById("dailyLiveStats").style.display = "none";
+  if(dailyIsReplay){
+    document.getElementById("dailyCountdownWrap").style.display = "none";
+  } else {
+    document.getElementById("dailyCountdownWrap").style.display = "inline";
+    startDailyCountdown();
+    document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
+  }
+  renderDailyHistory();
 }
+
+document.getElementById("dailyReturnBtn").addEventListener("click", () => {
+  startDailyMode(); // revient au défi du jour réel (aujourd'hui, hors entraînement)
+});
 
 document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
   const canvas = document.createElement("canvas");
   const rows = dailyGuesses;
   const W = 460, PAD = 24, ROWH = 30, HEADERH = 100;
-  canvas.width = W;
-  canvas.height = HEADERH + rows.length * ROWH + 50;
+  const H = HEADERH + rows.length * ROWH + 50;
+  const SCALE = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+  canvas.width = W * SCALE;
+  canvas.height = H * SCALE;
   const ctx = canvas.getContext("2d");
+  ctx.scale(SCALE, SCALE);
 
   ctx.fillStyle = cssVar("--ink");
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, W, H);
   ctx.strokeStyle = cssVar("--rust");
   ctx.lineWidth = 2;
-  ctx.strokeRect(2, 2, canvas.width-4, canvas.height-4);
+  ctx.strokeRect(2, 2, W-4, H-4);
 
   ctx.fillStyle = cssVar("--sand");
   ctx.font = "bold 26px 'Courier New', monospace";
@@ -1391,7 +1571,7 @@ document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
   ctx.textAlign = "center";
   ctx.fillStyle = cssVar("--olive");
   ctx.font = "10px 'Courier New', monospace";
-  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, canvas.height - 10);
+  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, H - 10);
 
   const a = document.createElement("a");
   a.download = `tankle_defi_du_jour_${Date.now()}.png`;
@@ -1442,14 +1622,43 @@ document.getElementById("colorblindIcon").addEventListener("click", () => {
 });
 applyColorblindPref();
 
-document.getElementById("rulesIcon").addEventListener("click", () => {
+let rulesLastFocused = null;
+function openRulesPanel(){
+  rulesLastFocused = document.activeElement;
   document.getElementById("rulesOverlay").classList.add("open");
-});
-document.getElementById("rulesClose").addEventListener("click", () => {
+  document.getElementById("rulesClose").focus();
+}
+function closeRulesPanel(){
   document.getElementById("rulesOverlay").classList.remove("open");
-});
+  if(rulesLastFocused && typeof rulesLastFocused.focus === "function"){
+    rulesLastFocused.focus();
+  }
+}
+document.getElementById("rulesIcon").addEventListener("click", openRulesPanel);
+document.getElementById("rulesClose").addEventListener("click", closeRulesPanel);
 document.getElementById("rulesOverlay").addEventListener("click", (e) => {
-  if(e.target.id === "rulesOverlay") document.getElementById("rulesOverlay").classList.remove("open");
+  if(e.target.id === "rulesOverlay") closeRulesPanel();
+});
+document.getElementById("rulesOverlay").addEventListener("keydown", (e) => {
+  if(!document.getElementById("rulesOverlay").classList.contains("open")) return;
+  if(e.key === "Escape"){
+    closeRulesPanel();
+    return;
+  }
+  if(e.key === "Tab"){
+    const panel = document.querySelector(".rulesPanel");
+    const focusables = panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if(focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if(e.shiftKey && document.activeElement === first){
+      e.preventDefault();
+      last.focus();
+    } else if(!e.shiftKey && document.activeElement === last){
+      e.preventDefault();
+      first.focus();
+    }
+  }
 });
 
 // ---- Initialisation : charge le dataset externe puis démarre le jeu ----
@@ -1464,6 +1673,7 @@ async function init(){
     return;
   }
   loadHistory();
+  refreshDailyDoneMark();
   if(!restoreRoundProgress()){
     startSession();
   }
