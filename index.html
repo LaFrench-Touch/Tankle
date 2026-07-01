@@ -410,8 +410,8 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </div>
 
   <div class="dailyHistoryBox" id="dailyHistoryBox" style="display:none;">
-    <h4>Historique (30 derniers jours)</h4>
-    <div id="dailyHistoryList"></div>
+    <h4 id="dailyHistoryToggle" style="cursor:pointer;">Historique (30 derniers jours) <span id="dailyHistoryChevron">▾</span></h4>
+    <div id="dailyHistoryList" style="display:none;"></div>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -1345,15 +1345,17 @@ function renderDailyHistory(){
       <div class="dailyHistRow">
         <span class="dhDate">${label}</span>
         <span class="dhStat">${formatTime(h.elapsedMs)} — ${h.tries} essai(s)</span>
-        <button data-replay-date="${h.date}">Rejouer</button>
       </div>`;
   }).join("");
-  wrap.querySelectorAll("button[data-replay-date]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      startDailyMode(btn.dataset.replayDate, true);
-    });
-  });
 }
+
+document.getElementById("dailyHistoryToggle").addEventListener("click", () => {
+  const list = document.getElementById("dailyHistoryList");
+  const chevron = document.getElementById("dailyHistoryChevron");
+  const isOpen = list.style.display !== "none";
+  list.style.display = isOpen ? "none" : "block";
+  chevron.textContent = isOpen ? "▾" : "▴";
+});
 
 function setUIModeVisibility(mode){
   const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries"];
