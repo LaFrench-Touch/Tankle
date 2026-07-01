@@ -20,19 +20,19 @@
   --border-color:var(--olive);
 }
 html.colorblind{
-  --olive:#2878FF;
-  --olive-dark:#1c4faa;
-  --olive-hover:#4795FF;
-  --sand:#AEB7C3;
-  --sand-light:#F5F5F5;
-  --rust:#FFD166;
-  --rust-hover:#e6bb52;
-  --ink:#10131A;
-  --steel:#AEB7C3;
-  --ok:#58D68D;
-  --warn:#FFD166;
-  --bad:#FF6B6B;
-  --border-color:#3D475A;
+  --olive:#3d5a80;
+  --olive-dark:#28394f;
+  --olive-hover:#4d6f99;
+  --sand:#9aa3ab;
+  --sand-light:#e8e4da;
+  --rust:#c98a3b;
+  --rust-hover:#ad7530;
+  --ink:#14161c;
+  --steel:#7d8791;
+  --ok:#4a90a4;
+  --warn:#c98a3b;
+  --bad:#3a3f47;
+  --border-color:#3d475a;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:var(--ink);
@@ -296,16 +296,22 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
 }
 .dailyResult b{display:block;letter-spacing:3px;font-size:1.2em;margin-bottom:10px;}
-.dailyResult .dailyStat{font-size:1.4em;color:var(--sand-light);margin:6px 0 14px;}
-.dailyGrid{font-size:1.3em;line-height:1.5;margin:12px 0;letter-spacing:2px;}
-button#shareResultBtn{
-  display:block;margin:14px auto 0;
+.dailyResult .scoreTotal{font-size:1.6em;color:var(--sand-light);margin:6px 0 12px;}
+.dailyResult table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.78em;}
+.dailyResult td,.dailyResult th{padding:5px 4px;border-bottom:1px solid var(--olive);text-align:center;}
+.resultSquare{
+  display:inline-block;width:14px;height:14px;margin:0 2px;vertical-align:middle;
+}
+.resultSquare.ok{background:var(--ok);}
+.resultSquare.warn{background:var(--warn);}
+.resultSquare.bad{background:var(--bad);}
+button#dailyScreenshotBtn{
+  display:none;margin:14px auto 0;
   background:var(--olive);color:var(--sand-light);
   border:none;padding:10px 22px;font-family:inherit;
   letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
 }
-button#shareResultBtn:hover{background:var(--olive-hover);}
-.shareConfirm{font-size:.75em;color:var(--ok);margin-top:8px;display:none;}
+button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
 .rulesIcon{
   position:absolute;top:16px;right:16px;
   width:34px;height:34px;border:2px solid var(--sand);border-radius:50%;
@@ -358,8 +364,8 @@ button#shareResultBtn:hover{background:var(--olive-hover);}
   </header>
 
   <div class="mode-bar">
-    <button class="modeBtn active" data-mode="standard">Mode Standard</button>
     <button class="modeBtn" data-mode="daily">Défi du jour</button>
+    <button class="modeBtn active" data-mode="standard">Mode Standard</button>
   </div>
 
   <div class="dailyBar" id="dailyBar" style="display:none;">
@@ -440,6 +446,7 @@ button#shareResultBtn:hover{background:var(--olive-hover);}
   <button id="screenshotBtn">📷 Enregistrer le score</button>
 
   <div class="dailyResult" id="dailyResult"></div>
+  <button id="dailyScreenshotBtn">📷 Enregistrer mon résultat</button>
 
   <div class="legend">
     <span><span class="swatch" style="background:var(--ok);"></span> Correct</span>
@@ -945,6 +952,11 @@ document.getElementById("nextRound").addEventListener("click", goToNextRound);
 document.getElementById("newGame").addEventListener("click", startSession);
 
 // ---- Screenshot du score ----
+// Lit la valeur actuelle d'une variable CSS (respecte le mode daltonien pour les captures d'écran)
+function cssVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 document.getElementById("screenshotBtn").addEventListener("click", async () => {
   const box = document.getElementById("sessionSummary");
   if(!box || box.style.display === "none") return;
@@ -958,25 +970,25 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   const ctx = canvas.getContext("2d");
 
   // Fond
-  ctx.fillStyle = "#1c1d16";
+  ctx.fillStyle = cssVar("--ink");
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   // Bordure
-  ctx.strokeStyle = "#a8462c";
+  ctx.strokeStyle = cssVar("--rust");
   ctx.lineWidth = 2;
   ctx.strokeRect(2, 2, canvas.width-4, canvas.height-4);
 
   // Titre
-  ctx.fillStyle = "#cdb98a";
+  ctx.fillStyle = cssVar("--sand");
   ctx.font = "bold 28px 'Courier New', monospace";
   ctx.textAlign = "center";
   ctx.fillText("TANKLE", W/2, 38);
   ctx.font = "11px 'Courier New', monospace";
-  ctx.fillStyle = "#7c8471";
+  ctx.fillStyle = cssVar("--steel");
   ctx.fillText("BY LA FRENCH TOUCH", W/2, 54);
 
   // Score total
   ctx.font = "bold 22px 'Courier New', monospace";
-  ctx.fillStyle = "#e9dfc6";
+  ctx.fillStyle = cssVar("--sand-light");
   ctx.fillText(`${sessionScore} PTS`, W/2, 84);
 
   // Lignes
@@ -988,17 +1000,17 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
     ctx.font = "bold 13px 'Courier New', monospace";
     ctx.textAlign = "left";
     ctx.fillText(`Manche ${i+1}${stars}`, PAD, y);
-    ctx.fillStyle = "#cdb98a";
+    ctx.fillStyle = cssVar("--sand");
     ctx.font = "13px 'Courier New', monospace";
     ctx.fillText(`${r.name}`, PAD + 110, y);
-    ctx.fillStyle = "#e9dfc6";
+    ctx.fillStyle = cssVar("--sand-light");
     ctx.textAlign = "right";
     ctx.fillText(r.win ? `${r.tries} essai(s) — ${r.score} pts` : `non trouvé — 0 pt`, W - PAD, y);
   });
 
   // Date
   ctx.textAlign = "center";
-  ctx.fillStyle = "#4b5320";
+  ctx.fillStyle = cssVar("--olive");
   ctx.font = "10px 'Courier New', monospace";
   ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, canvas.height - 12);
 
@@ -1205,7 +1217,7 @@ function loadDailyState(){
 function setUIModeVisibility(mode){
   const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries"];
   const standardOnlyClass = document.querySelector(".session-bar");
-  const dailyOnly = ["dailyBar","dailyResult"];
+  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn"];
   if(mode === "standard"){
     if(standardOnlyClass) standardOnlyClass.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
@@ -1237,6 +1249,7 @@ function startDailyMode(){
   document.getElementById("boardBody").innerHTML = "";
   document.getElementById("dailyResult").style.display = "none";
   document.getElementById("dailyResult").innerHTML = "";
+  document.getElementById("dailyScreenshotBtn").style.display = "none";
 
   if(saved){
     dailyGuesses = (saved.guessNames || []).map(n => TANKS.find(t => t.name === n)).filter(Boolean);
@@ -1298,55 +1311,90 @@ function submitDailyGuess(tank){
   }
 }
 
-function buildShareGrid(){
-  return dailyGuesses.map(g => {
-    const cells = [
-      g.nation === dailySecret.nation ? "🟩" : "⬜",
-      g.type === dailySecret.type ? "🟩" : "⬜",
-      g.tier === dailySecret.tier ? "🟩" : "⬜",
-      g.dmg === dailySecret.dmg ? "🟩" : (Math.abs(g.dmg-dailySecret.dmg) <= 50 ? "🟨" : "⬜"),
-      g.premium === dailySecret.premium ? "🟩" : "⬜",
-    ];
-    return cells.join("");
-  }).join("\n");
+function guessResultCells(g){
+  // Retourne les classes de couleur (comme les cases du plateau) pour une tentative, sans emoji
+  return [
+    g.nation === dailySecret.nation ? "ok" : "bad",
+    g.type === dailySecret.type ? "ok" : "bad",
+    g.tier === dailySecret.tier ? "ok" : "bad",
+    g.dmg === dailySecret.dmg ? "ok" : (Math.abs(g.dmg-dailySecret.dmg) <= 50 ? "warn" : "bad"),
+    g.premium === dailySecret.premium ? "ok" : "bad",
+  ];
 }
 
 function showDailyResult(){
   const box = document.getElementById("dailyResult");
-  const grid = buildShareGrid();
+  const rows = dailyGuesses.map((g, i) => {
+    const cells = guessResultCells(g);
+    const squares = cells.map(c => `<span class="resultSquare ${c}"></span>`).join("");
+    return `
+    <tr>
+      <td>Tentative ${i+1}</td>
+      <td>${squares}</td>
+    </tr>`;
+  }).join("");
   box.innerHTML = `
     <b>DÉFI DU JOUR RÉUSSI</b>
-    <div class="dailyStat">${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)</div>
-    <div class="dailyGrid">${grid.replace(/\n/g,"<br>")}</div>
-    <button id="shareResultBtn">📋 Partager mon résultat</button>
-    <div class="shareConfirm" id="shareConfirm">Copié dans le presse-papiers !</div>
+    <div class="scoreTotal">${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)</div>
+    <table>
+      <thead><tr><th>Essai</th><th>Résultat</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
   `;
   box.style.display = "block";
-  document.getElementById("shareResultBtn").addEventListener("click", shareDailyResult);
+  document.getElementById("dailyScreenshotBtn").style.display = "block";
 }
 
-async function shareDailyResult(){
-  const d = new Date();
-  const dateLabel = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
-  const text = `TANKLE — Défi du ${dateLabel}\n⏱ ${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)\n${buildShareGrid()}`;
-  try{
-    if(navigator.share){
-      await navigator.share({text});
-    } else {
-      await navigator.clipboard.writeText(text);
-      const c = document.getElementById("shareConfirm");
-      c.style.display = "block";
-      setTimeout(() => { c.style.display = "none"; }, 2500);
-    }
-  } catch(e){
-    try{
-      await navigator.clipboard.writeText(text);
-      const c = document.getElementById("shareConfirm");
-      c.style.display = "block";
-      setTimeout(() => { c.style.display = "none"; }, 2500);
-    } catch(e2){}
-  }
-}
+document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
+  const canvas = document.createElement("canvas");
+  const rows = dailyGuesses;
+  const W = 460, PAD = 24, ROWH = 30, HEADERH = 100;
+  canvas.width = W;
+  canvas.height = HEADERH + rows.length * ROWH + 50;
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = cssVar("--ink");
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = cssVar("--rust");
+  ctx.lineWidth = 2;
+  ctx.strokeRect(2, 2, canvas.width-4, canvas.height-4);
+
+  ctx.fillStyle = cssVar("--sand");
+  ctx.font = "bold 26px 'Courier New', monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("TANKLE", W/2, 36);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--steel");
+  ctx.fillText("DÉFI DU JOUR", W/2, 52);
+
+  ctx.font = "bold 18px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--sand-light");
+  ctx.fillText(`${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)`, W/2, 80);
+
+  const colColors = { ok: cssVar("--ok"), warn: cssVar("--warn"), bad: cssVar("--bad") };
+  const sq = 14, gap = 4;
+  rows.forEach((g, i) => {
+    const y = HEADERH + i * ROWH;
+    const cells = guessResultCells(g);
+    const totalW = cells.length * sq + (cells.length-1) * gap;
+    let x = W/2 - totalW/2;
+    cells.forEach(c => {
+      ctx.fillStyle = colColors[c];
+      ctx.fillRect(x, y, sq, sq);
+      x += sq + gap;
+    });
+  });
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = cssVar("--olive");
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, canvas.height - 10);
+
+  const a = document.createElement("a");
+  a.download = `tankle_defi_du_jour_${Date.now()}.png`;
+  a.href = canvas.toDataURL("image/png");
+  a.click();
+});
 
 // ---- Sélecteur de mode ----
 let currentMode = "standard";
