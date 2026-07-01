@@ -758,6 +758,9 @@ function restoreRoundProgress(){
   guesses.forEach(g => renderGuess(g));
   updateTries();
   updateHintBoxes();
+  if(guesses.length === 0 && !finished){
+    renderQuickPick(); // régénère les 3 boutons "Panne d'inspiration ?" (perdus au rechargement)
+  }
   if(st.hintResult1) document.getElementById("hintResult1").textContent = st.hintResult1;
   if(hintUsed1) document.querySelectorAll(".hintBox button[data-box='1']").forEach(b => b.disabled = true);
   if(st.iconShown && secret.image){
