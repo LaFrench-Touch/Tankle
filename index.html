@@ -7,14 +7,32 @@
 :root{
   --olive:#4b5320;
   --olive-dark:#33391a;
+  --olive-hover:#5d6829;
   --sand:#cdb98a;
   --sand-light:#e9dfc6;
   --rust:#a8462c;
+  --rust-hover:#8e3a24;
   --ink:#1c1d16;
   --steel:#7c8471;
   --ok:#5c7a3a;
   --warn:#b8862e;
   --bad:#3a3a36;
+  --border-color:var(--olive);
+}
+html.colorblind{
+  --olive:#2878FF;
+  --olive-dark:#1c4faa;
+  --olive-hover:#4795FF;
+  --sand:#AEB7C3;
+  --sand-light:#F5F5F5;
+  --rust:#FFD166;
+  --rust-hover:#e6bb52;
+  --ink:#10131A;
+  --steel:#AEB7C3;
+  --ok:#58D68D;
+  --warn:#FFD166;
+  --bad:#FF6B6B;
+  --border-color:#3D475A;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:var(--ink);
@@ -30,7 +48,7 @@ html,body{margin:0;padding:0;background:var(--ink);
 header{text-align:center;margin-bottom:18px;}
 .crest{
   display:inline-block;
-  border:3px solid var(--sand);
+  border:3px solid var(--border-color);
   padding:10px 26px;
   position:relative;
 }
@@ -76,6 +94,7 @@ input#guessInput:focus{border-color:var(--rust);}
 }
 .suggest div{padding:8px 14px;cursor:pointer;font-size:.9em;}
 .suggest div:hover{background:var(--olive);}
+.suggest div.suggestActive{background:var(--olive);}
 .tries{text-align:center;color:var(--steel);font-size:.8em;letter-spacing:2px;margin-bottom:14px;}
 table#board{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;}
 thead th{
@@ -121,7 +140,7 @@ button#newGame{
   letter-spacing:2px;font-size:.8em;cursor:pointer;
   text-transform:uppercase;
 }
-button#newGame:hover{background:#8e3a24;}
+button#newGame:hover{background:var(--rust-hover);}
 .session-bar{
   display:flex;justify-content:center;gap:24px;
   font-size:.72em;letter-spacing:1px;color:var(--sand);
@@ -142,7 +161,7 @@ button#nextRound{
   letter-spacing:2px;font-size:.8em;cursor:pointer;
   text-transform:uppercase;
 }
-button#nextRound:hover{background:#5d6829;}
+button#nextRound:hover{background:var(--olive-hover);}
 #sessionSummary{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -170,9 +189,17 @@ select.tankSelect{
   border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px;
 }
 .scoreEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:14px;}
+.pager{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:12px;font-size:.75em;color:var(--sand);}
+.pager button{
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);padding:6px 12px;
+  font-family:inherit;font-size:.9em;cursor:pointer;text-transform:uppercase;letter-spacing:1px;
+}
+.pager button:hover:not(:disabled){background:var(--olive);}
+.pager button:disabled{opacity:.35;cursor:default;}
 .hintBox{
   display:none;text-align:center;margin:0 0 16px;padding:10px;
-  border:1px dashed var(--steel);
+  border:1px dashed var(--border-color);
 }
 .hintBox .hintLabel{font-size:.7em;letter-spacing:1px;color:var(--steel);text-transform:uppercase;margin-bottom:8px;}
 .hintBox button{
@@ -221,10 +248,10 @@ button#screenshotBtn{
   border:none;padding:10px 22px;font-family:inherit;
   letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
 }
-button#screenshotBtn:hover{background:#5d6829;}
+button#screenshotBtn:hover{background:var(--olive-hover);}
 .statsBox{
   margin-top:28px;padding:16px;
-  border:1px solid var(--olive);background:rgba(75,83,32,0.1);
+  border:1px solid var(--border-color);background:rgba(75,83,32,0.1);
 }
 .statsBox h3{
   text-align:center;font-size:.85em;letter-spacing:3px;color:var(--sand);
@@ -232,7 +259,7 @@ button#screenshotBtn:hover{background:#5d6829;}
 }
 .statsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
 .statCard{
-  background:var(--olive-dark);border:1px solid var(--olive);
+  background:var(--olive-dark);border:1px solid var(--border-color);
   padding:10px;text-align:center;
 }
 .statCard .sv{font-size:1.4em;font-weight:900;color:var(--sand-light);}
@@ -258,6 +285,27 @@ button.modeBtn{
   text-transform:uppercase;
 }
 button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-color:var(--rust);}
+.dailyBar{
+  display:flex;justify-content:center;gap:20px;
+  font-size:.75em;letter-spacing:1px;color:var(--sand);
+  margin-bottom:16px;text-transform:uppercase;
+}
+.dailyBar b{color:var(--sand-light);}
+.dailyResult{
+  display:none;text-align:center;margin-top:18px;padding:18px;
+  border:2px solid var(--rust);background:rgba(168,70,44,0.12);
+}
+.dailyResult b{display:block;letter-spacing:3px;font-size:1.2em;margin-bottom:10px;}
+.dailyResult .dailyStat{font-size:1.4em;color:var(--sand-light);margin:6px 0 14px;}
+.dailyGrid{font-size:1.3em;line-height:1.5;margin:12px 0;letter-spacing:2px;}
+button#shareResultBtn{
+  display:block;margin:14px auto 0;
+  background:var(--olive);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
+}
+button#shareResultBtn:hover{background:var(--olive-hover);}
+.shareConfirm{font-size:.75em;color:var(--ok);margin-top:8px;display:none;}
 .rulesIcon{
   position:absolute;top:16px;right:16px;
   width:34px;height:34px;border:2px solid var(--sand);border-radius:50%;
@@ -266,13 +314,22 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
   background:var(--olive-dark);font-size:.9em;
 }
 .rulesIcon:hover{background:var(--olive);}
+.colorblindIcon{
+  position:absolute;top:16px;left:16px;
+  width:34px;height:34px;border:2px solid var(--sand);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:inherit;font-weight:900;color:var(--sand);cursor:pointer;
+  background:var(--olive-dark);font-size:1.1em;
+}
+.colorblindIcon:hover{background:var(--olive);}
+.colorblindIcon.active{background:var(--rust);color:var(--ink);border-color:var(--rust);}
 .rulesOverlay{
   display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);
   z-index:100;align-items:center;justify-content:center;padding:20px;
 }
 .rulesOverlay.open{display:flex;}
 .rulesPanel{
-  background:var(--ink);border:2px solid var(--rust);max-width:520px;width:100%;
+  background:var(--ink);border:2px solid var(--border-color);max-width:520px;width:100%;
   max-height:80vh;overflow-y:auto;padding:22px;position:relative;
 }
 .rulesPanel h2{letter-spacing:3px;font-size:1em;color:var(--sand-light);margin:0 0 14px;text-transform:uppercase;}
@@ -294,6 +351,7 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 <body>
 <div class="wrap" style="position:relative;">
   <div class="rulesIcon" id="rulesIcon">?</div>
+  <div class="colorblindIcon" id="colorblindIcon" title="Mode daltonien">◐</div>
   <header>
     <div class="crest"><h1>TANKLE</h1></div>
     <div class="sub">BY LA FRENCH TOUCH</div>
@@ -301,6 +359,13 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 
   <div class="mode-bar">
     <button class="modeBtn active" data-mode="standard">Mode Standard</button>
+    <button class="modeBtn" data-mode="daily">Défi du jour</button>
+  </div>
+
+  <div class="dailyBar" id="dailyBar" style="display:none;">
+    <span>Défi du <b id="dailyDateLabel">--/--</b></span>
+    <span>⏱ <b id="dailyTimer">00:00</b></span>
+    <span>Tentatives : <b id="dailyTriesLabel">0</b></span>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -324,8 +389,10 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
       </ul>
       <h3>Score</h3>
       <p>Barème selon le nombre d'essais utilisés pour trouver le char : 2000 / 1000 / 850 / 700 / 550 / 400 / 250 / 100 points (0 si non trouvé).</p>
+      <h3>Défi du jour</h3>
+      <p>Un seul char, identique pour tous les joueurs, tiré au sort chaque jour. Pas de limite de tentatives, mais aucun indice disponible. Ton temps et ton nombre d'essais remplacent le score, et tu peux partager ton résultat (sans révéler le char) une fois trouvé.</p>
       <h3>Astuce recherche</h3>
-      <p>La barre de recherche ignore les accents, les tirets, les points et les espaces ("is 7" = "is-7"), et filtre automatiquement la liste selon les informations déjà révélées en vert.</p>
+      <p>La barre de recherche ignore les accents, les tirets, les points et les espaces ("is 7" = "is-7"), filtre automatiquement la liste selon les informations déjà révélées en vert, et retire un char de la recherche une fois qu'il a été proposé (anti-doublon). Navigation possible au clavier (↑ / ↓ / Entrée).</p>
     </div>
   </div>
 
@@ -372,6 +439,8 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
   <div id="sessionSummary"></div>
   <button id="screenshotBtn">📷 Enregistrer le score</button>
 
+  <div class="dailyResult" id="dailyResult"></div>
+
   <div class="legend">
     <span><span class="swatch" style="background:var(--ok);"></span> Correct</span>
     <span><span class="swatch" style="background:var(--warn);"></span> Dégâts à ±50 de la cible</span>
@@ -400,653 +469,7 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 <script>
 // ---- Jeu de données (sous-ensemble curé, inspiré de la Tankopedia WoT) ----
 // nation, type, tier, dmg = dégâts moyens par tir (obus standard)
-const TANKS = [
-  {name:"AMX 50 100", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:280, premium:false, speed:55, caliber:90, dispersion:0.36, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F08_AMX_50_100.png"},
-  {name:"KR-1", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:11, dmg:530, premium:false, speed:60, caliber:136, dispersion:0.4, hp:2600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R228_KR_1.png"},
-  {name:"Object 907", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:55, caliber:100, dispersion:0.36, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R95_Object_907.png"},
-  {name:"Patton the Tank", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:400, premium:true, speed:40, caliber:120, dispersion:0.4, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A169_PattonIII_120.png"},
-  {name:"Object 777 Version II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:440, premium:true, speed:40, caliber:122, dispersion:0.42, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R119_Object_777.png"},
-  {name:"Tiger 131", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:6, dmg:220, premium:true, speed:40, caliber:88, dispersion:0.38, hp:1060, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G136_Tiger_131.png"},
-  {name:"T20", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:7, dmg:160, premium:false, speed:56, caliber:76, dispersion:0.36, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A07_T20.png"},
-  {name:"110", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:false, speed:47, caliber:122, dispersion:0.41, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch11_110.png"},
-  {name:"Projekt ION", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:8, dmg:460, premium:true, speed:35, caliber:130, dispersion:0.42, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz14_Skoda_T-56_WT24_3Dst.png"},
-  {name:"TS-54", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:280, premium:true, speed:40, caliber:94, dispersion:0.38, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A145_TS_54.png"},
-  {name:"MT-25", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:6, dmg:85, premium:false, speed:62, caliber:57, dispersion:0.36, hp:760, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R101_MT25.png"},
-  {name:"AMX 12 t", nation:"France", flag:"🇫🇷", type:"Léger", tier:6, dmg:115, premium:false, speed:60, caliber:75, dispersion:0.4, hp:750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F15_AMX_12t.png"},
-  {name:"Comet", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:7, dmg:140, premium:false, speed:52, caliber:75, dispersion:0.36, hp:1180, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB22_Comet.png"},
-  {name:"Nashorn", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:6, dmg:220, premium:false, speed:40, caliber:88, dispersion:0.32, hp:670, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G40_Nashorn.png"},
-  {name:"WZ-111 model 1-4", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:122, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch12_111_1_2_3.png"},
-  {name:"T30", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:450, premium:false, speed:35, caliber:120, dispersion:0.35, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A14_T30.png"},
-  {name:"ERAC 105 Proto", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:320, premium:true, speed:70, caliber:105, dispersion:0.37, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F123_ERAC_105_Proto.png"},
-  {name:"XM69 Hacker", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:11, dmg:410, premium:false, speed:48, caliber:110, dispersion:0.35, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A183_XM69_Hacker.png"},
-  {name:"A46", nation:"UK", flag:"🇬🇧", type:"Léger", tier:6, dmg:105, premium:true, speed:60, caliber:76, dispersion:0.45, hp:580, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB108_A46.png"},
-  {name:"Type 71", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:10, dmg:430, premium:false, speed:40, caliber:120, dispersion:0.22, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J40_Type_71.png"},
-  {name:"VK 36.01 (H)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:6, dmg:135, premium:false, speed:51, caliber:75, dispersion:0.34, hp:1180, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G15_VK3601H.png"},
-  {name:"Spähpanzer SP I C", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:7, dmg:220, premium:false, speed:58, caliber:90, dispersion:0.37, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G113_SP_I_C.png"},
-  {name:"59-16", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:6, dmg:85, premium:false, speed:60, caliber:57, dispersion:0.34, hp:760, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch15_59_16.png"},
-  {name:"Saryuda", nation:"Japon", flag:"🇯🇵", type:"TD", tier:9, dmg:500, premium:true, speed:36, caliber:127, dispersion:0.37, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J48_Saryuda.png"},
-  {name:"ST-II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:false, speed:40, caliber:122, dispersion:0.4, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R169_ST_II.png"},
-  {name:"AMX 50 B", nation:"France", flag:"🇫🇷", type:"Lourd", tier:10, dmg:420, premium:false, speed:65, caliber:120, dispersion:0.33, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F10_AMX_50B.png"},
-  {name:"KV-1S", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:120, premium:false, speed:43, caliber:76, dispersion:0.37, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R13_KV-1s.png"},
-  {name:"LPT-67 Šelma", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:9, dmg:11, premium:false, speed:62, caliber:50, dispersion:0.42, hp:1330, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz28_LPT_67_Selma.png"},
-  {name:"Rheinmetall Panzerwagen", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:10, dmg:320, premium:false, speed:75, caliber:105, dispersion:0.33, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G125_Spz_57_Rh.png"},
-  {name:"WZ-131", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:7, dmg:180, premium:false, speed:60, caliber:85, dispersion:0.35, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch16_WZ_131.png"},
-  {name:"HWK 12", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.36, hp:1180, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G126_HWK_12.png"},
-  {name:"T-10", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:122, dispersion:0.4, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R81_IS8.png"},
-  {name:"Ares 90 C", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:11, dmg:105, premium:false, speed:55, caliber:90, dispersion:0.36, hp:2050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A191_Ares_90_C.png"},
-  {name:"AMX ELC 901", nation:"France", flag:"🇫🇷", type:"Léger", tier:6, dmg:240, premium:true, speed:60, caliber:90, dispersion:0.4, hp:550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F127_AMX_ELC_901.png"},
-  {name:"TBT", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:490, premium:true, speed:36, caliber:130, dispersion:0.41, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz30_TBT.png"},
-  {name:"AT 8", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:140, premium:false, speed:20, caliber:76, dispersion:0.32, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB74_AT8.png"},
-  {name:"LT-432", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:8, dmg:180, premium:true, speed:70, caliber:85, dispersion:0.38, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R158_LT_432.png"},
-  {name:"Obsidian", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:200, premium:true, speed:42, caliber:85, dispersion:0.34, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R205_Tank_Rozanova_Obsidian.png"},
-  {name:"Gorilla", nation:"USA", flag:"🇺🇸", type:"TD", tier:11, dmg:800, premium:false, speed:35, caliber:155, dispersion:0.36, hp:2150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A195_Gorilla.png"},
-  {name:"LHMTV", nation:"UK", flag:"🇬🇧", type:"Léger", tier:8, dmg:135, premium:false, speed:63, caliber:75, dispersion:0.35, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB102_LHMTV.png"},
-  {name:"M-V-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:360, premium:false, speed:40, caliber:105, dispersion:0.35, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A143_M_V_Y.png"},
-  {name:"WZ-111 Alpine Tiger", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:50, caliber:122, dispersion:0.39, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch03_WZ_111_A.png"},
-  {name:"T-43", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:7, dmg:200, premium:false, speed:55, caliber:85, dispersion:0.36, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R23_T-43.png"},
-  {name:"K-91", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:false, speed:55, caliber:100, dispersion:0.33, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R144_K_91.png"},
-  {name:"T28 Concept", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:320, premium:true, speed:29, caliber:105, dispersion:0.4, hp:880, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A102_T28_concept.png"},
-  {name:"Tiger-Maus", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:530, premium:true, speed:32, caliber:128, dispersion:0.37, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G167_Tiger_Maus_120t.png"},
-  {name:"SU-101", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:320, premium:false, speed:54, caliber:100, dispersion:0.39, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R58_SU-101.png"},
-  {name:"AMX AC mle. 46", nation:"France", flag:"🇫🇷", type:"TD", tier:7, dmg:240, premium:false, speed:50, caliber:90, dispersion:0.36, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F35_AMX_AC_Mle1946.png"},
-  {name:"BZ-75", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:650, premium:false, speed:30, caliber:152, dispersion:0.42, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch48_BZ_75.png"},
-  {name:"Projet Louis", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:125, premium:true, speed:65, caliber:75, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F120_Projet_Louis.png"},
-  {name:"Crusader", nation:"UK", flag:"🇬🇧", type:"Léger", tier:6, dmg:60, premium:false, speed:63, caliber:40, dispersion:0.35, hp:760, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB20_Crusader.png"},
-  {name:"Object 416", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:false, speed:55, caliber:100, dispersion:0.36, hp:1380, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R60_Object416.png"},
-  {name:"IS-4", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:false, speed:43, caliber:122, dispersion:0.42, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R90_IS_4M.png"},
-  {name:"Cobra", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:360, premium:true, speed:40, caliber:120, dispersion:0.38, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB106_Cobra.png"},
-  {name:"Vickers MBT Mk. 3", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.27, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB114_Vickers_MBT_Mk3.png"},
-  {name:"KV-4 KTTS", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:360, premium:true, speed:35, caliber:107, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R121_KV4_KTT.png"},
-  {name:"IS-2-II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:230, premium:false, speed:38, caliber:85, dispersion:0.38, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R170_IS_2_II.png"},
-  {name:"STA-1", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:8, dmg:240, premium:false, speed:45, caliber:90, dispersion:0.38, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J13_STA_1.png"},
-  {name:"Bat.-Châtillon 12 t", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:170, premium:false, speed:68, caliber:75, dispersion:0.38, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F87_Batignolles-Chatillon_12t.png"},
-  {name:"T95", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:360, premium:false, speed:20, caliber:105, dispersion:0.36, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A40_T95.png"},
-  {name:"Object 430U", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:440, premium:false, speed:50, caliber:122, dispersion:0.4, hp:2050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R148_Object_430_U.png"},
-  {name:"IS-3A Peregrine", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:40, caliber:122, dispersion:0.46, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R115_IS-3_auto_S.png"},
-  {name:"Bat.-Châtillon Bourrasque", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:360, premium:true, speed:62, caliber:105, dispersion:0.42, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F116_Bat_Chatillon_Bourrasque.png"},
-  {name:"SU-152", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:390, premium:false, speed:43, caliber:122, dispersion:0.42, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R18_SU-152.png"},
-  {name:"IS-7", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:490, premium:false, speed:60, caliber:130, dispersion:0.4, hp:2400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R45_IS-7.png"},
-  {name:"XM57", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:630, premium:true, speed:24, caliber:155, dispersion:0.43, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A168_XM_57.png"},
-  {name:"Pudel", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:135, premium:true, speed:55, caliber:75, dispersion:0.34, hp:940, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl03_PzV_Poland.png"},
-  {name:"KV-13", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:7, dmg:110, premium:false, speed:50, caliber:76, dispersion:0.46, hp:1020, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R46_KV-13.png"},
-  {name:"Panther II", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:135, premium:false, speed:55, caliber:75, dispersion:0.3, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G64_Panther_II.png"},
-  {name:"Chrysler K GF", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:105, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A115_Chrysler_K_GF.png"},
-  {name:"Object 140", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:340, premium:false, speed:55, caliber:100, dispersion:0.35, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R97_Object_140.png"},
-  {name:"Taschenratte", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:11, dmg:510, premium:false, speed:18, caliber:132, dispersion:0.36, hp:3300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G187_Taschenratte.png"},
-  {name:"PTZ-78", nation:"Chine", flag:"🇨🇳", type:"TD", tier:11, dmg:760, premium:false, speed:40, caliber:152, dispersion:0.36, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch70_PTZ_78.png"},
-  {name:"AltProto AMX 30", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:300, premium:true, speed:65, caliber:100, dispersion:0.36, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F117_Alt_Proto_AMX_30.png"},
-  {name:"T25 AT", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:280, premium:false, speed:56, caliber:90, dispersion:0.37, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A64_T25_AT.png"},
-  {name:"Object 704", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:750, premium:false, speed:40, caliber:152, dispersion:0.37, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R53_Object_704.png"},
-  {name:"Charioteer Nomad", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:390, premium:true, speed:52, caliber:105, dispersion:0.35, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB133_Charioteer_MkVII.png"},
-  {name:"116-F3", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:530, premium:true, speed:35, caliber:130, dispersion:0.42, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch52_WZ_122_6_F3.png"},
-  {name:"E 100", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:530, premium:false, speed:30, caliber:128, dispersion:0.37, hp:2700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G56_E-100.png"},
-  {name:"M4A3E8 Thunderbolt VII", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:42, caliber:76, dispersion:0.38, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A118_M4_Thunderbolt.png"},
-  {name:"T110E5", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:false, speed:37, caliber:120, dispersion:0.35, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A69_T110E5.png"},
-  {name:"M60", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:390, premium:true, speed:60, caliber:105, dispersion:0.33, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A92_M60.png"},
-  {name:"T-34-85M", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:180, premium:true, speed:53, caliber:85, dispersion:0.37, hp:810, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R108_T34_85M.png"},
-  {name:"Somua SM", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:37, caliber:100, dispersion:0.4, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F84_Somua_SM.png"},
-  {name:"A-43", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:115, premium:false, speed:55, caliber:76, dispersion:0.38, hp:860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R57_A43.png"},
-  {name:"VK 45.02 (P) Ausf. A", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:280, premium:false, speed:38, caliber:88, dispersion:0.34, hp:1660, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G67_VK4502A.png"},
-  {name:"Charioteer", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:230, premium:false, speed:52, caliber:83, dispersion:0.32, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB80_Charioteer.png"},
-  {name:"Conqueror", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:280, premium:false, speed:34, caliber:94, dispersion:0.33, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB12_Conqueror.png"},
-  {name:"IS-2M", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:34, caliber:122, dispersion:0.45, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R156_IS_2M.png"},
-  {name:"T 54D", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:390, premium:true, speed:40, caliber:105, dispersion:0.33, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G169_T_54D.png"},
-  {name:"T23E3", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:7, dmg:115, premium:true, speed:56, caliber:76, dispersion:0.36, hp:1050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A86_T23E3.png"},
-  {name:"IS-2", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:34, caliber:122, dispersion:0.46, hp:1320, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R71_IS_2B.png"},
-  {name:"AMX 13 57 GF", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:90, premium:true, speed:61, caliber:57, dispersion:0.37, hp:890, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F69_AMX13_57_100_GrandFinal.png"},
-  {name:"Emil I", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:8, dmg:320, premium:false, speed:50, caliber:105, dispersion:0.37, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S18_EMIL_1951_E1.png"},
-  {name:"Ho-Ri 2", nation:"Japon", flag:"🇯🇵", type:"TD", tier:8, dmg:360, premium:false, speed:30, caliber:105, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J33_Ho_Ri_2.png"},
-  {name:"SU-100M1", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:250, premium:false, speed:54, caliber:100, dispersion:0.42, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R74_SU100M1.png"},
-  {name:"SDP 44 Burza", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:6, dmg:240, premium:false, speed:50, caliber:90, dispersion:0.39, hp:700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl32_SDP_Wz_44.png"},
-  {name:"Prototipo 6", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:300, premium:true, speed:50, caliber:105, dispersion:0.32, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It33_Prototipo_6.png"},
-  {name:"Yong Bing", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:440, premium:true, speed:33, caliber:122, dispersion:0.4, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch63_Yong_Bing.png"},
-  {name:"Jagdpanther II", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:240, premium:false, speed:55, caliber:88, dispersion:0.32, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G71_JagdPantherII.png"},
-  {name:"AE Phase I", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A125_AEP_1.png"},
-  {name:"DBV-152", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:10, dmg:800, premium:true, speed:52, caliber:152, dispersion:0.32, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz40_DBV_152.png"},
-  {name:"WZ-120G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:9, dmg:560, premium:true, speed:47, caliber:130, dispersion:0.36, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch40_WZ120G_FT.png"},
-  {name:"Konštrukta T-34/100", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:7, dmg:220, premium:false, speed:54, caliber:85, dispersion:0.37, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz05_T34_100.png"},
-  {name:"Object 244", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:180, premium:true, speed:42, caliber:85, dispersion:0.35, hp:990, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R114_Object_244.png"},
-  {name:"Kranvagn", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:10, dmg:440, premium:false, speed:45, caliber:120, dispersion:0.4, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S16_Kranvagn.png"},
-  {name:"T-150", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:230, premium:false, speed:35, caliber:85, dispersion:0.4, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R72_T150.png"},
-  {name:"AMX 30 B", nation:"France", flag:"🇫🇷", type:"Moyen", tier:10, dmg:390, premium:false, speed:65, caliber:105, dispersion:0.36, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F72_AMX_30.png"},
-  {name:"AMX 13 75", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:125, premium:false, speed:61, caliber:75, dispersion:0.38, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F16_AMX_13_75.png"},
-  {name:"CS-44", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:7, dmg:240, premium:false, speed:57, caliber:90, dispersion:0.4, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl20_CS_44.png"},
-  {name:"Concept 1B", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:true, speed:45, caliber:110, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A128_concept_1b.png"},
-  {name:"Object 430 Version II", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:320, premium:false, speed:55, caliber:100, dispersion:0.36, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R104_Object_430_II.png"},
-  {name:"40TP Habicha", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:135, premium:false, speed:50, caliber:75, dispersion:0.37, hp:870, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl10_40TP_Habicha.png"},
-  {name:"ZŤS Vz.63-1 Ogar", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:9, dmg:350, premium:true, speed:50, caliber:107, dispersion:0.32, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz43_Ogar.png"},
-  {name:"T-34-3", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:122, dispersion:0.42, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch14_T34_3.png"},
-  {name:"Kampfpanzer 07 RH", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:200, premium:true, speed:65, caliber:90, dispersion:0.35, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G154_Kpz_07_RH.png"},
-  {name:"SMV CC-56", nation:"Italie", flag:"🇮🇹", type:"TD", tier:7, dmg:240, premium:false, speed:31, caliber:90, dispersion:0.38, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It26_CC_56.png"},
-  {name:"Rheinmetall Skorpion", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:60, caliber:128, dispersion:0.3, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G114_Skorpian.png"},
-  {name:"Type 5 Chi-Ri", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:7, dmg:130, premium:false, speed:45, caliber:75, dispersion:0.34, hp:1280, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J11_Chi_Ri.png"},
-  {name:"AMX 65 t", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:false, speed:35, caliber:100, dispersion:0.34, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F81_Char_de_65t.png"},
-  {name:"P.43 ter", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:7, dmg:240, premium:false, speed:55, caliber:90, dispersion:0.4, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It09_P43_ter.png"},
-  {name:"CS-63", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:10, dmg:390, premium:false, speed:55, caliber:105, dispersion:0.36, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl21_CS_63.png"},
-  {name:"ISU-152", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:700, premium:false, speed:43, caliber:152, dispersion:0.44, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R47_ISU-152.png"},
-  {name:"AS-XX 40 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:11, dmg:410, premium:false, speed:66, caliber:118, dispersion:0.35, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F135_AS_XX_40_t.png"},
-  {name:"White Dragon", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:200, premium:true, speed:65, caliber:90, dispersion:0.35, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G154_Kpz_07_RH_LN.png"},
-  {name:"T57 Heavy", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:false, speed:35, caliber:120, dispersion:0.35, hp:2250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A67_T57_58.png"},
-  {name:"Vz. 44-1", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:7, dmg:250, premium:false, speed:30, caliber:100, dispersion:0.39, hp:1420, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz19_Vz_44_1.png"},
-  {name:"Type 5 Ka-Ri", nation:"Japon", flag:"🇯🇵", type:"TD", tier:8, dmg:500, premium:true, speed:40, caliber:127, dispersion:0.34, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J31_Type_5_KaRi.png"},
-  {name:"K-91 Version II", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:300, premium:true, speed:55, caliber:100, dispersion:0.35, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R173_K_91_2.png"},
-  {name:"E 75 TS", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.38, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G143_E75_TS.png"},
-  {name:"Vercingétorix", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:400, premium:true, speed:45, caliber:120, dispersion:0.36, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F132_Vercingetorix.png"},
-  {name:"CC-46 Pancernik", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:9, dmg:650, premium:true, speed:30, caliber:155, dispersion:0.44, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl26_Czolg_P_Wz_46.png"},
-  {name:"Leopard 1", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:10, dmg:420, premium:false, speed:70, caliber:105, dispersion:0.29, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G89_Leopard1.png"},
-  {name:"VK 28.01 mit 10,5 cm L/28", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:6, dmg:350, premium:true, speed:64, caliber:105, dispersion:0.55, hp:680, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G158_VK2801_105_SPXXI.png"},
-  {name:"Type 61", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:9, dmg:240, premium:false, speed:45, caliber:90, dispersion:0.36, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J14_Type_61.png"},
-  {name:"Schwertwal", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:700, premium:true, speed:30, caliber:150, dispersion:0.4, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G186_Schwertwal.png"},
-  {name:"Type 59 G", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:true, speed:60, caliber:100, dispersion:0.35, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch01_Type59_Gold.png"},
-  {name:"Vz. 64 Blesk", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:8, dmg:5, premium:false, speed:60, caliber:30, dispersion:0.43, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz24_Vz_64_Blesk.png"},
-  {name:"KV-4 Kreslavskiy", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:107, dispersion:0.38, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R128_KV4_Kreslavskiy.png"},
-  {name:"XM66F", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A153_XM66F.png"},
-  {name:"Charlemagne", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:119, dispersion:0.44, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB111_Charlemagne.png"},
-  {name:"Black Prince", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:false, speed:30, caliber:76, dispersion:0.34, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB10_Black_Prince.png"},
-  {name:"Cromwell", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:75, premium:false, speed:64, caliber:57, dispersion:0.39, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB21_Cromwell.png"},
-  {name:"SDP 58 Kilana", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:8, dmg:600, premium:false, speed:40, caliber:85, dispersion:0.38, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl30_SDP_Wz58T.png"},
-  {name:"FV601 Saladin", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:150, premium:false, speed:65, caliber:76, dispersion:0.33, hp:1380, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB125_Saladin.png"},
-  {name:"STG", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:122, dispersion:0.33, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R146_STG.png"},
-  {name:"T-34-2", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:false, speed:56, caliber:100, dispersion:0.37, hp:1480, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch05_T34_2.png"},
-  {name:"VK 168.01 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:440, premium:true, speed:20, caliber:128, dispersion:0.4, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G138_VK168_02.png"},
-  {name:"Object 252U", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:122, dispersion:0.44, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R134_Object_252U.png"},
-  {name:"IS-3", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:false, speed:45, caliber:122, dispersion:0.42, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R19_IS-3.png"},
-  {name:"KV-85", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:160, premium:false, speed:34, caliber:85, dispersion:0.38, hp:920, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R106_KV85.png"},
-  {name:"Object 780", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:530, premium:true, speed:45, caliber:130, dispersion:0.35, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R178_Object_780.png"},
-  {name:"Rambo", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:360, premium:true, speed:34, caliber:110, dispersion:0.38, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A176_M103_110_CFE_R.png"},
-  {name:"O-I", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:300, premium:false, speed:25, caliber:105, dispersion:0.43, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J24_Mi_To_130_tons.png"},
-  {name:"Tiger I", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:280, premium:false, speed:40, caliber:88, dispersion:0.34, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G04_PzVI_Tiger_I.png"},
-  {name:"Object 252U Defender", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:122, dispersion:0.44, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R134_Object_252K.png"},
-  {name:"M41 Walker Bulldog", nation:"USA", flag:"🇺🇸", type:"Léger", tier:8, dmg:170, premium:false, speed:68, caliber:76, dispersion:0.36, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A97_M41_Bulldog.png"},
-  {name:"AMX 50 120", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:340, premium:false, speed:65, caliber:100, dispersion:0.35, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F09_AMX_50_120.png"},
-  {name:"M-VI-Y (120)", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:440, premium:true, speed:40, caliber:120, dispersion:0.4, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A144_M_VI_Y_CFE_R.png"},
-  {name:"T77", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:48, caliber:120, dispersion:0.37, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A132_T77.png"},
-  {name:"SPHT", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:420, premium:true, speed:50, caliber:120, dispersion:0.33, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A178_SPHT.png"},
-  {name:"FV230 Canopener", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:420, premium:false, speed:34, caliber:120, dispersion:0.33, hp:2250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB142_FV230_Canopener.png"},
-  {name:"IS-2", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:7, dmg:250, premium:false, speed:37, caliber:100, dispersion:0.42, hp:1280, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch10_IS2.png"},
-  {name:"AMX 13 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:170, premium:false, speed:68, caliber:75, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F17_AMX_13_90.png"},
-  {name:"FV215b", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:400, premium:true, speed:34, caliber:120, dispersion:0.33, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB13_FV215b.png"},
-  {name:"Ho-Ri 3", nation:"Japon", flag:"🇯🇵", type:"TD", tier:10, dmg:700, premium:false, speed:35, caliber:149, dispersion:0.36, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J35_Ho_Ri_3.png"},
-  {name:"Mäuschen", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:440, premium:false, speed:20, caliber:128, dispersion:0.37, hp:2400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G110_Typ_205.png"},
-  {name:"Rhm.-Borsig Waffenträger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:false, speed:35, caliber:128, dispersion:0.35, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G99_RhB_Waffentrager.png"},
-  {name:"FV224 Chopper", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:230, premium:false, speed:34, caliber:83, dispersion:0.37, hp:1240, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB140_FV224_Chopper.png"},
-  {name:"Black Prince II", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:true, speed:30, caliber:76, dispersion:0.38, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB156_Black_Prince_II.png"},
-  {name:"Object 268 Version V", nation:"URSS", flag:"🇷🇺", type:"TD", tier:10, dmg:750, premium:true, speed:48, caliber:152, dispersion:0.36, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R126_Object_730_5.png"},
-  {name:"AC 4 Experimental", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:150, premium:true, speed:60, caliber:76, dispersion:0.39, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB35_Sentinel_AC_IV.png"},
-  {name:"Type 68", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:9, dmg:360, premium:false, speed:35, caliber:105, dispersion:0.24, hp:1860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J41_Type_68.png"},
-  {name:"AAT60", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:44, caliber:105, dispersion:0.35, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A155_AAT60.png"},
-  {name:"Centurion Action X", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:390, premium:false, speed:55, caliber:105, dispersion:0.32, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB86_Centurion_Action_X.png"},
-  {name:"Schwarzpanzer 58", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:90, dispersion:0.34, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G119_Panzer58_BF.png"},
-  {name:"VK 100.01 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:320, premium:false, speed:20, caliber:105, dispersion:0.36, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G115_Typ_205B.png"},
-  {name:"T32", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:false, speed:35, caliber:90, dispersion:0.36, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A12_T32.png"},
-  {name:"FV4025 Contriver", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:11, dmg:440, premium:false, speed:38, caliber:114, dispersion:0.33, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB147_FV4025_Contriver.png"},
-  {name:"Vz. 71 Tesák", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:10, dmg:16, premium:false, speed:65, caliber:57, dispersion:0.4, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz34_Vz_71_Tesak.png"},
-  {name:"M-III-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:false, speed:40, caliber:90, dispersion:0.37, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A139_M_III_Y.png"},
-  {name:"WZ-132-1", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:10, dmg:390, premium:false, speed:70, caliber:105, dispersion:0.38, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch29_Type_62C_prot.png"},
-  {name:"Kpz. 3 GST Turm", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:400, premium:true, speed:38, caliber:120, dispersion:0.36, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G174_Kpz3_GST_Turm.png"},
-  {name:"Sherman VC Firefly", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:150, premium:true, speed:40, caliber:76, dispersion:0.36, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB95_Ekins_Firefly_M4A4.png"},
-  {name:"M41D", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:8, dmg:170, premium:true, speed:68, caliber:76, dispersion:0.35, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch42_WalkerBulldog_M41D.png"},
-  {name:"VK 30.02 (D)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:7, dmg:135, premium:false, speed:60, caliber:75, dispersion:0.35, hp:1280, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G24_VK3002DB.png"},
-  {name:"Chrysler MTC 2TC", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.37, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A159_Chrysler_MTC_2.png"},
-  {name:"ISU-122-2", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:390, premium:true, speed:40, caliber:122, dispersion:0.37, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R204_ISU_122_2.png"},
-  {name:"45TP Habicha", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:90, dispersion:0.39, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl11_45TP_Habicha.png"},
-  {name:"Strv 74", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:6, dmg:150, premium:false, speed:45, caliber:75, dispersion:0.35, hp:870, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S07_Strv_74.png"},
-  {name:"Mittlerer Kpz. Pr. 68 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:400, premium:true, speed:50, caliber:120, dispersion:0.33, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G164_Kpz_Pr_68_P.png"},
-  {name:"Ares 90", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:105, premium:false, speed:50, caliber:90, dispersion:0.36, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A189_Ares_90.png"},
-  {name:"IS-M", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:false, speed:35, caliber:122, dispersion:0.43, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R139_IS_M.png"},
-  {name:"FV215b (183)", nation:"UK", flag:"🇬🇧", type:"TD", tier:10, dmg:1150, premium:true, speed:34, caliber:183, dispersion:0.4, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB48_FV215b_183.png"},
-  {name:"Škoda T 45", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:7, dmg:220, premium:true, speed:30, caliber:88, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz15_Skoda_T-45_Prem.png"},
-  {name:"Triumphant", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.32, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB86_Centurion_Action_X_CFE_A.png"},
-  {name:"TT-130M", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:490, premium:true, speed:30, caliber:130, dispersion:0.4, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz35_T56_G.png"},
-  {name:"M48A2 Räumpanzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:280, premium:true, speed:40, caliber:90, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G142_M48RPz.png"},
-  {name:"Ares 75", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:56, premium:false, speed:50, caliber:75, dispersion:0.38, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A187_Ares_75.png"},
-  {name:"ST-I", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:false, speed:40, caliber:122, dispersion:0.4, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R63_ST_I.png"},
-  {name:"Object 268 Version 4", nation:"URSS", flag:"🇷🇺", type:"TD", tier:10, dmg:650, premium:false, speed:40, caliber:152, dispersion:0.42, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R149_Object_268_4.png"},
-  {name:"Kampfpanzer 07 P(E)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:410, premium:true, speed:50, caliber:120, dispersion:0.33, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G162_Project_Kpz_07P_E.png"},
-  {name:"Divine Valor", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:650, premium:true, speed:30, caliber:152, dispersion:0.42, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch62_BZ_75_M.png"},
-  {name:"AT 15", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:230, premium:false, speed:25, caliber:83, dispersion:0.3, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB72_AT15.png"},
-  {name:"Object 257", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:122, dispersion:0.38, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R151_Object_257_2.png"},
-  {name:"SU-100Y", nation:"URSS", flag:"🇷🇺", type:"TD", tier:6, dmg:440, premium:true, speed:35, caliber:130, dispersion:0.38, hp:780, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R49_SU100Y.png"},
-  {name:"Chimera", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:440, premium:true, speed:50, caliber:127, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB97_Chimera.png"},
-  {name:"Peerless", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:true, speed:35, caliber:122, dispersion:0.42, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R172_Object_752_CFE_T.png"},
-  {name:"KV-3", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:300, premium:false, speed:32, caliber:107, dispersion:0.38, hp:1380, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R39_KV-3.png"},
-  {name:"Aufklärungspanzer Panther", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:7, dmg:135, premium:true, speed:55, caliber:75, dispersion:0.33, hp:1050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G85_Auf_Panther.png"},
-  {name:"IS-3-II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:320, premium:false, speed:38, caliber:100, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R171_IS_3_II.png"},
-  {name:"T25 Pilot Number 1", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:90, dispersion:0.36, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A111_T25_Pilot.png"},
-  {name:"Object 452K", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:560, premium:true, speed:40, caliber:130, dispersion:0.38, hp:2400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R196_Object_452K.png"},
-  {name:"BZ-58", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:7, dmg:220, premium:false, speed:30, caliber:85, dispersion:0.38, hp:1240, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch51_BZ_58.png"},
-  {name:"M46 Patton", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:280, premium:false, speed:48, caliber:90, dispersion:0.34, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A63_M46_Patton.png"},
-  {name:"AMX 50 Foch", nation:"France", flag:"🇫🇷", type:"TD", tier:9, dmg:400, premium:false, speed:50, caliber:120, dispersion:0.35, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F37_AMX50_Foch.png"},
-  {name:"KV-122", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:42, caliber:122, dispersion:0.46, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R133_KV_122.png"},
-  {name:"Type 62", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:7, dmg:180, premium:true, speed:60, caliber:85, dispersion:0.37, hp:880, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch02_Type62.png"},
-  {name:"Emil II", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:9, dmg:360, premium:false, speed:40, caliber:105, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S17_EMIL_1952_E2.png"},
-  {name:"M103", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:false, speed:34, caliber:120, dispersion:0.38, hp:1860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A66_M103.png"},
-  {name:"E 77", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:460, premium:true, speed:40, caliber:128, dispersion:0.39, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G171_E77.png"},
-  {name:"Leopard 120 Verbessert", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:11, dmg:440, premium:false, speed:65, caliber:120, dispersion:0.32, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G185_Leopard_120_Verbessert.png"},
-  {name:"BZ-79", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:11, dmg:690, premium:false, speed:30, caliber:152, dispersion:0.42, hp:2740, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch67_BZ_79.png"},
-  {name:"M4A1 FL 10", nation:"France", flag:"🇫🇷", type:"Moyen", tier:6, dmg:135, premium:true, speed:48, caliber:75, dispersion:0.38, hp:810, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F85_M4A1_FL10.png"},
-  {name:"Vz. 68 Squall", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:8, dmg:8, premium:true, speed:55, caliber:50, dispersion:0.4, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz33_Vz_68_Squall.png"},
-  {name:"T-54", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:300, premium:false, speed:56, caliber:100, dispersion:0.35, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R40_T-54.png"},
-  {name:"AMX AC mle. 48", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:300, premium:false, speed:50, caliber:100, dispersion:0.36, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F36_AMX_AC_Mle1948.png"},
-  {name:"TS-60", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.4, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A151_TS_60.png"},
-  {name:"T34 B", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.35, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A13_T34_hvy_BF.png"},
-  {name:"WZ-111-1G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:8, dmg:440, premium:false, speed:35, caliber:122, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch36_WZ111_1G_FT.png"},
-  {name:"P.44 Pantera", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:240, premium:false, speed:60, caliber:90, dispersion:0.34, hp:1480, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It14_P44_Pantera.png"},
-  {name:"KPz 3 Projekt 07 HK", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:360, premium:true, speed:65, caliber:105, dispersion:0.35, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G159_KPZ_3_Project_07_HK.png"},
-  {name:"AMX M4 mle. 49 Liberté", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:100, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F74_AMX_M4_1949_Liberte.png"},
-  {name:"Hirschkäfer", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:11, dmg:600, premium:false, speed:60, caliber:120, dispersion:0.28, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G189_Hirschkafer.png"},
-  {name:"AMX M4 mle. 45", nation:"France", flag:"🇫🇷", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:90, dispersion:0.38, hp:1380, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F07_AMX_M4_1945.png"},
-  {name:"E 50", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:280, premium:false, speed:60, caliber:88, dispersion:0.3, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G54_E-50.png"},
-  {name:"TS-5", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:400, premium:true, speed:26, caliber:120, dispersion:0.44, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A122_TS-5.png"},
-  {name:"Achilles", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:150, premium:false, speed:48, caliber:76, dispersion:0.35, hp:680, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB45_Achilles_IIC.png"},
-  {name:"Carro d'assalto P.88", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:88, dispersion:0.4, hp:1240, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It16_Carro_d_assalto_P88.png"},
-  {name:"M18 Hellcat", nation:"USA", flag:"🇺🇸", type:"TD", tier:6, dmg:135, premium:false, speed:72, caliber:76, dispersion:0.35, hp:620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A41_M18_Hellcat.png"},
-  {name:"AT 15A", nation:"UK", flag:"🇬🇧", type:"TD", tier:7, dmg:150, premium:true, speed:20, caliber:76, dispersion:0.32, hp:1050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB71_AT_15A.png"},
-  {name:"ARL V39", nation:"France", flag:"🇫🇷", type:"TD", tier:6, dmg:240, premium:false, speed:45, caliber:90, dispersion:0.36, hp:700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F34_ARL_V39.png"},
-  {name:"IS-5 (Object 730)", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:42, caliber:122, dispersion:0.42, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R113_Object_730.png"},
-  {name:"T26E4 SuperPershing", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:40, caliber:90, dispersion:0.38, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A80_T26_E4_SuperPershing.png"},
-  {name:"M4A1 Revalorisé", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:390, premium:true, speed:40, caliber:105, dispersion:0.35, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F73_M4A1_Revalorise.png"},
-  {name:"Leo", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:7, dmg:150, premium:false, speed:60, caliber:75, dispersion:0.33, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S13_Leo.png"},
-  {name:"Panther mit 8,8 cm L/71", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:280, premium:true, speed:50, caliber:88, dispersion:0.29, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G106_PzKpfwPanther_AusfF.png"},
-  {name:"53TP Markowskiego", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:320, premium:false, speed:40, caliber:105, dispersion:0.38, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl13_53TP_Markowskiego.png"},
-  {name:"FV4201 Chieftain Proto", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:400, premium:true, speed:40, caliber:119, dispersion:0.37, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB110_FV4201_Chieftain_Prototype.png"},
-  {name:"King Tiger (Captured)", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:7, dmg:240, premium:true, speed:38, caliber:88, dispersion:0.36, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A126_PzVI_Tiger_II_capt.png"},
-  {name:"Chieftain/T95", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:240, premium:true, speed:42, caliber:90, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB87_Chieftain_T95_turret.png"},
-  {name:"50TP Tyszkiewicza", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:9, dmg:420, premium:false, speed:35, caliber:122, dispersion:0.36, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl05_50TP_Tyszkiewicza.png"},
-  {name:"Semovente M43 Bassotto", nation:"Italie", flag:"🇮🇹", type:"TD", tier:6, dmg:240, premium:false, speed:35, caliber:90, dispersion:0.37, hp:600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It27_M43_da_105_25_Bassoto.png"},
-  {name:"Löwe", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:105, dispersion:0.33, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G51_Lowe.png"},
-  {name:"Škoda T 25", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:6, dmg:110, premium:false, speed:55, caliber:75, dispersion:0.36, hp:860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz08_T_25.png"},
-  {name:"Strv m/42-57 Alt A.2", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:6, dmg:150, premium:true, speed:45, caliber:75, dispersion:0.35, hp:780, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S01_Strv_74_A2.png"},
-  {name:"Object 705", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:440, premium:false, speed:40, caliber:122, dispersion:0.4, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R153_Object_705.png"},
-  {name:"TVP VTU Koncept", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:8, dmg:220, premium:false, speed:50, caliber:88, dispersion:0.37, hp:1480, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz07_TVP_46.png"},
-  {name:"T-54 first prototype", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:44, caliber:100, dispersion:0.36, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R112_T54_45.png"},
-  {name:"FCM 50 t", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:240, premium:true, speed:51, caliber:90, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F65_FCM_50t.png"},
-  {name:"T110E4", nation:"USA", flag:"🇺🇸", type:"TD", tier:10, dmg:750, premium:false, speed:35, caliber:155, dispersion:0.37, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A83_T110E4.png"},
-  {name:"FV1066 Senlac", nation:"UK", flag:"🇬🇧", type:"Léger", tier:8, dmg:180, premium:true, speed:65, caliber:83, dispersion:0.35, hp:1050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB101_FV1066_Senlac.png"},
-  {name:"KV-4", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:300, premium:false, speed:32, caliber:107, dispersion:0.37, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R73_KV4.png"},
-  {name:"B.U.G.I.", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:150, premium:false, speed:55, caliber:75, dispersion:0.38, hp:870, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl18_BUGI.png"},
-  {name:"UDES 14 Alt 5", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:250, premium:false, speed:55, caliber:90, dispersion:0.34, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S29_UDES_14_5.png"},
-  {name:"E 50 Ausf. M", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:10, dmg:390, premium:false, speed:60, caliber:105, dispersion:0.3, hp:2050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G73_E50_Ausf_M.png"},
-  {name:"Super Hellcat", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:240, premium:true, speed:72, caliber:90, dispersion:0.35, hp:800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A130_Super_Hellcat.png"},
-  {name:"Type 4 Heavy", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:9, dmg:550, premium:false, speed:25, caliber:127, dispersion:0.38, hp:2150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J25_Type_4.png"},
-  {name:"Controcarro 3 Minotauro", nation:"Italie", flag:"🇮🇹", type:"TD", tier:10, dmg:530, premium:false, speed:30, caliber:130, dispersion:0.44, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It23_CC_3.png"},
-  {name:"Object 703 Version II", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:38, caliber:122, dispersion:0.44, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R165_Object_703_II.png"},
-  {name:"59-Patton", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:280, premium:true, speed:50, caliber:90, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch26_59_Patton.png"},
-  {name:"TVP T 50/51", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:10, dmg:320, premium:false, speed:60, caliber:100, dispersion:0.35, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz04_T50_51.png"},
-  {name:"50TP Resilient", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:122, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl08_50TP_Prototyp_Resilient.png"},
-  {name:"Ikv 65 Alt II", nation:"Suède", flag:"🇸🇪", type:"TD", tier:6, dmg:240, premium:false, speed:60, caliber:90, dispersion:0.36, hp:650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S08_Ikv_65_Alt_2.png"},
-  {name:"T-54 ltwt.", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:9, dmg:250, premium:false, speed:69, caliber:100, dispersion:0.42, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R109_T54S.png"},
-  {name:"M4A3E2 Sherman Jumbo", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:110, premium:false, speed:35, caliber:75, dispersion:0.46, hp:810, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A36_Sherman_Jumbo.png"},
-  {name:"Mars", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:90, dispersion:0.33, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It13_Progetto_M35_mod_46_LE.png"},
-  {name:"Škoda T 50", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:9, dmg:300, premium:false, speed:50, caliber:100, dispersion:0.36, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz02_TVP_T50.png"},
-  {name:"Coccodrillo", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:470, premium:true, speed:50, caliber:127, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It39_Coccodrillo.png"},
-  {name:"T-50-2", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:6, dmg:85, premium:true, speed:65, caliber:57, dispersion:0.38, hp:650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R160_T_50_2.png"},
-  {name:"T69", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:175, premium:false, speed:52, caliber:76, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A90_T69.png"},
-  {name:"TNH 105/1000", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:8, dmg:320, premium:false, speed:50, caliber:105, dispersion:0.36, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz18_TNH_105_1000.png"},
-  {name:"T-44-100", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:52, caliber:100, dispersion:0.35, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R122_T44_100.png"},
-  {name:"Sentinelle", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:390, premium:true, speed:45, caliber:105, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F130_Sentinelle.png"},
-  {name:"Strv 103B", nation:"Suède", flag:"🇸🇪", type:"TD", tier:10, dmg:390, premium:false, speed:50, caliber:105, dispersion:0.3, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S11_Strv_103B.png"},
-  {name:"AMX 13 105", nation:"France", flag:"🇫🇷", type:"Léger", tier:10, dmg:390, premium:false, speed:68, caliber:105, dispersion:0.42, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F88_AMX_13_105.png"},
-  {name:"STA-2", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:90, dispersion:0.35, hp:1420, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J18_STA_2_3.png"},
-  {name:"SDP 60 Gonkiewicza", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:9, dmg:700, premium:false, speed:42, caliber:100, dispersion:0.37, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl28_SDP_Wz_60.png"},
-  {name:"KV-4 Turchaninov", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:300, premium:true, speed:30, caliber:107, dispersion:0.42, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R200_KV_4_Turchaninov.png"},
-  {name:"Progetto M35 mod. 46", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:8, dmg:240, premium:true, speed:55, caliber:90, dispersion:0.33, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It13_Progetto_M35_mod_46.png"},
-  {name:"Windhund", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:320, premium:true, speed:50, caliber:105, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G184_Windhund.png"},
-  {name:"Type 59 First Warrior", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:true, speed:60, caliber:100, dispersion:0.35, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch65_Type59_IC4_3DSt.png"},
-  {name:"Bofors Tornvagn", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.4, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S32_Bofors_Tornvagn.png"},
-  {name:"Lorraine 120 Alby", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:400, premium:true, speed:50, caliber:120, dispersion:0.36, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F134_Lorraine_120_Alby.png"},
-  {name:"Panzer 58 Mutz", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:90, dispersion:0.34, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G119_Pz58_Mutz.png"},
-  {name:"Hotchkiss EBR", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:170, premium:false, speed:70, caliber:75, dispersion:0.4, hp:800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F107_Hotchkiss_EBR.png"},
-  {name:"NC 70 Błyskawica", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:10, dmg:800, premium:false, speed:45, caliber:85, dispersion:0.35, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl29_NC_Wz_70T.png"},
-  {name:"Stinger", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.35, hp:2250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A174_T57_58_Rush_Ep1.png"},
-  {name:"GSOR 1006 Scheme 7", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:280, premium:false, speed:65, caliber:90, dispersion:0.34, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB123_GSOR_1006_v7.png"},
-  {name:"A43 BP prototype", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:150, premium:true, speed:20, caliber:76, dispersion:0.37, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB105_Black_Prince_2019.png"},
-  {name:"STG Guard", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:390, premium:true, speed:50, caliber:122, dispersion:0.33, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R146_STG_Tday.png"},
-  {name:"T37", nation:"USA", flag:"🇺🇸", type:"Léger", tier:6, dmg:115, premium:false, speed:65, caliber:76, dispersion:0.39, hp:760, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A94_T37.png"},
-  {name:"Udarniy", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:45, caliber:122, dispersion:0.42, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R188_Object_259A_CN.png"},
-  {name:"T54 Heavy Tank", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:450, premium:true, speed:40, caliber:120, dispersion:0.38, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A156_T54_2022.png"},
-  {name:"ARL 44", nation:"France", flag:"🇫🇷", type:"Lourd", tier:6, dmg:240, premium:false, speed:37, caliber:90, dispersion:0.36, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F06_ARL_44.png"},
-  {name:"T28 Prototype", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:360, premium:false, speed:32, caliber:105, dispersion:0.37, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A68_T28_Prototype.png"},
-  {name:"TS-6", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:460, premium:true, speed:30, caliber:120, dispersion:0.39, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A167_TS_6.png"},
-  {name:"Caernarvon", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:150, premium:false, speed:34, caliber:76, dispersion:0.34, hp:1660, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB11_Caernarvon.png"},
-  {name:"CS-59", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:9, dmg:320, premium:false, speed:50, caliber:100, dispersion:0.37, hp:1760, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl22_CS_59.png"},
-  {name:"Waffenträger auf Pz. IV", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:490, premium:false, speed:38, caliber:128, dispersion:0.33, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G97_Waffentrager_IV.png"},
-  {name:"ST-62 Version 2", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:50, caliber:100, dispersion:0.37, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R194_ST_62_var_2.png"},
-  {name:"FSV Scheme A", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:7, dmg:135, premium:false, speed:60, caliber:76, dispersion:0.35, hp:1040, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB126_FSV_Scheme_A.png"},
-  {name:"8,8 cm Pak 43 Jagdtiger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:240, premium:true, speed:38, caliber:88, dispersion:0.31, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G65_JagdTiger_SdKfz_185.png"},
-  {name:"KJPZ TIII Jäger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:450, premium:true, speed:45, caliber:120, dispersion:0.28, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G168_KJpz_T_III.png"},
-  {name:"Rheinmetall Skorpion G", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:60, caliber:128, dispersion:0.3, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G114_Rheinmetall_Skorpian.png"},
-  {name:"TL-7", nation:"USA", flag:"🇺🇸", type:"TD", tier:9, dmg:360, premium:true, speed:50, caliber:120, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A146_TL_7_120.png"},
-  {name:"TOG II*", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:150, premium:true, speed:14, caliber:76, dispersion:0.36, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB63_TOG_II.png"},
-  {name:"M24E2 Super Chaffee", nation:"USA", flag:"🇺🇸", type:"Léger", tier:6, dmg:115, premium:true, speed:56, caliber:76, dispersion:0.44, hp:660, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A134_M24E2_SuperChaffee.png"},
-  {name:"MBT-B", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:10, dmg:400, premium:true, speed:50, caliber:120, dispersion:0.35, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A150_MBT_B.png"},
-  {name:"GSOR the TANK", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:390, premium:true, speed:40, caliber:105, dispersion:0.35, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB141_GSOR_the_TANK.png"},
-  {name:"Chi-To SP", nation:"Japon", flag:"🇯🇵", type:"TD", tier:7, dmg:320, premium:false, speed:30, caliber:105, dispersion:0.38, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J32_Chi_To_SPG.png"},
-  {name:"O-Ni", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:7, dmg:340, premium:false, speed:25, caliber:105, dispersion:0.41, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J28_O_I_100.png"},
-  {name:"Type 64", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:6, dmg:115, premium:true, speed:72, caliber:76, dispersion:0.4, hp:650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch24_Type64.png"},
-  {name:"Felice", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:480, premium:true, speed:45, caliber:127, dispersion:0.42, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It35_Felice.png"},
-  {name:"IS-6 B", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:35, caliber:122, dispersion:0.44, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R61_Object252_BF.png"},
-  {name:"BZ-72-1", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:560, premium:true, speed:30, caliber:130, dispersion:0.4, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch54_BZ_72_1.png"},
-  {name:"IS", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:180, premium:false, speed:34, caliber:85, dispersion:0.37, hp:1280, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R01_IS.png"},
-  {name:"Centurion Mk. I", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:150, premium:false, speed:50, caliber:76, dispersion:0.34, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB23_Centurion.png"},
-  {name:"Stitch", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:330, premium:true, speed:40, caliber:105, dispersion:0.37, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J42_Chi_Se_CFE_A.png"},
-  {name:"Leox", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:410, premium:true, speed:70, caliber:105, dispersion:0.32, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F137_LEOX.png"},
-  {name:"Object 590", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:320, premium:true, speed:52, caliber:100, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R187_Object_590.png"},
-  {name:"Kanonenjagdpanzer 2", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:370, premium:true, speed:60, caliber:110, dispersion:0.4, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G178_KanJpz_2.png"},
-  {name:"Bat.-Châtillon 25 t AP", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:280, premium:false, speed:65, caliber:90, dispersion:0.35, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F75_Char_de_25t.png"},
-  {name:"Alembic", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:52, caliber:105, dispersion:0.43, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A140_ASTRON_REX_105mm_SPD.png"},
-  {name:"Heavy Tank No. VI", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:220, premium:true, speed:40, caliber:88, dispersion:0.38, hp:1060, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J19_Tiger_I_Jpn.png"},
-  {name:"Pz.Kpfw. VII", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:560, premium:false, speed:33, caliber:128, dispersion:0.33, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G134_PzKpfw_VII.png"},
-  {name:"Churchill St. Gloriana", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:140, premium:true, speed:25, caliber:75, dispersion:0.36, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB150_Churchill_VII_A.png"},
-  {name:"T-103", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:440, premium:true, speed:40, caliber:130, dispersion:0.36, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R135_T_103.png"},
-  {name:"M-II-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:7, dmg:240, premium:false, speed:40, caliber:90, dispersion:0.42, hp:1280, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A147_M_II_Y.png"},
-  {name:"Vz. 60S Dravec", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:10, dmg:450, premium:true, speed:45, caliber:122, dispersion:0.33, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz21_Vz_60S_Dravec.png"},
-  {name:"Bat.-Châtillon 25 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:10, dmg:390, premium:false, speed:65, caliber:105, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F18_Bat_Chatillon25t.png"},
-  {name:"T-34-85", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:160, premium:false, speed:54, caliber:85, dispersion:0.39, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R07_T-34-85.png"},
-  {name:"T-100 LT", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:10, dmg:300, premium:false, speed:72, caliber:100, dispersion:0.46, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R132_VNII_100LT.png"},
-  {name:"Type 57", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:320, premium:false, speed:35, caliber:105, dispersion:0.26, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J39_Type_57.png"},
-  {name:"Kunze Panzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:390, premium:true, speed:65, caliber:105, dispersion:0.42, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G147_Kunze_Panzer.png"},
-  {name:"Type 4 Chi-To", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:6, dmg:125, premium:false, speed:45, caliber:75, dispersion:0.36, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J10_Chi_To.png"},
-  {name:"SU-100", nation:"URSS", flag:"🇷🇺", type:"TD", tier:6, dmg:250, premium:false, speed:50, caliber:100, dispersion:0.4, hp:650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R17_SU-100.png"},
-  {name:"T95/FV4201 Chieftain", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:440, premium:true, speed:40, caliber:119, dispersion:0.35, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB98_T95_FV4201_Chieftain.png"},
-  {name:"SMV CC-64 Vipera", nation:"Italie", flag:"🇮🇹", type:"TD", tier:8, dmg:400, premium:true, speed:30, caliber:120, dispersion:0.44, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It30_CC_mod_64_Prem.png"},
-  {name:"VK 45.02 (P) Ausf. B", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:360, premium:false, speed:30, caliber:105, dispersion:0.31, hp:1940, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G58_VK4502P.png"},
-  {name:"Škoda T 17", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Léger", tier:7, dmg:80, premium:false, speed:56, caliber:66, dispersion:0.39, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz23_Skoda_T_17.png"},
-  {name:"LTG", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:7, dmg:160, premium:false, speed:63, caliber:85, dispersion:0.4, hp:980, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R131_Tank_Gavalov.png"},
-  {name:"WZ-131G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:6, dmg:200, premium:false, speed:50, caliber:85, dispersion:0.36, hp:620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch34_WZ131G_FT.png"},
-  {name:"Fauteur", nation:"France", flag:"🇫🇷", type:"Lourd", tier:11, dmg:400, premium:false, speed:36, caliber:120, dispersion:0.33, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F143_Fauteur.png"},
-  {name:"LTTB", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:8, dmg:180, premium:false, speed:68, caliber:85, dispersion:0.36, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R107_LTB.png"},
-  {name:"Manticore", nation:"UK", flag:"🇬🇧", type:"Léger", tier:10, dmg:390, premium:false, speed:68, caliber:105, dispersion:0.38, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB100_Manticore.png"},
-  {name:"VK 30.01 (D)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:6, dmg:110, premium:false, speed:60, caliber:75, dispersion:0.39, hp:820, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G87_VK3002DB_V1.png"},
-  {name:"M4A3E8 Fury", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:42, caliber:76, dispersion:0.38, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A104_M4A3E8A.png"},
-  {name:"AT 7", nation:"UK", flag:"🇬🇧", type:"TD", tier:7, dmg:150, premium:false, speed:20, caliber:76, dispersion:0.3, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB75_AT7.png"},
-  {name:"M36 Jackson", nation:"USA", flag:"🇺🇸", type:"TD", tier:6, dmg:160, premium:false, speed:42, caliber:76, dispersion:0.35, hp:630, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A31_M36_Slagger.png"},
-  {name:"Executor", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:11, dmg:480, premium:false, speed:65, caliber:110, dispersion:0.27, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB158_Executor.png"},
-  {name:"T803", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:11, dmg:410, premium:false, speed:37, caliber:120, dispersion:0.35, hp:2350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A182_T803.png"},
-  {name:"WZ-113G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:10, dmg:750, premium:false, speed:40, caliber:152, dispersion:0.36, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch38_WZ113G_FT.png"},
-  {name:"K-91-PT", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:390, premium:true, speed:52, caliber:122, dispersion:0.4, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R183_K_91_PT.png"},
-  {name:"Turtle Mk. I", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:330, premium:true, speed:25, caliber:108, dispersion:0.36, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB99_Turtle_Mk1.png"},
-  {name:"Sherman Firefly Saunders", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:150, premium:true, speed:40, caliber:76, dispersion:0.36, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A192_M4A4_Firefly_CFE_A.png"},
-  {name:"Maus", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:490, premium:false, speed:20, caliber:128, dispersion:0.36, hp:3000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G42_Maus.png"},
-  {name:"M46 Patton KR", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:48, caliber:90, dispersion:0.38, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A63_M46_Patton_KR.png"},
-  {name:"T28", nation:"USA", flag:"🇺🇸", type:"TD", tier:8, dmg:360, premium:false, speed:22, caliber:105, dispersion:0.37, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A39_T28.png"},
-  {name:"Lorraine 50 t", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:400, premium:true, speed:60, caliber:120, dispersion:0.33, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F115_Lorraine_50t.png"},
-  {name:"T54E1", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:280, premium:false, speed:35, caliber:90, dispersion:0.37, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A89_T54E1.png"},
-  {name:"BZ-166", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:420, premium:false, speed:30, caliber:122, dispersion:0.42, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch50_BZ_166.png"},
-  {name:"Jagdtiger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:490, premium:false, speed:38, caliber:128, dispersion:0.33, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G44_JagdTiger.png"},
-  {name:"WZ-111 model 6", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:360, premium:true, speed:40, caliber:105, dispersion:0.4, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch58_111_Vz51.png"},
-  {name:"ISU-152K", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:750, premium:true, speed:40, caliber:152, dispersion:0.42, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R177_ISU_152K_BL10.png"},
-  {name:"Strv 107-12", nation:"Suède", flag:"🇸🇪", type:"TD", tier:11, dmg:390, premium:false, speed:51, caliber:105, dispersion:0.29, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S36_Strv_107_12.png"},
-  {name:"leKpz Borkenkäfer", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:11, dmg:330, premium:false, speed:75, caliber:105, dispersion:0.33, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G188_LeKpz_Borkenkafer.png"},
-  {name:"BZT-70", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:850, premium:true, speed:28, caliber:180, dispersion:0.45, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch57_BZT_70.png"},
-  {name:"Bretagne Panther", nation:"France", flag:"🇫🇷", type:"Moyen", tier:6, dmg:135, premium:true, speed:55, caliber:75, dispersion:0.34, hp:940, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F113_Bretagne_Panther.png"},
-  {name:"Panther", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:7, dmg:135, premium:false, speed:55, caliber:75, dispersion:0.35, hp:1340, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G03_PzV_Panther.png"},
-  {name:"DZT-159", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:440, premium:true, speed:40, caliber:122, dispersion:0.4, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch61_DZT_159.png"},
-  {name:"T26E5 Patriot", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:true, speed:45, caliber:90, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A117_T26E5_Patriot.png"},
-  {name:"FV4004 Conway", nation:"UK", flag:"🇬🇧", type:"TD", tier:9, dmg:400, premium:false, speed:50, caliber:120, dispersion:0.32, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB81_FV4004.png"},
-  {name:"M4A3E8 Sherman", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:false, speed:48, caliber:76, dispersion:0.39, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A06_M4A3E8_Sherman.png"},
-  {name:"WZ-114", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:530, premium:true, speed:33, caliber:130, dispersion:0.33, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch45_WZ_114.png"},
-  {name:"HWK 30", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:70, caliber:90, dispersion:0.36, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G140_HWK_30.png"},
-  {name:"AMX Canon d'assaut 105", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.3, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F89_Canon_dassaut_de_105.png"},
-  {name:"CS-52 C", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:100, dispersion:0.39, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl25_CS_52_C.png"},
-  {name:"T-62A", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:false, speed:50, caliber:100, dispersion:0.34, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R87_T62A.png"},
-  {name:"M-IV-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A141_M_IV_Y.png"},
-  {name:"Gryphon", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:420, premium:true, speed:43, caliber:119, dispersion:0.36, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB134_Gryphon.png"},
-  {name:"Tiger II", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:280, premium:false, speed:38, caliber:88, dispersion:0.32, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G16_PzVIB_Tiger_II.png"},
-  {name:"VK 28.01", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:6, dmg:70, premium:false, speed:64, caliber:50, dispersion:0.36, hp:740, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G66_VK2801.png"},
-  {name:"Chrysler K", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:105, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A115_Chrysler_K.png"},
-  {name:"Challenger", nation:"UK", flag:"🇬🇧", type:"TD", tier:7, dmg:150, premium:false, speed:52, caliber:76, dispersion:0.32, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB41_Challenger.png"},
-  {name:"Rinoceronte", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:10, dmg:490, premium:false, speed:40, caliber:127, dispersion:0.33, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It15_Rinoceronte.png"},
-  {name:"Kpz. Erich Konzept I", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:400, premium:true, speed:65, caliber:120, dispersion:0.3, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G165_Erich_Konzept_I.png"},
-  {name:"Brennos", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:105, dispersion:0.37, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F131_Brennos.png"},
-  {name:"ISU-130", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:490, premium:true, speed:38, caliber:130, dispersion:0.37, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R111_ISU130.png"},
-  {name:"Pz.Kpfw. IV Schmalturm", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:6, dmg:135, premium:true, speed:48, caliber:75, dispersion:0.32, hp:820, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G77_PzIV_Schmalturm.png"},
-  {name:"AMX M4 mle. 49", nation:"France", flag:"🇫🇷", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:100, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F74_AMX_M4_1949.png"},
-  {name:"Buryan", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:520, premium:true, speed:38, caliber:130, dispersion:0.42, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R231_Buryan.png"},
-  {name:"Super Conqueror", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:400, premium:false, speed:34, caliber:120, dispersion:0.33, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB91_Super_Conqueror.png"},
-  {name:"AMX 50 Foch (155)", nation:"France", flag:"🇫🇷", type:"TD", tier:10, dmg:750, premium:true, speed:50, caliber:155, dispersion:0.36, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F64_AMX_50Fosh_155.png"},
-  {name:"Nemesis", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:420, premium:true, speed:40, caliber:110, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB128_Nemesis.png"},
-  {name:"Sturer Emil", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:300, premium:false, speed:30, caliber:105, dispersion:0.33, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G43_Sturer_Emil.png"},
-  {name:"T78", nation:"USA", flag:"🇺🇸", type:"TD", tier:6, dmg:240, premium:true, speed:55, caliber:90, dispersion:0.38, hp:670, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A123_T78.png"},
-  {name:"Chieftain Mk. 6", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:400, premium:true, speed:42, caliber:119, dispersion:0.32, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB84_Chieftain_Mk6.png"},
-  {name:"STK-2", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:11, dmg:470, premium:false, speed:40, caliber:137, dispersion:0.22, hp:2450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J52_STK_2.png"},
-  {name:"113 Beijing Opera", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:440, premium:true, speed:50, caliber:122, dispersion:0.37, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch22_113_Beijing_Opera.png"},
-  {name:"50TP prototyp", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:440, premium:true, speed:35, caliber:122, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl08_50TP_prototyp.png"},
-  {name:"Lätt Stridsfordon 120", nation:"Suède", flag:"🇸🇪", type:"TD", tier:9, dmg:420, premium:true, speed:50, caliber:120, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S33_Latt_Stridsfordon_120.png"},
-  {name:"Serpente", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:400, premium:true, speed:55, caliber:120, dispersion:0.38, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It37_Serpente.png"},
-  {name:"Type 95 Ji-Ro", nation:"Japon", flag:"🇯🇵", type:"TD", tier:6, dmg:150, premium:false, speed:40, caliber:75, dispersion:0.33, hp:650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J38_Type_95_Ji_Ro.png"},
-  {name:"ISU-122S", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:390, premium:true, speed:43, caliber:122, dispersion:0.41, hp:870, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R116_ISU122C_Berlin.png"},
-  {name:"AMX 13 57", nation:"France", flag:"🇫🇷", type:"Léger", tier:7, dmg:90, premium:true, speed:61, caliber:57, dispersion:0.37, hp:890, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F69_AMX13_57_100.png"},
-  {name:"Hurricane", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.36, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl21_CS_63_OSP3.png"},
-  {name:"SDT-58 Vlkodav", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:9, dmg:390, premium:true, speed:50, caliber:105, dispersion:0.38, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz37_SDT_58_Vlkodav.png"},
-  {name:"T 55A", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:320, premium:true, speed:50, caliber:100, dispersion:0.33, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G105_T-55_NVA_DDR.png"},
-  {name:"T-34-1", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:7, dmg:160, premium:false, speed:50, caliber:85, dispersion:0.36, hp:1180, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch04_T34_1.png"},
-  {name:"Jagdpanzer E 100", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:1050, premium:false, speed:30, caliber:170, dispersion:0.35, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G72_JagdPz_E100.png"},
-  {name:"TL-1 LPC", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:280, premium:true, speed:50, caliber:90, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A127_TL_1_LPC.png"},
-  {name:"Primo Victoria", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:83, dispersion:0.33, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S23_Strv_81_sabaton.png"},
-  {name:"121B", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.33, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch25_121_mod_1971B.png"},
-  {name:"Panhard EBR 75 (FL 10)", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:175, premium:true, speed:60, caliber:75, dispersion:0.38, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F106_Panhard_EBR_75_Mle1954.png"},
-  {name:"Strv 81", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:83, dispersion:0.33, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S23_Strv_81.png"},
-  {name:"SZDV Vz. 50", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:8, dmg:390, premium:true, speed:42, caliber:122, dispersion:0.27, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz38_SZDV_vz50.png"},
-  {name:"WZ-132A", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:9, dmg:250, premium:false, speed:64, caliber:100, dispersion:0.36, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch28_WZ_132A.png"},
-  {name:"Wz. 64GC Bzyg", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:10, dmg:800, premium:true, speed:36, caliber:85, dispersion:0.4, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl36_Wz_64GC_Bzyg.png"},
-  {name:"T-34-2G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:7, dmg:250, premium:false, speed:50, caliber:100, dispersion:0.35, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch35_T-34-2G_FT.png"},
-  {name:"Kanonenjagdpanzer", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:240, premium:true, speed:70, caliber:90, dispersion:0.32, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G112_KanonenJagdPanzer.png"},
-  {name:"T71 CMCD", nation:"USA", flag:"🇺🇸", type:"Léger", tier:7, dmg:135, premium:false, speed:65, caliber:76, dispersion:0.36, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A112_T71E2R.png"},
-  {name:"Char Murat", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:390, premium:true, speed:60, caliber:105, dispersion:0.35, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F119_Char_Murat.png"},
-  {name:"Vz. 55 Gothic Warrior", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:10, dmg:490, premium:true, speed:50, caliber:130, dispersion:0.38, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz17_Vz_55_CN.png"},
-  {name:"Lion", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:420, premium:true, speed:60, caliber:105, dispersion:0.33, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It21_Lion.png"},
-  {name:"SU-130PM", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:520, premium:true, speed:65, caliber:130, dispersion:0.35, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R159_SU_130PM.png"},
-  {name:"112", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:45, caliber:122, dispersion:0.44, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch23_112.png"},
-  {name:"TNH T Vz. 51", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:390, premium:false, speed:50, caliber:105, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz16_TNH_T_vz51.png"},
-  {name:"UDES 03 Alt 3", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:9, dmg:360, premium:true, speed:55, caliber:105, dispersion:0.33, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S30_UDES_03_Alt_3.png"},
-  {name:"T-22 medium", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:true, speed:55, caliber:100, dispersion:0.38, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R120_T22SR_A22.png"},
-  {name:"Strv 103-0", nation:"Suède", flag:"🇸🇪", type:"TD", tier:9, dmg:390, premium:false, speed:50, caliber:105, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S10_Strv_103_0_Series.png"},
-  {name:"VK 45.03", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:240, premium:true, speed:38, caliber:88, dispersion:0.33, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G118_VK4503.png"},
-  {name:"Object 265T", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:true, speed:40, caliber:122, dispersion:0.42, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R219_Object_265T.png"},
-  {name:"AMX M4 mle. 54", nation:"France", flag:"🇫🇷", type:"Lourd", tier:10, dmg:400, premium:false, speed:35, caliber:120, dispersion:0.3, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F82_AMX_M4_Mle1949_Ter.png"},
-  {name:"Vz. 58 Medvěd", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:9, dmg:440, premium:true, speed:36, caliber:122, dispersion:0.45, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz32_Vz_58_Koncept.png"},
-  {name:"WT auf E 100 Phönix", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:560, premium:true, speed:40, caliber:128, dispersion:0.29, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G98_WT_auf_E_100_Phonix.png"},
-  {name:"Type 59", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:250, premium:true, speed:60, caliber:100, dispersion:0.35, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch01_Type59.png"},
-  {name:"Predatore", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:320, premium:true, speed:62, caliber:105, dispersion:0.34, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It40_Predatore.png"},
-  {name:"Kirovets-1", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:42, caliber:122, dispersion:0.45, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R123_Kirovets_1.png"},
-  {name:"Caliban", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:600, premium:true, speed:33, caliber:152, dispersion:0.58, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB112_Caliban.png"},
-  {name:"UDES 15/16", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:10, dmg:440, premium:false, speed:50, caliber:120, dispersion:0.35, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S28_UDES_15_16.png"},
-  {name:"Sherman Firefly", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:110, premium:false, speed:36, caliber:75, dispersion:0.43, hp:800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB19_Sherman_Firefly.png"},
-  {name:"leKpz M 41 90 mm", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:72, caliber:90, dispersion:0.38, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G120_M41_90.png"},
-  {name:"Panhard AMD 178B", nation:"France", flag:"🇫🇷", type:"Léger", tier:6, dmg:55, premium:false, speed:65, caliber:47, dispersion:0.37, hp:670, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F109_AMD_Panhard_178B.png"},
-  {name:"Object 752", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:9, dmg:390, premium:true, speed:35, caliber:122, dispersion:0.42, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R172_Object_752.png"},
-  {name:"Concept No. 5", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:10, dmg:460, premium:false, speed:65, caliber:110, dispersion:0.27, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB120_Concept_No_5.png"},
-  {name:"Type 5 Heavy", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:10, dmg:700, premium:false, speed:25, caliber:152, dispersion:0.4, hp:2900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J20_Type_2605.png"},
-  {name:"CS-67 Szakal", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:11, dmg:420, premium:false, speed:55, caliber:115, dispersion:0.34, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl37_CS_67_Szakal.png"},
-  {name:"Cromwell B", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:135, premium:true, speed:64, caliber:75, dispersion:0.36, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB85_Cromwell_Berlin.png"},
-  {name:"FV227 Conceiver", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:230, premium:false, speed:34, caliber:83, dispersion:0.35, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB148_FV227_Conceiver.png"},
-  {name:"Stridsyxa", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:350, premium:true, speed:50, caliber:105, dispersion:0.37, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S35_Stridsyxa.png"},
-  {name:"Fantôme", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:360, premium:true, speed:50, caliber:110, dispersion:0.4, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F140_Fantome.png"},
-  {name:"Object 430", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:390, premium:false, speed:50, caliber:122, dispersion:0.42, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R96_Object_430.png"},
-  {name:"Kanonenjagdpanzer 105", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:390, premium:true, speed:70, caliber:105, dispersion:0.32, hp:1050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G112_KanonenJagdPanzer_105.png"},
-  {name:"M47 Iron Arnie", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:40, caliber:105, dispersion:0.44, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A152_M_Project.png"},
-  {name:"Tortoise", nation:"UK", flag:"🇬🇧", type:"TD", tier:9, dmg:280, premium:false, speed:20, caliber:94, dispersion:0.33, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB32_Tortoise.png"},
-  {name:"Ferdinand", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:280, premium:false, speed:30, caliber:88, dispersion:0.32, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G37_Ferdinand.png"},
-  {name:"M4A3(76)W Sherman", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:48, caliber:76, dispersion:0.38, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A172_M4A3E8_Sherman_BPXIV.png"},
-  {name:"Panhard EBR 105", nation:"France", flag:"🇫🇷", type:"Léger", tier:10, dmg:390, premium:false, speed:70, caliber:105, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F108_Panhard_EBR_105.png"},
-  {name:"Prototipo Standard B", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.33, hp:1660, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It12_Prototipo_Standard_B.png"},
-  {name:"M6", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:6, dmg:115, premium:false, speed:35, caliber:76, dispersion:0.36, hp:1040, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A10_M6.png"},
-  {name:"Staghound Mk. III", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:90, premium:false, speed:60, caliber:57, dispersion:0.36, hp:860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB122_Staghound_Mk_III.png"},
-  {name:"O-Ho", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:370, premium:false, speed:25, caliber:105, dispersion:0.37, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J27_O_I_120.png"},
-  {name:"Object 274a", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:320, premium:true, speed:58, caliber:107, dispersion:0.38, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R180_Object_274_A.png"},
-  {name:"KV-2", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:300, premium:false, speed:35, caliber:107, dispersion:0.42, hp:910, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R77_KV2.png"},
-  {name:"KV-2 (R)", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:6, dmg:700, premium:true, speed:35, caliber:152, dispersion:0.6, hp:960, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R152_KV2_W.png"},
-  {name:"AMBT", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:360, premium:true, speed:40, caliber:105, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A149_AMBT.png"},
-  {name:"Leichter Kpz. 70 (K)", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:60, caliber:90, dispersion:0.33, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G166_LKpz_70_K.png"},
-  {name:"T42", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:280, premium:true, speed:52, caliber:90, dispersion:0.33, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A136_T42.png"},
-  {name:"Churchill VII", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:135, premium:false, speed:25, caliber:75, dispersion:0.36, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB09_Churchill_VII.png"},
-  {name:"Object 283", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:360, premium:true, speed:50, caliber:100, dispersion:0.38, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R191_Object_283.png"},
-  {name:"Black Rock", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:11, dmg:420, premium:true, speed:43, caliber:114, dispersion:0.34, hp:2400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A179_Black_Rock.png"},
-  {name:"113", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:440, premium:false, speed:50, caliber:122, dispersion:0.37, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch22_113.png"},
-  {name:"Object Kust", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:550, premium:true, speed:50, caliber:130, dispersion:0.43, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R217_Object_Kust.png"},
-  {name:"ASTRON Rex 105 mm", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:52, caliber:105, dispersion:0.43, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A140_ASTRON_REX_105mm.png"},
-  {name:"IMT", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:360, premium:true, speed:50, caliber:105, dispersion:0.37, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A171_IMT.png"},
-  {name:"Jagdpanzer IV", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:6, dmg:150, premium:false, speed:40, caliber:75, dispersion:0.33, hp:670, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G17_JagdPzIV.png"},
-  {name:"Jagdpanzer E 90", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:9, dmg:750, premium:true, speed:28, caliber:150, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G176_Jagdpanzer_E90.png"},
-  {name:"Centurion Mk. 7/1", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:9, dmg:230, premium:false, speed:50, caliber:83, dispersion:0.32, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB24_Centurion_Mk3.png"},
-  {name:"Ashigaru", nation:"Japon", flag:"🇯🇵", type:"TD", tier:10, dmg:390, premium:true, speed:40, caliber:105, dispersion:0.23, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J51_Ashigaru.png"},
-  {name:"T34", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:400, premium:true, speed:35, caliber:120, dispersion:0.35, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A13_T34_hvy.png"},
-  {name:"Char de transition", nation:"France", flag:"🇫🇷", type:"Lourd", tier:6, dmg:240, premium:true, speed:37, caliber:90, dispersion:0.38, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F129_ARL_44_BPXIV.png"},
-  {name:"Loza's M4-A2 Sherman", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:115, premium:true, speed:51, caliber:76, dispersion:0.4, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R140_M4_Loza.png"},
-  {name:"121", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:10, dmg:440, premium:false, speed:56, caliber:122, dispersion:0.35, hp:2050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch19_121.png"},
-  {name:"Ho-Ri 1", nation:"Japon", flag:"🇯🇵", type:"TD", tier:9, dmg:500, premium:false, speed:32, caliber:127, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J34_Ho_Ri_1.png"},
-  {name:"Ares 85", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:9, dmg:56, premium:false, speed:50, caliber:75, dispersion:0.37, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A190_Ares_85.png"},
-  {name:"FV4202", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:83, dispersion:0.33, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB70_N_FV4202_105.png"},
-  {name:"Jade Coil", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:320, premium:true, speed:60, caliber:105, dispersion:0.34, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB109_GSOR_1008_CFE_J.png"},
-  {name:"M56 Scorpion", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:240, premium:true, speed:45, caliber:90, dispersion:0.33, hp:820, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A101_M56.png"},
-  {name:"K-2", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:30, caliber:122, dispersion:0.44, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R192_K_2.png"},
-  {name:"T29", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:7, dmg:240, premium:false, speed:35, caliber:90, dispersion:0.38, hp:1240, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A11_T29.png"},
-  {name:"IS-6", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:35, caliber:122, dispersion:0.44, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R61_Object252.png"},
-  {name:"Type 3 Ju-Nu", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:150, premium:false, speed:35, caliber:75, dispersion:0.35, hp:1040, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J44_Type_3_Ju_Nu.png"},
-  {name:"Pawlack Tank", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:6, dmg:150, premium:false, speed:45, caliber:76, dispersion:0.41, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A142_Pawlack_Tank.png"},
-  {name:"Jagdtiger Prototype", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:490, premium:true, speed:38, caliber:128, dispersion:0.35, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G44_JagdTigerH.png"},
-  {name:"Caernarvon Action X", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:230, premium:true, speed:36, caliber:83, dispersion:0.32, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB93_Caernarvon_AX.png"},
-  {name:"Jagdpanther", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:240, premium:false, speed:55, caliber:88, dispersion:0.32, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G18_JagdPanther.png"},
-  {name:"T95E2", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:true, speed:56, caliber:90, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A81_T95_E2.png"},
-  {name:"VK 30.01 (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:6, dmg:120, premium:false, speed:45, caliber:75, dispersion:0.35, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G27_VK3001P.png"},
-  {name:"AT-FV230 Breaker", nation:"UK", flag:"🇬🇧", type:"TD", tier:11, dmg:480, premium:false, speed:20, caliber:123, dispersion:0.3, hp:2150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB152_AT_FV230_Breaker.png"},
-  {name:"Type 4 Ju-To", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:7, dmg:280, premium:false, speed:35, caliber:88, dispersion:0.35, hp:1240, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J43_Type_4_Ju-To.png"},
-  {name:"VK 75.01 (K)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:490, premium:true, speed:30, caliber:128, dispersion:0.39, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G141_VK7501K.png"},
-  {name:"WZ-111 model 5A", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:490, premium:false, speed:50, caliber:130, dispersion:0.39, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch41_WZ_111_5A.png"},
-  {name:"Centurion Mk. 5/1 RAAC", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:230, premium:true, speed:50, caliber:83, dispersion:0.33, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB94_Centurion_Mk5-1_RAAC.png"},
-  {name:"Excalibur", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:150, premium:true, speed:50, caliber:76, dispersion:0.3, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB96_Excalibur.png"},
-  {name:"56TP", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:8, dmg:390, premium:true, speed:40, caliber:122, dispersion:0.34, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl24_56TP.png"},
-  {name:"Vz. 55", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:10, dmg:490, premium:false, speed:50, caliber:130, dispersion:0.38, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz17_Vz_55.png"},
-  {name:"Progetto C50 mod. 66", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:9, dmg:320, premium:false, speed:45, caliber:105, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It19_Progetto_C50_mod_66.png"},
-  {name:"Object 432U", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:11, dmg:450, premium:false, speed:50, caliber:125, dispersion:0.39, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R230_Object_432U.png"},
-  {name:"M26 Pershing", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:240, premium:false, speed:48, caliber:90, dispersion:0.35, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A35_Pershing.png"},
-  {name:"Šotek", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:8, dmg:250, premium:true, speed:55, caliber:100, dispersion:0.3, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz20_ShPTK_TVP_100_mm_CO.png"},
-  {name:"Carro da Combattimento 45 t", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:400, premium:true, speed:55, caliber:120, dispersion:0.38, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It20_Carro_Combattimento_45t.png"},
-  {name:"Nergal", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:350, premium:true, speed:24, caliber:114, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB145_Crusher_ASE_4.png"},
-  {name:"KV-5", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:300, premium:true, speed:40, caliber:107, dispersion:0.4, hp:1780, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R54_KV-5.png"},
-  {name:"Miel", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:360, premium:true, speed:62, caliber:105, dispersion:0.42, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F116_Bat_Chatillon_Bourrasque_DV.png"},
-  {name:"GSOR 3301 AVR FS", nation:"UK", flag:"🇬🇧", type:"Léger", tier:9, dmg:230, premium:false, speed:65, caliber:83, dispersion:0.36, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB103_GSOR3301_AVR_FS.png"},
-  {name:"Object 705A", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:650, premium:false, speed:40, caliber:152, dispersion:0.44, hp:2450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R145_Object_705_A.png"},
-  {name:"T95E6", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:400, premium:true, speed:56, caliber:120, dispersion:0.38, hp:2150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A95_T95_E6.png"},
-  {name:"Churchill Gun Carrier", nation:"UK", flag:"🇬🇧", type:"TD", tier:6, dmg:140, premium:false, speed:26, caliber:76, dispersion:0.36, hp:730, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB40_Gun_Carrier_Churchill.png"},
-  {name:"T21", nation:"USA", flag:"🇺🇸", type:"Léger", tier:6, dmg:115, premium:false, speed:57, caliber:76, dispersion:0.41, hp:670, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A71_T21.png"},
-  {name:"WZ-111G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:9, dmg:560, premium:false, speed:35, caliber:130, dispersion:0.36, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch37_WZ111G_FT.png"},
-  {name:"M6A2E1", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:29, caliber:105, dispersion:0.4, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A45_M6A2E1.png"},
-  {name:"E 25", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:135, premium:true, speed:65, caliber:75, dispersion:0.3, hp:830, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G48_E-25.png"},
-  {name:"GSR 3301 Setter", nation:"UK", flag:"🇬🇧", type:"Léger", tier:7, dmg:75, premium:false, speed:63, caliber:57, dispersion:0.35, hp:950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB104_GSR_3301_Setter.png"},
-  {name:"T26E5", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:240, premium:true, speed:45, caliber:90, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A117_T26E5.png"},
-  {name:"Object 277", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:490, premium:false, speed:55, caliber:130, dispersion:0.38, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R155_Object_277.png"},
-  {name:"LTC II", nation:"USA", flag:"🇺🇸", type:"Léger", tier:9, dmg:200, premium:true, speed:65, caliber:90, dispersion:0.37, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A175_LTC_II.png"},
-  {name:"Monkey King", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:10, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.33, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch25_121_mod_1971B_MK.png"},
-  {name:"SU-122-44", nation:"URSS", flag:"🇷🇺", type:"TD", tier:7, dmg:390, premium:true, speed:48, caliber:122, dispersion:0.41, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R89_SU122_44.png"},
-  {name:"BZ-68", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:530, premium:false, speed:30, caliber:130, dispersion:0.42, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch49_BZ_68.png"},
-  {name:"T-44", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:220, premium:false, speed:56, caliber:85, dispersion:0.35, hp:1380, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R20_T-44.png"},
-  {name:"Gonsalo", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:440, premium:true, speed:37, caliber:120, dispersion:0.45, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB115_Gonsalo.png"},
-  {name:"T92", nation:"USA", flag:"🇺🇸", type:"Léger", tier:8, dmg:150, premium:true, speed:60, caliber:76, dispersion:0.38, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A99_T92_LT.png"},
-  {name:"BZ-74-1", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:420, premium:true, speed:50, caliber:122, dispersion:0.39, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch56_BZ_74_1.png"},
-  {name:"ST-66", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:300, premium:true, speed:50, caliber:100, dispersion:0.37, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R182_ST_66.png"},
-  {name:"Object 168 German", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:340, premium:true, speed:60, caliber:107, dispersion:0.34, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R203_Object_168N.png"},
-  {name:"BZ-58-2", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:9, dmg:520, premium:true, speed:35, caliber:130, dispersion:0.37, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch59_BZ58_2.png"},
-  {name:"Char Futur 4", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:390, premium:true, speed:60, caliber:105, dispersion:0.34, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F114_Projet_4_1.png"},
-  {name:"EMIL 1951", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.4, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S25_EMIL_51.png"},
-  {name:"Object 268", nation:"URSS", flag:"🇷🇺", type:"TD", tier:10, dmg:750, premium:false, speed:48, caliber:152, dispersion:0.33, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R88_Object268.png"},
-  {name:"Panther/M10", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:7, dmg:135, premium:true, speed:55, caliber:75, dispersion:0.32, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G78_Panther_M10.png"},
-  {name:"H3", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:400, premium:true, speed:46, caliber:120, dispersion:0.33, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A166_H_3.png"},
-  {name:"leKpz M 41 90 mm GF", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:72, caliber:90, dispersion:0.38, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G120_M41_90_GrandFinal.png"},
-  {name:"Spähpanzer Ru 251", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:9, dmg:240, premium:false, speed:70, caliber:90, dispersion:0.36, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G103_RU_251.png"},
-  {name:"P.43 bis", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:6, dmg:110, premium:false, speed:50, caliber:75, dispersion:0.36, hp:860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It10_P43_bis.png"},
-  {name:"BZ-176", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:650, premium:true, speed:30, caliber:160, dispersion:0.46, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch47_BZ_176.png"},
-  {name:"VCS 6x6 TS 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:250, premium:true, speed:80, caliber:90, dispersion:0.4, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F122_VCS_6x6_TS90.png"},
-  {name:"T49", nation:"USA", flag:"🇺🇸", type:"Léger", tier:9, dmg:270, premium:false, speed:65, caliber:90, dispersion:0.4, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A100_T49.png"},
-  {name:"Dicker Max", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:6, dmg:300, premium:true, speed:40, caliber:105, dispersion:0.36, hp:620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G41_DickerMax.png"},
-  {name:"VK 30.02 (M)", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:6, dmg:135, premium:false, speed:55, caliber:75, dispersion:0.37, hp:1050, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G96_VK3002M.png"},
-  {name:"ELC EVEN 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:220, premium:true, speed:70, caliber:90, dispersion:0.38, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F97_ELC_EVEN_90.png"},
-  {name:"KB-52", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:340, premium:true, speed:45, caliber:107, dispersion:0.37, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R235_KB_52.png"},
-  {name:"VK 72.01 (K)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:750, premium:true, speed:33, caliber:150, dispersion:0.4, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G92_VK7201.png"},
-  {name:"T-832", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:105, dispersion:0.33, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A158_T832.png"},
-  {name:"Churchill Crocodile", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:6, dmg:140, premium:true, speed:25, caliber:75, dispersion:0.36, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB136_Churchill_BPXIV.png"},
-  {name:"WZ-132", nation:"Chine", flag:"🇨🇳", type:"Léger", tier:8, dmg:200, premium:false, speed:64, caliber:85, dispersion:0.36, hp:1180, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch17_WZ131_1_WZ132.png"},
-  {name:"GSOR 1010 FB", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:8, dmg:360, premium:true, speed:60, caliber:105, dispersion:0.33, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB121_GSOR_1010_FB.png"},
-  {name:"Leopard Prototyp A", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:300, premium:false, speed:65, caliber:90, dispersion:0.32, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G91_Pro_Ag_A.png"},
-  {name:"E 75", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:9, dmg:360, premium:false, speed:40, caliber:105, dispersion:0.31, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G55_E-75.png"},
-  {name:"T26E3 Eagle 7", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:7, dmg:240, premium:true, speed:48, caliber:90, dispersion:0.39, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A121_M26_Cologne.png"},
-  {name:"FV4005 Stage II", nation:"UK", flag:"🇬🇧", type:"TD", tier:10, dmg:1150, premium:false, speed:32, caliber:183, dispersion:0.42, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB83_FV4005.png"},
-  {name:"STB-1", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:10, dmg:360, premium:false, speed:50, caliber:105, dispersion:0.37, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J16_ST_B1.png"},
-  {name:"Progetto M40 mod. 65", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:10, dmg:360, premium:false, speed:65, caliber:105, dispersion:0.35, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It08_Progetto_M40_mod_65.png"},
-  {name:"T25/2", nation:"USA", flag:"🇺🇸", type:"TD", tier:7, dmg:240, premium:false, speed:56, caliber:90, dispersion:0.36, hp:860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A72_T25_2.png"},
-  {name:"Object 260", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:true, speed:60, caliber:122, dispersion:0.35, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R110_Object_260.png"},
-  {name:"Lorraine 40 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:300, premium:true, speed:60, caliber:100, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F19_Lorraine40t.png"},
-  {name:"T-34-85 Rudy", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:180, premium:true, speed:54, caliber:85, dispersion:0.37, hp:810, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl16_T34_85_Rudy.png"},
-  {name:"FV226 Contradictious", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:360, premium:true, speed:36, caliber:105, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB139_FV226_Contradictious.png"},
-  {name:"FV201 (A45)", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:true, speed:31, caliber:76, dispersion:0.39, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB52_A45.png"},
-  {name:"WZ-111", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:50, caliber:122, dispersion:0.39, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch03_WZ-111.png"},
-  {name:"Tiger (P)", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:220, premium:false, speed:35, caliber:88, dispersion:0.37, hp:1480, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G57_PzVI_Tiger_P.png"},
-  {name:"T71 DA", nation:"USA", flag:"🇺🇸", type:"Léger", tier:7, dmg:115, premium:false, speed:64, caliber:76, dispersion:0.4, hp:840, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A103_T71E1.png"},
-  {name:"Progetto CC55 mod. 54", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:320, premium:false, speed:45, caliber:105, dispersion:0.39, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It17_Progetto_CC55_mod_54.png"},
-  {name:"114 SP2", nation:"Chine", flag:"🇨🇳", type:"TD", tier:10, dmg:650, premium:true, speed:45, caliber:152, dispersion:0.32, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch44_114_SP2.png"},
-  {name:"Tiger II Kuromorimine", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:7, dmg:240, premium:true, speed:38, caliber:88, dispersion:0.35, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G172_PzVIB_Tiger_II_DIT.png"},
-  {name:"WZ-111 Qilin", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:10, dmg:490, premium:true, speed:50, caliber:130, dispersion:0.39, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch41_WZ_111_QL.png"},
-  {name:"Kame", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:9, dmg:330, premium:true, speed:55, caliber:105, dispersion:0.3, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J49_Kame.png"},
-  {name:"T-34-85 Rudy", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:180, premium:true, speed:54, caliber:85, dispersion:0.37, hp:810, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R117_T34_85_Rudy.png"},
-  {name:"AMX Chasseur de chars", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:240, premium:true, speed:57, caliber:90, dispersion:0.34, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F68_AMX_Chasseur_de_char_46.png"},
-  {name:"SDP wz 66 Grom", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:8, dmg:800, premium:true, speed:45, caliber:100, dispersion:0.4, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl27_SDP_Wz_66T.png"},
-  {name:"XM551 Sheridan", nation:"USA", flag:"🇺🇸", type:"Léger", tier:10, dmg:390, premium:false, speed:65, caliber:105, dispersion:0.4, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A116_XM551.png"},
-  {name:"60TP Lewandowskiego", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:10, dmg:750, premium:false, speed:35, caliber:152, dispersion:0.4, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl15_60TP_Lewandowskiego.png"},
-  {name:"Škoda T 56", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Lourd", tier:8, dmg:460, premium:true, speed:35, caliber:130, dispersion:0.42, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz14_Skoda_T-56.png"},
-  {name:"OCP Peacekeeper", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:9, dmg:440, premium:true, speed:40, caliber:120, dispersion:0.4, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A144_M_VI_Y_CFE_RC.png"},
-  {name:"M54 Renegade", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.38, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A124_T54E2.png"},
-  {name:"FV217 Badger", nation:"UK", flag:"🇬🇧", type:"TD", tier:10, dmg:480, premium:false, speed:30, caliber:123, dispersion:0.3, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB92_FV217.png"},
-  {name:"SMV CC-67", nation:"Italie", flag:"🇮🇹", type:"TD", tier:8, dmg:320, premium:false, speed:35, caliber:105, dispersion:0.36, hp:1240, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It31_CC_67_B.png"},
-  {name:"WZ-120-1G FT", nation:"Chine", flag:"🇨🇳", type:"TD", tier:8, dmg:440, premium:true, speed:50, caliber:122, dispersion:0.37, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch39_WZ120_1G_FT.png"},
-  {name:"ShPTK-TVP 100", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"TD", tier:8, dmg:250, premium:true, speed:55, caliber:100, dispersion:0.3, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz20_ShPTK_TVP_100_mm.png"},
-  {name:"Strv S1", nation:"Suède", flag:"🇸🇪", type:"TD", tier:8, dmg:390, premium:true, speed:50, caliber:105, dispersion:0.4, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S22_Strv_S1.png"},
-  {name:"Ikv 90 Typ B", nation:"Suède", flag:"🇸🇪", type:"TD", tier:7, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.35, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S06_Ikv_90_Typ_B_Bofors.png"},
-  {name:"IS-3A", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:390, premium:true, speed:40, caliber:122, dispersion:0.46, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R115_IS-3_auto.png"},
-  {name:"Ashbringer", nation:"Pologne", flag:"🇵🇱", type:"Lourd", tier:10, dmg:750, premium:true, speed:35, caliber:152, dispersion:0.4, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl15_60TP_Lewandowskiego_CFE_A.png"},
-  {name:"Krupp-Steyr Waffenträger", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:7, dmg:240, premium:true, speed:35, caliber:88, dispersion:0.33, hp:800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G109_Steyr_WT.png"},
-  {name:"AMX 30 1er prototype", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.34, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F71_AMX_30_prototype.png"},
-  {name:"CS-53", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:300, premium:false, speed:50, caliber:100, dispersion:0.39, hp:1380, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl23_CS_53.png"},
-  {name:"CS-52 LIS", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:320, premium:true, speed:50, caliber:105, dispersion:0.36, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl19_CS_52_LIS.png"},
-  {name:"DZT-159 Dragon's Soul", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:440, premium:true, speed:40, caliber:122, dispersion:0.4, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch61_DZT_159_CFE_A.png"},
-  {name:"Char Mle. 75", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:200, premium:true, speed:55, caliber:100, dispersion:0.38, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F118_Char_Mle_75.png"},
-  {name:"Škoda T 27", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:8, dmg:240, premium:true, speed:50, caliber:88, dispersion:0.38, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz13_T_27.png"},
-  {name:"M48A5 Patton", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:10, dmg:390, premium:false, speed:48, caliber:105, dispersion:0.35, hp:2000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A120_M48A5.png"},
-  {name:"Lansen C", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:8, dmg:320, premium:true, speed:50, caliber:105, dispersion:0.38, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S26_Lansen_C.png"},
-  {name:"Toro", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:9, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.35, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It34_Toro.png"},
-  {name:"SFAC 105", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.4, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F128_SFAC_105.png"},
-  {name:"UDES 03", nation:"Suède", flag:"🇸🇪", type:"TD", tier:8, dmg:280, premium:false, speed:70, caliber:90, dispersion:0.35, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S21_UDES_03.png"},
-  {name:"A-44", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:7, dmg:100, premium:false, speed:59, caliber:57, dispersion:0.34, hp:1140, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R59_A44.png"},
-  {name:"AMX M4 mle. 51", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:400, premium:false, speed:33, caliber:120, dispersion:0.34, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F83_AMX_M4_Mle1949_Bis.png"},
-  {name:"GSOR 1008", nation:"UK", flag:"🇬🇧", type:"TD", tier:8, dmg:320, premium:true, speed:60, caliber:105, dispersion:0.34, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB109_GSOR_1008.png"},
-  {name:"Indien-Panzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:240, premium:false, speed:55, caliber:88, dispersion:0.32, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G88_Indien_Panzer.png"},
-  {name:"AMX 67 Imbattable", nation:"France", flag:"🇫🇷", type:"Lourd", tier:11, dmg:440, premium:false, speed:65, caliber:120, dispersion:0.33, hp:2400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F136_AMX_67_Imbattable.png"},
-  {name:"E 65 Zwilling", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:280, premium:true, speed:38, caliber:88, dispersion:0.35, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G177_E65_Zwilling.png"},
-  {name:"122 TM", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:8, dmg:400, premium:true, speed:50, caliber:120, dispersion:0.33, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch43_WZ_122_2.png"},
-  {name:"Strv K", nation:"Suède", flag:"🇸🇪", type:"Lourd", tier:9, dmg:420, premium:true, speed:45, caliber:105, dispersion:0.34, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S31_Strv_K.png"},
-  {name:"Object 263", nation:"URSS", flag:"🇷🇺", type:"TD", tier:9, dmg:440, premium:false, speed:55, caliber:122, dispersion:0.39, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R93_Object263.png"},
-  {name:"Kampfpanzer 50 t", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:320, premium:true, speed:60, caliber:105, dispersion:0.33, hp:1750, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G144_Kpz_50t.png"},
-  {name:"Stone Sentinel", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:360, premium:true, speed:50, caliber:105, dispersion:0.42, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It36_Progetto_C45_mod_71_M.png"},
-  {name:"UDES 16", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:9, dmg:360, premium:false, speed:50, caliber:105, dispersion:0.38, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S27_UDES_16.png"},
-  {name:"Panzer 58", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:90, dispersion:0.34, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G119_Panzer58.png"},
-  {name:"AMX 50 Foch B", nation:"France", flag:"🇫🇷", type:"TD", tier:10, dmg:400, premium:false, speed:50, caliber:120, dispersion:0.34, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F64_AMX_50Fosh_B.png"},
-  {name:"Panhard AML Lynx 6x6", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:175, premium:false, speed:58, caliber:75, dispersion:0.41, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F110_Lynx_6x6.png"},
-  {name:"Bisonte C45", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:360, premium:true, speed:50, caliber:105, dispersion:0.42, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It18_Progetto_C45_mod_71.png"},
-  {name:"Forest Spirit", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:520, premium:true, speed:65, caliber:130, dispersion:0.35, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R159_SU_130PM_DR.png"},
-  {name:"Controcarro 1 Mk. 2", nation:"Italie", flag:"🇮🇹", type:"TD", tier:9, dmg:400, premium:false, speed:30, caliber:120, dispersion:0.42, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It24_Controcarro_1_Mk2.png"},
-  {name:"Object 279 early", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:true, speed:35, caliber:122, dispersion:0.36, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R157_Object_279R.png"},
-  {name:"Grille 15", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:750, premium:false, speed:60, caliber:150, dispersion:0.27, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G121_Grille_15_L63.png"},
-  {name:"VK 168.01 Mauerbrecher", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:440, premium:true, speed:20, caliber:128, dispersion:0.4, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G138_VK168_02_Mauerbrecher.png"},
-  {name:"FV229 Contender", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:320, premium:false, speed:34, caliber:94, dispersion:0.31, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB143_FV229_Contender.png"},
-  {name:"Panhard EBR 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.38, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F100_Panhard_EBR_90.png"},
-  {name:"Type 63", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:105, dispersion:0.28, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J36_Type_63_HT.png"},
-  {name:"SDP 57 Gowika", nation:"Pologne", flag:"🇵🇱", type:"TD", tier:7, dmg:320, premium:false, speed:50, caliber:100, dispersion:0.38, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl31_SDP_Wz_57D.png"},
-  {name:"IS-2 shielded", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:7, dmg:390, premium:true, speed:30, caliber:122, dispersion:0.46, hp:1270, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R175_IS_2_screen.png"},
-  {name:"T110E3", nation:"USA", flag:"🇺🇸", type:"TD", tier:10, dmg:750, premium:false, speed:24, caliber:155, dispersion:0.36, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A85_T110E3.png"},
-  {name:"WZ-120", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:9, dmg:250, premium:false, speed:60, caliber:100, dispersion:0.35, hp:1720, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch18_WZ-120.png"},
-  {name:"Škoda T 40", nation:"Tchécoslovaquie", flag:"🇨🇿", type:"Moyen", tier:6, dmg:220, premium:true, speed:50, caliber:88, dispersion:0.37, hp:780, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/czech-Cz01_Skoda_T40.png"},
-  {name:"Type 58", nation:"Chine", flag:"🇨🇳", type:"Moyen", tier:6, dmg:160, premium:false, speed:55, caliber:85, dispersion:0.37, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch20_Type58.png"},
-];
+let TANKS = [];
 
 let secret = null;
 let guesses = [];
@@ -1101,6 +524,7 @@ function startSession(){
   sessionScore = 0;
   usedTanksThisSession = [];
   window._sessionAllGuesses = [];
+  clearRoundProgress();
   document.getElementById("sessionSummary").style.display = "none";
   document.getElementById("sessionSummary").innerHTML = "";
   document.getElementById("screenshotBtn").style.display = "none";
@@ -1128,6 +552,8 @@ function startRound(){
   renderQuickPick();
   updateTries();
   updateSessionBar();
+  saveRoundProgress();
+  document.getElementById("guessInput").focus();
 }
 
 function renderQuickPick(){
@@ -1179,6 +605,7 @@ document.querySelectorAll(".hintBox button[data-hint], .hintBox3 button[data-hin
       } else {
         rev.innerHTML = `<div class="iconName" style="color:var(--steel);">Icône non disponible pour ce char.</div>`;
       }
+      saveRoundProgress();
       return;
     }
 
@@ -1187,6 +614,7 @@ document.querySelectorAll(".hintBox button[data-hint], .hintBox3 button[data-hin
     resultEl.textContent = `${labels[kind]} : ${hintValue(kind)}`;
     hintUsed1 = true;
     document.querySelectorAll(".hintBox button[data-box='1']").forEach(b => b.disabled = true);
+    saveRoundProgress();
   });
 });
 
@@ -1267,6 +695,7 @@ function endRound(win){
 
   if(round < ROUNDS_PER_GAME){
     document.getElementById("nextRound").style.display = "block";
+    saveRoundProgress();
   } else {
     finishSession();
   }
@@ -1275,6 +704,85 @@ function endRound(win){
 function goToNextRound(){
   round += 1;
   startRound();
+}
+
+// ---- Sauvegarde de la manche en cours (mode Standard uniquement) ----
+const ROUND_SAVE_KEY = "tankle_active_round_v1";
+
+function saveRoundProgress(){
+  if(currentMode !== "standard" || !secret) return;
+  const state = {
+    round, sessionScore, roundResults, usedTanksThisSession,
+    secretName: secret.name,
+    guessNames: guesses.map(g => g.name),
+    finished, hintUsed1, hintUsed3,
+    hintResult1: document.getElementById("hintResult1").textContent,
+    iconShown: !!document.getElementById("iconReveal").innerHTML,
+    sessionAllGuesses: window._sessionAllGuesses || [],
+  };
+  try{ localStorage.setItem(ROUND_SAVE_KEY, JSON.stringify(state)); } catch(e){}
+}
+
+function clearRoundProgress(){
+  try{ localStorage.removeItem(ROUND_SAVE_KEY); } catch(e){}
+}
+
+function restoreRoundProgress(){
+  if(currentMode !== "standard") return false;
+  let raw;
+  try{ raw = localStorage.getItem(ROUND_SAVE_KEY); } catch(e){ return false; }
+  if(!raw) return false;
+  let st;
+  try{ st = JSON.parse(raw); } catch(e){ return false; }
+  if(!st || !st.secretName) return false;
+  const foundSecret = TANKS.find(t => t.name === st.secretName);
+  if(!foundSecret) return false;
+
+  round = st.round; sessionScore = st.sessionScore; roundResults = st.roundResults || [];
+  usedTanksThisSession = st.usedTanksThisSession || [];
+  window._sessionAllGuesses = st.sessionAllGuesses || [];
+  secret = foundSecret;
+  guesses = (st.guessNames || []).map(n => TANKS.find(t => t.name === n)).filter(Boolean);
+  finished = !!st.finished;
+  hintUsed1 = !!st.hintUsed1;
+  hintUsed3 = !!st.hintUsed3;
+
+  document.getElementById("boardBody").innerHTML = "";
+  guesses.forEach(g => renderGuess(g));
+  updateTries();
+  updateHintBoxes();
+  if(st.hintResult1) document.getElementById("hintResult1").textContent = st.hintResult1;
+  if(hintUsed1) document.querySelectorAll(".hintBox button[data-box='1']").forEach(b => b.disabled = true);
+  if(st.iconShown && secret.image){
+    document.getElementById("iconReveal").innerHTML = `<img src="${secret.image}" alt="Icône du char">`;
+  }
+  if(hintUsed3) document.querySelectorAll(".hintBox3 button[data-box='3']").forEach(b => b.disabled = true);
+  document.getElementById("guessInput").disabled = finished;
+  document.getElementById("nextRound").style.display = "none";
+
+  if(finished && roundResults.length >= round){
+    const r = roundResults[round-1];
+    const msg = document.getElementById("message");
+    msg.className = r.win ? "win" : "lose";
+    if(r.win){
+      const tries = r.tries;
+      let title;
+      if(tries === 1) title = "ONE SHOT !";
+      else if(tries === 2) title = "SNAP SHOT !";
+      else if(tries === 3) title = "EASY KILL";
+      else if(tries <= 7) title = "CIBLE NEUTRALISÉE";
+      else title = "C'ÉTAIT MOINS UNE";
+      msg.innerHTML = `<b>${title} — +${r.score} PTS</b>Bravo, c'était bien le <b style="display:inline">${secret.name}</b>, en ${tries} tentative(s).`;
+    } else {
+      msg.innerHTML = `<b>MISSION ÉCHOUÉE — +0 PT</b>Le char recherché était le <b style="display:inline">${secret.name}</b> (Tier ${secret.tier}, ${secret.type}).`;
+    }
+    if(round < ROUNDS_PER_GAME){
+      document.getElementById("nextRound").style.display = "block";
+    }
+  }
+
+  updateSessionBar();
+  return true;
 }
 
 function finishSession(){
@@ -1301,6 +809,7 @@ function finishSession(){
   `;
   box.style.display = "block";
   document.getElementById("screenshotBtn").style.display = "block";
+  clearRoundProgress();
   saveSessionToHistory();
 }
 
@@ -1319,6 +828,10 @@ function submitGuess(name){
     flashInput();
     return;
   }
+  if(currentMode === "daily"){
+    submitDailyGuess(tank);
+    return;
+  }
   guesses.push(tank);
   if(!window._sessionAllGuesses) window._sessionAllGuesses = [];
   window._sessionAllGuesses.push(tank.name);
@@ -1327,11 +840,14 @@ function submitGuess(name){
   updateHintBoxes();
   document.getElementById("guessInput").value = "";
   document.getElementById("suggest").innerHTML = "";
+  document.getElementById("guessInput").focus();
 
   if(tank.name === secret.name){
     endRound(true);
   } else if(guesses.length >= MAX_TRIES){
     endRound(false);
+  } else {
+    saveRoundProgress();
   }
 }
 
@@ -1355,7 +871,9 @@ function getKnownConstraints(){
 
 function filterPoolByConstraints(pool){
   const c = getKnownConstraints();
+  const alreadyGuessed = new Set(guesses.map(g => g.name));
   return pool.filter(t =>
+    !alreadyGuessed.has(t.name) && // anti-doublon : un char déjà proposé disparaît de la recherche
     (c.nation===undefined || t.nation===c.nation) &&
     (c.type===undefined || t.type===c.type) &&
     (c.tier===undefined || t.tier===c.tier) &&
@@ -1366,28 +884,60 @@ function filterPoolByConstraints(pool){
 
 const input = document.getElementById("guessInput");
 const suggestBox = document.getElementById("suggest");
+let activeSuggestIndex = -1;
 
-input.addEventListener("input", ()=>{
+function renderSuggestions(){
   const v = input.value.trim();
   const nv = normalize(v);
   suggestBox.innerHTML = "";
+  activeSuggestIndex = -1;
   if(!v) return;
   const pool = filterPoolByConstraints(TANKS);
   const matches = pool
     .filter(t => normalize(t.name).includes(nv))
     .sort((a,b) => a.name.length - b.name.length || a.name.localeCompare(b.name))
     .slice(0,8);
-  matches.forEach(t=>{
+  matches.forEach((t, i)=>{
     const div = document.createElement("div");
     div.textContent = t.name;
+    div.dataset.index = i;
     div.onclick = ()=>{ submitGuess(t.name); };
     suggestBox.appendChild(div);
   });
-});
+}
+
+function highlightSuggestion(idx){
+  const items = suggestBox.querySelectorAll("div");
+  items.forEach(el => el.classList.remove("suggestActive"));
+  if(idx >= 0 && idx < items.length){
+    items[idx].classList.add("suggestActive");
+    items[idx].scrollIntoView({block:"nearest"});
+  }
+}
+
+input.addEventListener("input", renderSuggestions);
 
 input.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter"){
-    submitGuess(input.value);
+  const items = suggestBox.querySelectorAll("div");
+  if(e.key === "ArrowDown"){
+    if(items.length === 0) return;
+    e.preventDefault();
+    activeSuggestIndex = (activeSuggestIndex + 1) % items.length;
+    highlightSuggestion(activeSuggestIndex);
+  } else if(e.key === "ArrowUp"){
+    if(items.length === 0) return;
+    e.preventDefault();
+    activeSuggestIndex = (activeSuggestIndex - 1 + items.length) % items.length;
+    highlightSuggestion(activeSuggestIndex);
+  } else if(e.key === "Enter"){
+    if(activeSuggestIndex >= 0 && items[activeSuggestIndex]){
+      submitGuess(items[activeSuggestIndex].textContent);
+    } else {
+      submitGuess(input.value);
+    }
+  } else if(e.key === "Escape"){
+    suggestBox.innerHTML = "";
+    activeSuggestIndex = -1;
   }
 });
 
@@ -1470,6 +1020,7 @@ function saveSessionToHistory(){
     allGuesses: window._sessionAllGuesses || [], // TOUS les chars proposés (tentatives) durant la partie
   };
   history.unshift(entry);
+  scoreboardPage = 0;
   try{
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   } catch(e){
@@ -1490,14 +1041,24 @@ function loadHistory(){
   renderStats();
 }
 
+const SCOREBOARD_PAGE_SIZE = 10;
+let scoreboardPage = 0;
+
 function renderScoreboard(){
   const wrap = document.getElementById("scoreboardContent");
   if(!history.length){
     wrap.innerHTML = `<div class="scoreEmpty">Aucune partie terminée pour l'instant. Termine une partie de 5 manches pour l'ajouter ici.</div>`;
     return;
   }
+  const totalPages = Math.max(1, Math.ceil(history.length / SCOREBOARD_PAGE_SIZE));
+  if(scoreboardPage >= totalPages) scoreboardPage = totalPages - 1;
+  if(scoreboardPage < 0) scoreboardPage = 0;
+  const start = scoreboardPage * SCOREBOARD_PAGE_SIZE;
+  const pageItems = history.slice(start, start + SCOREBOARD_PAGE_SIZE);
+
   let rowsHtml = "";
-  history.forEach((session, idx) => {
+  pageItems.forEach((session, localIdx) => {
+    const idx = start + localIdx; // index réel dans history
     rowsHtml += `
       <tr class="sessionRow" data-session="${idx}">
         <td>${session.date}</td>
@@ -1522,11 +1083,20 @@ function renderScoreboard(){
         </td>
       </tr>`;
   });
+
+  const pagerHtml = totalPages > 1 ? `
+    <div class="pager">
+      <button id="pagerPrev" ${scoreboardPage === 0 ? "disabled" : ""}>◀ Précédent</button>
+      <span>Page ${scoreboardPage+1} / ${totalPages}</span>
+      <button id="pagerNext" ${scoreboardPage >= totalPages-1 ? "disabled" : ""}>Suivant ▶</button>
+    </div>` : "";
+
   wrap.innerHTML = `
     <table id="scoreTable">
       <thead><tr><th>Date</th><th>Score total</th><th></th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
+    ${pagerHtml}
   `;
   wrap.querySelectorAll(".sessionRow").forEach(row => {
     row.addEventListener("click", () => {
@@ -1537,6 +1107,10 @@ function renderScoreboard(){
       row.querySelector("td:last-child").textContent = isOpen ? "▾ voir le détail" : "▴ masquer";
     });
   });
+  const prevBtn = document.getElementById("pagerPrev");
+  const nextBtn = document.getElementById("pagerNext");
+  if(prevBtn) prevBtn.addEventListener("click", () => { scoreboardPage--; renderScoreboard(); });
+  if(nextBtn) nextBtn.addEventListener("click", () => { scoreboardPage++; renderScoreboard(); });
 }
 
 function renderStats(){
@@ -1579,16 +1153,220 @@ function renderStats(){
     : `<div style="color:var(--steel);font-size:.8em;padding:8px;">Pas encore assez de données.</div>`;
 }
 
-// ---- Sélecteur de mode (Standard pour l'instant, d'autres modes à venir) ----
+// ---- Défi du jour : sélection déterministe, timer, sauvegarde, partage ----
+let dailySecret = null;
+let dailyGuesses = [];
+let dailyElapsedMs = 0;
+let dailyFinished = false;
+let dailyTimerHandle = null;
+let dailyDateStr = "";
+
+function todayDateStr(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function hashStr(s){
+  let h = 0;
+  for(let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; }
+  return h;
+}
+
+function pickDailyTank(dateStr){
+  const h = hashStr("tankle-daily-" + dateStr);
+  return TANKS[h % TANKS.length];
+}
+
+function formatTime(ms){
+  const totalSec = Math.floor(ms/1000);
+  const m = Math.floor(totalSec/60);
+  const s = totalSec % 60;
+  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
+function dailyStorageKey(){ return "tankle_daily_" + dailyDateStr; }
+
+function saveDailyState(){
+  const state = {
+    guessNames: dailyGuesses.map(g => g.name),
+    elapsedMs: dailyElapsedMs,
+    finished: dailyFinished,
+  };
+  try{ localStorage.setItem(dailyStorageKey(), JSON.stringify(state)); } catch(e){}
+}
+
+function loadDailyState(){
+  try{
+    const raw = localStorage.getItem(dailyStorageKey());
+    return raw ? JSON.parse(raw) : null;
+  } catch(e){ return null; }
+}
+
+function setUIModeVisibility(mode){
+  const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries"];
+  const standardOnlyClass = document.querySelector(".session-bar");
+  const dailyOnly = ["dailyBar","dailyResult"];
+  if(mode === "standard"){
+    if(standardOnlyClass) standardOnlyClass.style.display = "flex";
+    standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
+    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; });
+    document.getElementById("hintBox1").style.display = "none"; // sera réaffiché par updateHintBoxes si pertinent
+    document.getElementById("hintBox3").style.display = "none";
+    document.getElementById("nextRound").style.display = "none";
+    document.getElementById("message").style.display = "";
+  } else {
+    if(standardOnlyClass) standardOnlyClass.style.display = "none";
+    standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = "none"; });
+    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; }); // dailyResult affiché seulement si fini
+    document.getElementById("dailyBar").style.display = "flex";
+    document.getElementById("message").style.display = "none";
+    document.getElementById("message").innerHTML = "";
+  }
+}
+
+function startDailyMode(){
+  if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
+  dailyDateStr = todayDateStr();
+  dailySecret = pickDailyTank(dailyDateStr);
+  secret = dailySecret; // réutilise le rendu générique (renderGuess, filterPoolByConstraints...)
+
+  const d = new Date();
+  document.getElementById("dailyDateLabel").textContent = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
+
+  const saved = loadDailyState();
+  document.getElementById("boardBody").innerHTML = "";
+  document.getElementById("dailyResult").style.display = "none";
+  document.getElementById("dailyResult").innerHTML = "";
+
+  if(saved){
+    dailyGuesses = (saved.guessNames || []).map(n => TANKS.find(t => t.name === n)).filter(Boolean);
+    dailyElapsedMs = saved.elapsedMs || 0;
+    dailyFinished = !!saved.finished;
+    guesses = dailyGuesses;
+    dailyGuesses.forEach(g => renderGuess(g));
+  } else {
+    dailyGuesses = [];
+    guesses = [];
+    dailyElapsedMs = 0;
+    dailyFinished = false;
+  }
+
+  finished = dailyFinished;
+  updateDailyTries();
+  updateDailyTimerDisplay();
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").disabled = dailyFinished;
+  document.getElementById("suggest").innerHTML = "";
+
+  if(dailyFinished){
+    showDailyResult();
+  } else {
+    dailyTimerHandle = setInterval(() => {
+      dailyElapsedMs += 1000;
+      updateDailyTimerDisplay();
+      if(dailyElapsedMs % 5000 === 0) saveDailyState();
+    }, 1000);
+    document.getElementById("guessInput").focus();
+  }
+}
+
+function updateDailyTries(){
+  document.getElementById("dailyTriesLabel").textContent = dailyGuesses.length;
+}
+function updateDailyTimerDisplay(){
+  document.getElementById("dailyTimer").textContent = formatTime(dailyElapsedMs);
+}
+
+function submitDailyGuess(tank){
+  dailyGuesses.push(tank);
+  guesses = dailyGuesses;
+  renderGuess(tank);
+  updateDailyTries();
+  document.getElementById("guessInput").value = "";
+  document.getElementById("suggest").innerHTML = "";
+  document.getElementById("guessInput").focus();
+
+  if(tank.name === dailySecret.name){
+    dailyFinished = true;
+    finished = true;
+    if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
+    document.getElementById("guessInput").disabled = true;
+    saveDailyState();
+    showDailyResult();
+  } else {
+    saveDailyState();
+  }
+}
+
+function buildShareGrid(){
+  return dailyGuesses.map(g => {
+    const cells = [
+      g.nation === dailySecret.nation ? "🟩" : "⬜",
+      g.type === dailySecret.type ? "🟩" : "⬜",
+      g.tier === dailySecret.tier ? "🟩" : "⬜",
+      g.dmg === dailySecret.dmg ? "🟩" : (Math.abs(g.dmg-dailySecret.dmg) <= 50 ? "🟨" : "⬜"),
+      g.premium === dailySecret.premium ? "🟩" : "⬜",
+    ];
+    return cells.join("");
+  }).join("\n");
+}
+
+function showDailyResult(){
+  const box = document.getElementById("dailyResult");
+  const grid = buildShareGrid();
+  box.innerHTML = `
+    <b>DÉFI DU JOUR RÉUSSI</b>
+    <div class="dailyStat">${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)</div>
+    <div class="dailyGrid">${grid.replace(/\n/g,"<br>")}</div>
+    <button id="shareResultBtn">📋 Partager mon résultat</button>
+    <div class="shareConfirm" id="shareConfirm">Copié dans le presse-papiers !</div>
+  `;
+  box.style.display = "block";
+  document.getElementById("shareResultBtn").addEventListener("click", shareDailyResult);
+}
+
+async function shareDailyResult(){
+  const d = new Date();
+  const dateLabel = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
+  const text = `TANKLE — Défi du ${dateLabel}\n⏱ ${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)\n${buildShareGrid()}`;
+  try{
+    if(navigator.share){
+      await navigator.share({text});
+    } else {
+      await navigator.clipboard.writeText(text);
+      const c = document.getElementById("shareConfirm");
+      c.style.display = "block";
+      setTimeout(() => { c.style.display = "none"; }, 2500);
+    }
+  } catch(e){
+    try{
+      await navigator.clipboard.writeText(text);
+      const c = document.getElementById("shareConfirm");
+      c.style.display = "block";
+      setTimeout(() => { c.style.display = "none"; }, 2500);
+    } catch(e2){}
+  }
+}
+
+// ---- Sélecteur de mode ----
 let currentMode = "standard";
 document.querySelectorAll(".modeBtn").forEach(btn => {
   btn.addEventListener("click", () => {
+    if(btn.dataset.mode === currentMode) return;
     document.querySelectorAll(".modeBtn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     currentMode = btn.dataset.mode;
-    // Le mode Standard est le seul disponible pour l'instant ; les futurs modes
-    // pourront réinitialiser la session avec des règles différentes ici.
-    startSession();
+
+    if(currentMode === "daily"){
+      setUIModeVisibility("daily");
+      startDailyMode();
+    } else {
+      if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
+      setUIModeVisibility("standard");
+      if(!restoreRoundProgress()){
+        startSession();
+      }
+    }
   });
 });
 
@@ -1600,6 +1378,19 @@ document.getElementById("resetStatsBtn").addEventListener("click", () => {
   renderStats();
 });
 
+// ---- Mode daltonien ----
+function applyColorblindPref(){
+  const on = localStorage.getItem("tankle_colorblind") === "1";
+  document.documentElement.classList.toggle("colorblind", on);
+  document.getElementById("colorblindIcon").classList.toggle("active", on);
+}
+document.getElementById("colorblindIcon").addEventListener("click", () => {
+  const currentlyOn = document.documentElement.classList.contains("colorblind");
+  localStorage.setItem("tankle_colorblind", currentlyOn ? "0" : "1");
+  applyColorblindPref();
+});
+applyColorblindPref();
+
 document.getElementById("rulesIcon").addEventListener("click", () => {
   document.getElementById("rulesOverlay").classList.add("open");
 });
@@ -1610,8 +1401,24 @@ document.getElementById("rulesOverlay").addEventListener("click", (e) => {
   if(e.target.id === "rulesOverlay") document.getElementById("rulesOverlay").classList.remove("open");
 });
 
-startSession();
-loadHistory();
+// ---- Initialisation : charge le dataset externe puis démarre le jeu ----
+async function init(){
+  try{
+    const res = await fetch("tanks.json");
+    TANKS = await res.json();
+  } catch(e){
+    console.error("Impossible de charger tanks.json :", e);
+    document.getElementById("boardBody").innerHTML =
+      `<tr><td colspan="5" style="padding:20px;color:var(--bad);">Erreur : impossible de charger la liste des chars (tanks.json). Vérifie que ce fichier est bien déployé à côté de index.html.</td></tr>`;
+    return;
+  }
+  loadHistory();
+  if(!restoreRoundProgress()){
+    startSession();
+  }
+}
+
+init();
 </script>
 </body>
 </html>
