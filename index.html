@@ -196,8 +196,24 @@ select.tankSelect{
   font-family:inherit;font-size:.75em;cursor:pointer;text-transform:uppercase;letter-spacing:1px;
 }
 .hintBox3 button:hover{background:var(--olive);}
+.quickPick{text-align:center;margin-bottom:14px;display:none;}
+.quickPickLabel{font-size:.68em;letter-spacing:1px;color:var(--steel);text-transform:uppercase;margin-bottom:6px;}
+.quickPickBtns{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.quickPickBtns button{
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);padding:6px 12px;
+  font-family:inherit;font-size:.72em;cursor:pointer;
+}
+.quickPickBtns button:hover{background:var(--olive);}
+button#resetStatsBtn{
+  display:block;margin:16px auto 0;
+  background:var(--bad);color:var(--sand-light);
+  border:1px solid #52544a;padding:8px 16px;
+  font-family:inherit;font-size:.7em;letter-spacing:1px;cursor:pointer;text-transform:uppercase;
+}
+button#resetStatsBtn:hover{background:var(--rust);}
 .iconReveal{margin-top:10px;}
-.iconReveal img{width:180px;height:56px;object-fit:cover;image-rendering:pixelated;filter:drop-shadow(0 0 6px var(--rust));}
+.iconReveal img{width:160px;height:60px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 0 6px var(--rust));}
 .iconReveal .iconName{font-size:.9em;color:var(--sand-light);margin-top:6px;letter-spacing:1px;}
 button#screenshotBtn{
   display:none;margin:14px auto 0;
@@ -291,7 +307,7 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
     <div class="rulesPanel">
       <button class="rulesClose" id="rulesClose">×</button>
       <h2>Règles du jeu</h2>
-      <p>Une partie se joue en <b>5 manches</b>. À chaque manche, un char est tiré au sort et tu dois le deviner en <b>8 tentatives maximum</b>.</p>
+      <p>Une partie se joue en <b>5 manches</b>. À chaque manche, un char est tiré au sort parmi les chars <b>tier 6 à 11</b> et tu dois le deviner en <b>8 tentatives maximum</b>.</p>
       <h3>Lecture du tableau</h3>
       <ul>
         <li><b>Vert</b> : information correcte.</li>
@@ -299,16 +315,17 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
         <li><b>Gris</b> : information incorrecte.</li>
         <li>Flèches ↑ / ↓ : indiquent si la vraie valeur (Tier ou Dégâts) est plus haute ou plus basse que ta proposition.</li>
       </ul>
+      <h3>Panne d'inspiration ?</h3>
+      <p>Avant ta toute première tentative, 3 chars totalement aléatoires te sont proposés en raccourci. Ils peuvent, par hasard, être le char à trouver !</p>
       <h3>Indices</h3>
       <ul>
-        <li>Après <b>3 essais</b> : choix entre Calibre du canon et Dispersion à 100m.</li>
-        <li>Après <b>5 essais</b> : choix entre Vitesse maximale et Points de structure.</li>
+        <li>Après <b>4 essais</b> : choix entre Dispersion à 100m et Vitesse maximale.</li>
         <li>Après <b>7 essais</b> : icône du char (à débloquer volontairement).</li>
       </ul>
       <h3>Score</h3>
       <p>Barème selon le nombre d'essais utilisés pour trouver le char : 2000 / 1000 / 850 / 700 / 550 / 400 / 250 / 100 points (0 si non trouvé).</p>
       <h3>Astuce recherche</h3>
-      <p>La barre de recherche ignore les accents, les tirets et les espaces ("is 7" = "is-7"), et filtre automatiquement la liste selon les informations déjà révélées en vert.</p>
+      <p>La barre de recherche ignore les accents, les tirets, les points et les espaces ("is 7" = "is-7"), et filtre automatiquement la liste selon les informations déjà révélées en vert.</p>
     </div>
   </div>
 
@@ -322,18 +339,16 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
     <input id="guessInput" type="text" placeholder="Tape le nom d'un char... (ex: IS-7, E 100, Object 140)" autocomplete="off">
     <div class="suggest" id="suggest"></div>
   </div>
+  <div class="quickPick" id="quickPick">
+    <div class="quickPickLabel">Panne d'inspiration ?</div>
+    <div class="quickPickBtns" id="quickPickBtns"></div>
+  </div>
   <div class="tries" id="tries">TENTATIVES : 0 / 8</div>
   <div class="hintBox" id="hintBox1">
-    <div class="hintLabel">Indice disponible après 3 essais — choisis-en un :</div>
-    <button data-hint="caliber" data-box="1">Calibre du canon</button>
+    <div class="hintLabel">Indice disponible après 4 essais — choisis-en un :</div>
     <button data-hint="dispersion" data-box="1">Dispersion à 100m</button>
+    <button data-hint="speed" data-box="1">Vitesse maximale</button>
     <div class="hintResult" id="hintResult1"></div>
-  </div>
-  <div class="hintBox" id="hintBox2" style="border-color:var(--warn);">
-    <div class="hintLabel">Indice disponible après 5 essais — choisis-en un :</div>
-    <button data-hint="speed" data-box="2">Vitesse maximale</button>
-    <button data-hint="hp" data-box="2">Points de structure</button>
-    <div class="hintResult" id="hintResult2"></div>
   </div>
   <div class="hintBox3" id="hintBox3">
     <div class="hintLabel">⚠ Dernier recours — disponible après 7 essais</div>
@@ -376,6 +391,7 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
       <h4>Top 5 chars les plus proposés</h4>
       <div id="top5List"></div>
     </div>
+    <button id="resetStatsBtn">Réinitialiser mes statistiques</button>
   </div>
 
   <div class="footnote">Jeu fan-made non officiel — données indicatives inspirées de la Tankopedia World of Tanks (api.worldoftanks.eu)</div>
@@ -456,7 +472,6 @@ const TANKS = [
   {name:"Panther II", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:135, premium:false, speed:55, caliber:75, dispersion:0.3, hp:1560, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G64_Panther_II.png"},
   {name:"Chrysler K GF", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:320, premium:true, speed:35, caliber:105, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A115_Chrysler_K_GF.png"},
   {name:"Object 140", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:340, premium:false, speed:55, caliber:100, dispersion:0.35, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R97_Object_140.png"},
-  {name:"LTS-85", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:8, dmg:300, premium:true, speed:65, caliber:100, dispersion:0.44, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R198_LTS_85.png"},
   {name:"Taschenratte", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:11, dmg:510, premium:false, speed:18, caliber:132, dispersion:0.36, hp:3300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G187_Taschenratte.png"},
   {name:"PTZ-78", nation:"Chine", flag:"🇨🇳", type:"TD", tier:11, dmg:760, premium:false, speed:40, caliber:152, dispersion:0.36, hp:2200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch70_PTZ_78.png"},
   {name:"AltProto AMX 30", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:300, premium:true, speed:65, caliber:100, dispersion:0.36, hp:1250, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F117_Alt_Proto_AMX_30.png"},
@@ -717,10 +732,8 @@ const TANKS = [
   {name:"Stitch", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:330, premium:true, speed:40, caliber:105, dispersion:0.37, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J42_Chi_Se_CFE_A.png"},
   {name:"Leox", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:410, premium:true, speed:70, caliber:105, dispersion:0.32, hp:1650, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F137_LEOX.png"},
   {name:"Object 590", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:9, dmg:320, premium:true, speed:52, caliber:100, dispersion:0.38, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R187_Object_590.png"},
-  {name:"T-44-100 Igrovoy", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:250, premium:true, speed:52, caliber:100, dispersion:0.35, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R127_T44_100_I.png"},
   {name:"Kanonenjagdpanzer 2", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:370, premium:true, speed:60, caliber:110, dispersion:0.4, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G178_KanJpz_2.png"},
   {name:"Bat.-Châtillon 25 t AP", nation:"France", flag:"🇫🇷", type:"Moyen", tier:9, dmg:280, premium:false, speed:65, caliber:90, dispersion:0.35, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F75_Char_de_25t.png"},
-  {name:"Terrifiant", nation:"France", flag:"🇫🇷", type:"Lourd", tier:9, dmg:500, premium:true, speed:35, caliber:128, dispersion:0.36, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F139_Terrifiant.png"},
   {name:"Alembic", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:52, caliber:105, dispersion:0.43, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A140_ASTRON_REX_105mm_SPD.png"},
   {name:"Heavy Tank No. VI", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:6, dmg:220, premium:true, speed:40, caliber:88, dispersion:0.38, hp:1060, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J19_Tiger_I_Jpn.png"},
   {name:"Pz.Kpfw. VII", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:10, dmg:560, premium:false, speed:33, caliber:128, dispersion:0.33, hp:2500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G134_PzKpfw_VII.png"},
@@ -731,7 +744,6 @@ const TANKS = [
   {name:"Bat.-Châtillon 25 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:10, dmg:390, premium:false, speed:65, caliber:105, dispersion:0.35, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F18_Bat_Chatillon25t.png"},
   {name:"T-34-85", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:6, dmg:160, premium:false, speed:54, caliber:85, dispersion:0.39, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R07_T-34-85.png"},
   {name:"T-100 LT", nation:"URSS", flag:"🇷🇺", type:"Léger", tier:10, dmg:300, premium:false, speed:72, caliber:100, dispersion:0.46, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R132_VNII_100LT.png"},
-  {name:"TITT Rozanov", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:8, dmg:200, premium:true, speed:42, caliber:85, dispersion:0.34, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R205_Tank_Rozanova.png"},
   {name:"Type 57", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:320, premium:false, speed:35, caliber:105, dispersion:0.26, hp:1520, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J39_Type_57.png"},
   {name:"Kunze Panzer", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:9, dmg:390, premium:true, speed:65, caliber:105, dispersion:0.42, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G147_Kunze_Panzer.png"},
   {name:"Type 4 Chi-To", nation:"Japon", flag:"🇯🇵", type:"Moyen", tier:6, dmg:125, premium:false, speed:45, caliber:75, dispersion:0.36, hp:900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J10_Chi_To.png"},
@@ -777,7 +789,6 @@ const TANKS = [
   {name:"HWK 30", nation:"Allemagne", flag:"🇩🇪", type:"Léger", tier:8, dmg:240, premium:true, speed:70, caliber:90, dispersion:0.36, hp:1150, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G140_HWK_30.png"},
   {name:"AMX Canon d'assaut 105", nation:"France", flag:"🇫🇷", type:"TD", tier:8, dmg:390, premium:true, speed:55, caliber:105, dispersion:0.3, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F89_Canon_dassaut_de_105.png"},
   {name:"CS-52 C", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:100, dispersion:0.39, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl25_CS_52_C.png"},
-  {name:"WZ-113-II", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:320, premium:true, speed:50, caliber:100, dispersion:0.37, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch46_113_140.png"},
   {name:"T-62A", nation:"URSS", flag:"🇷🇺", type:"Moyen", tier:10, dmg:320, premium:false, speed:50, caliber:100, dispersion:0.34, hp:1950, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R87_T62A.png"},
   {name:"M-IV-Y", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:8, dmg:360, premium:true, speed:45, caliber:105, dispersion:0.4, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A141_M_IV_Y.png"},
   {name:"Gryphon", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:10, dmg:420, premium:true, speed:43, caliber:119, dispersion:0.36, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB134_Gryphon.png"},
@@ -859,7 +870,6 @@ const TANKS = [
   {name:"Ferdinand", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:8, dmg:280, premium:false, speed:30, caliber:88, dispersion:0.32, hp:1600, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G37_Ferdinand.png"},
   {name:"M4A3(76)W Sherman", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:6, dmg:115, premium:true, speed:48, caliber:76, dispersion:0.38, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A172_M4A3E8_Sherman_BPXIV.png"},
   {name:"Panhard EBR 105", nation:"France", flag:"🇫🇷", type:"Léger", tier:10, dmg:390, premium:false, speed:70, caliber:105, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F108_Panhard_EBR_105.png"},
-  {name:"Chi-Se", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:330, premium:true, speed:40, caliber:105, dispersion:0.37, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J42_Chi_Se.png"},
   {name:"Prototipo Standard B", nation:"Italie", flag:"🇮🇹", type:"Moyen", tier:9, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.33, hp:1660, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It12_Prototipo_Standard_B.png"},
   {name:"M6", nation:"USA", flag:"🇺🇸", type:"Lourd", tier:6, dmg:115, premium:false, speed:35, caliber:76, dispersion:0.36, hp:1040, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A10_M6.png"},
   {name:"Staghound Mk. III", nation:"UK", flag:"🇬🇧", type:"Moyen", tier:6, dmg:90, premium:false, speed:60, caliber:57, dispersion:0.36, hp:860, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB122_Staghound_Mk_III.png"},
@@ -968,7 +978,6 @@ const TANKS = [
   {name:"Object 260", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:true, speed:60, caliber:122, dispersion:0.35, hp:2100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R110_Object_260.png"},
   {name:"Lorraine 40 t", nation:"France", flag:"🇫🇷", type:"Moyen", tier:8, dmg:300, premium:true, speed:60, caliber:100, dispersion:0.38, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F19_Lorraine40t.png"},
   {name:"T-34-85 Rudy", nation:"Pologne", flag:"🇵🇱", type:"Moyen", tier:6, dmg:180, premium:true, speed:54, caliber:85, dispersion:0.37, hp:810, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/poland-Pl16_T34_85_Rudy.png"},
-  {name:"Object 259A", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:8, dmg:420, premium:true, speed:60, caliber:122, dispersion:0.38, hp:1450, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R188_Object_259A.png"},
   {name:"FV226 Contradictious", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:360, premium:true, speed:36, caliber:105, dispersion:0.36, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB139_FV226_Contradictious.png"},
   {name:"FV201 (A45)", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:7, dmg:150, premium:true, speed:31, caliber:76, dispersion:0.39, hp:1500, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB52_A45.png"},
   {name:"WZ-111", nation:"Chine", flag:"🇨🇳", type:"Lourd", tier:8, dmg:390, premium:true, speed:50, caliber:122, dispersion:0.39, hp:1550, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/china-Ch03_WZ-111.png"},
@@ -1021,7 +1030,6 @@ const TANKS = [
   {name:"UDES 16", nation:"Suède", flag:"🇸🇪", type:"Moyen", tier:9, dmg:360, premium:false, speed:50, caliber:105, dispersion:0.38, hp:1620, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/sweden-S27_UDES_16.png"},
   {name:"Panzer 58", nation:"Allemagne", flag:"🇩🇪", type:"Moyen", tier:8, dmg:300, premium:true, speed:55, caliber:90, dispersion:0.34, hp:1350, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G119_Panzer58.png"},
   {name:"AMX 50 Foch B", nation:"France", flag:"🇫🇷", type:"TD", tier:10, dmg:400, premium:false, speed:50, caliber:120, dispersion:0.34, hp:1850, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F64_AMX_50Fosh_B.png"},
-  {name:"Crusher", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:8, dmg:350, premium:true, speed:24, caliber:114, dispersion:0.38, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB131_Crusher.png"},
   {name:"Panhard AML Lynx 6x6", nation:"France", flag:"🇫🇷", type:"Léger", tier:8, dmg:175, premium:false, speed:58, caliber:75, dispersion:0.41, hp:1000, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F110_Lynx_6x6.png"},
   {name:"Bisonte C45", nation:"Italie", flag:"🇮🇹", type:"Lourd", tier:8, dmg:360, premium:true, speed:50, caliber:105, dispersion:0.42, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/italy-It18_Progetto_C45_mod_71.png"},
   {name:"Forest Spirit", nation:"URSS", flag:"🇷🇺", type:"TD", tier:8, dmg:520, premium:true, speed:65, caliber:130, dispersion:0.35, hp:1100, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R159_SU_130PM_DR.png"},
@@ -1029,7 +1037,6 @@ const TANKS = [
   {name:"Object 279 early", nation:"URSS", flag:"🇷🇺", type:"Lourd", tier:10, dmg:440, premium:true, speed:35, caliber:122, dispersion:0.36, hp:2300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/ussr-R157_Object_279R.png"},
   {name:"Grille 15", nation:"Allemagne", flag:"🇩🇪", type:"TD", tier:10, dmg:750, premium:false, speed:60, caliber:150, dispersion:0.27, hp:1800, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G121_Grille_15_L63.png"},
   {name:"VK 168.01 Mauerbrecher", nation:"Allemagne", flag:"🇩🇪", type:"Lourd", tier:8, dmg:440, premium:true, speed:20, caliber:128, dispersion:0.4, hp:1700, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/germany-G138_VK168_02_Mauerbrecher.png"},
-  {name:"M47 Patton Improved", nation:"USA", flag:"🇺🇸", type:"Moyen", tier:8, dmg:320, premium:true, speed:40, caliber:105, dispersion:0.44, hp:1300, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/usa-A152_M_Project_2.png"},
   {name:"FV229 Contender", nation:"UK", flag:"🇬🇧", type:"Lourd", tier:9, dmg:320, premium:false, speed:34, caliber:94, dispersion:0.31, hp:1900, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/uk-GB143_FV229_Contender.png"},
   {name:"Panhard EBR 90", nation:"France", flag:"🇫🇷", type:"Léger", tier:9, dmg:240, premium:false, speed:65, caliber:90, dispersion:0.38, hp:1200, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/france-F100_Panhard_EBR_90.png"},
   {name:"Type 63", nation:"Japon", flag:"🇯🇵", type:"Lourd", tier:8, dmg:320, premium:true, speed:40, caliber:105, dispersion:0.28, hp:1400, image:"https://api.worldoftanks.eu/static/2.77.0/wot/encyclopedia/vehicle/contour/japan-J36_Type_63_HT.png"},
@@ -1106,7 +1113,6 @@ function startRound(){
   guesses = [];
   finished = false;
   hintUsed1 = false;
-  hintUsed2 = false;
   hintUsed3 = false;
   document.getElementById("boardBody").innerHTML = "";
   document.getElementById("message").className = "";
@@ -1115,34 +1121,44 @@ function startRound(){
   document.getElementById("guessInput").value = "";
   document.getElementById("guessInput").disabled = false;
   document.getElementById("hintResult1").textContent = "";
-  document.getElementById("hintResult2").textContent = "";
   document.querySelectorAll(".hintBox button[data-hint], .hintBox3 button[data-hint]").forEach(b => b.disabled = false);
   document.getElementById("hintBox1").style.display = "none";
-  document.getElementById("hintBox2").style.display = "none";
   document.getElementById("hintBox3").style.display = "none";
   document.getElementById("iconReveal").innerHTML = "";
+  renderQuickPick();
   updateTries();
   updateSessionBar();
 }
 
+function renderQuickPick(){
+  const box = document.getElementById("quickPick");
+  const btnsWrap = document.getElementById("quickPickBtns");
+  box.style.display = "block";
+  const shuffled = [...TANKS].sort(() => Math.random() - 0.5).slice(0, 3);
+  btnsWrap.innerHTML = "";
+  shuffled.forEach(t => {
+    const b = document.createElement("button");
+    b.textContent = t.name;
+    b.onclick = () => submitGuess(t.name);
+    btnsWrap.appendChild(b);
+  });
+}
+
 let hintUsed1 = false;
-let hintUsed2 = false;
 let hintUsed3 = false;
 
 function updateHintBoxes(){
   const b1 = document.getElementById("hintBox1");
-  const b2 = document.getElementById("hintBox2");
   const b3 = document.getElementById("hintBox3");
   const n = guesses.length;
-  if(n >= 3) b1.style.display = "block"; else b1.style.display = "none";
-  if(n >= 5) b2.style.display = "block"; else b2.style.display = "none";
+  if(n >= 4) b1.style.display = "block"; else b1.style.display = "none";
   if(n >= 7) b3.style.display = "block"; else b3.style.display = "none";
+  // Le quick-pick "Panne d'inspiration ?" n'est proposé qu'avant la toute première tentative
+  document.getElementById("quickPick").style.display = (n === 0 && !finished) ? "block" : "none";
 }
 
 function hintValue(kind){
   if(kind === "speed")    return secret.speed     != null ? `${secret.speed} km/h`      : "Donnée indisponible";
-  if(kind === "hp")       return secret.hp         != null ? `${secret.hp} PV`           : "Donnée indisponible";
-  if(kind === "caliber")  return secret.caliber    != null ? `${secret.caliber} mm`      : "Donnée indisponible";
   if(kind === "dispersion") return secret.dispersion != null ? `${secret.dispersion} m`  : "Donnée indisponible";
   return "?";
 }
@@ -1151,7 +1167,6 @@ document.querySelectorAll(".hintBox button[data-hint], .hintBox3 button[data-hin
   btn.addEventListener("click", () => {
     const box = btn.dataset.box;
     if(box === "1" && (hintUsed1 || finished)) return;
-    if(box === "2" && (hintUsed2 || finished)) return;
     if(box === "3" && (hintUsed3 || finished)) return;
     const kind = btn.dataset.hint;
 
@@ -1167,16 +1182,11 @@ document.querySelectorAll(".hintBox button[data-hint], .hintBox3 button[data-hin
       return;
     }
 
-    const labels = {speed:"Vitesse max", hp:"Points de structure", caliber:"Calibre", dispersion:"Dispersion à 100m"};
+    const labels = {speed:"Vitesse max", dispersion:"Dispersion à 100m"};
     const resultEl = document.getElementById(`hintResult${box}`);
     resultEl.textContent = `${labels[kind]} : ${hintValue(kind)}`;
-    if(box === "1"){
-      hintUsed1 = true;
-      document.querySelectorAll(".hintBox button[data-box='1']").forEach(b => b.disabled = true);
-    } else {
-      hintUsed2 = true;
-      document.querySelectorAll(".hintBox button[data-box='2']").forEach(b => b.disabled = true);
-    }
+    hintUsed1 = true;
+    document.querySelectorAll(".hintBox button[data-box='1']").forEach(b => b.disabled = true);
   });
 });
 
@@ -1244,7 +1254,8 @@ function endRound(win){
   if(win){
     let title;
     if(tries === 1) title = "ONE SHOT !";
-    else if(tries === 2) title = "QUEL SNAP SHOT !";
+    else if(tries === 2) title = "SNAP SHOT !";
+    else if(tries === 3) title = "EASY KILL";
     else if(tries <= 7) title = "CIBLE NEUTRALISÉE";
     else title = "C'ÉTAIT MOINS UNE";
     msg.innerHTML = `<b>${title} — +${points} PTS</b>Bravo, c'était bien le <b style="display:inline">${secret.name}</b>, en ${tries} tentative(s).`;
@@ -1297,7 +1308,7 @@ function normalize(str){
   return str
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // retire les accents (é->e, ä->a, ü->u...)
     .toLowerCase()
-    .replace(/[\s\-]+/g, "");
+    .replace(/[\s\-.]+/g, "");
 }
 
 function submitGuess(name){
@@ -1579,6 +1590,14 @@ document.querySelectorAll(".modeBtn").forEach(btn => {
     // pourront réinitialiser la session avec des règles différentes ici.
     startSession();
   });
+});
+
+document.getElementById("resetStatsBtn").addEventListener("click", () => {
+  if(!confirm("Réinitialiser toutes tes statistiques et ton historique de scores ? Cette action est irréversible.")) return;
+  history = [];
+  try{ localStorage.removeItem(STORAGE_KEY); } catch(e){}
+  renderScoreboard();
+  renderStats();
 });
 
 document.getElementById("rulesIcon").addEventListener("click", () => {
