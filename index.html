@@ -69,10 +69,6 @@ h1{
   text-shadow:2px 2px 0 var(--olive-dark);
 }
 .sub{letter-spacing:3px;color:var(--steel);font-size:.78em;margin-top:6px;text-transform:uppercase;}
-.intro{
-  max-width:560px;margin:14px auto 22px;text-align:center;
-  font-size:.85em;color:var(--sand);line-height:1.5;
-}
 .searchbox{position:relative;max-width:480px;margin:0 auto 22px;}
 input#guessInput{
   width:100%;
@@ -86,6 +82,9 @@ input#guessInput{
   outline:none;
 }
 input#guessInput:focus{border-color:var(--rust);}
+.rulesIcon:focus-visible,.colorblindIcon:focus-visible,.socialIcon:focus-visible{
+  outline:2px solid var(--rust);outline-offset:2px;
+}
 .suggest{
   position:absolute;top:100%;left:0;right:0;
   background:var(--olive-dark);
@@ -117,7 +116,7 @@ td.cell{
 @keyframes flip{from{transform:rotateX(90deg);opacity:0;}to{transform:rotateX(0);opacity:1;}}
 td.cell.ok{background:var(--ok);border-color:var(--ok);}
 td.cell.warn{background:var(--warn);border-color:var(--warn);color:var(--ink);}
-td.cell.bad{background:var(--bad);border-color:#52544a;color:var(--steel);}
+td.cell.bad{background:var(--bad);border-color:var(--border-color);color:var(--steel);}
 td.cell .arrow{display:block;font-size:1.1em;margin-top:1px;}
 .name-cell{display:flex;align-items:center;justify-content:center;gap:6px;}
 .flag{font-size:1.1em;}
@@ -186,10 +185,6 @@ button#nextRound:hover{background:var(--olive-hover);}
   text-align:center;padding:7px 4px;border-bottom:1px solid var(--olive-dark);
 }
 .scoreTableStyle tr:hover td{background:rgba(75,83,32,0.25);}
-select.tankSelect{
-  width:100%;background:var(--olive-dark);color:var(--sand-light);
-  border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px;
-}
 .scoreEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:14px;}
 .sortBar{display:flex;justify-content:center;gap:16px;margin-bottom:12px;font-size:.75em;color:var(--sand);flex-wrap:wrap;}
 .sortBar select{
@@ -243,7 +238,7 @@ select.tankSelect{
 button#resetStatsBtn{
   display:block;margin:16px auto 0;
   background:var(--bad);color:var(--sand-light);
-  border:1px solid #52544a;padding:8px 16px;
+  border:1px solid var(--border-color);padding:8px 16px;
   font-family:inherit;font-size:.7em;letter-spacing:1px;cursor:pointer;text-transform:uppercase;
 }
 button#resetStatsBtn:hover{background:var(--rust);}
@@ -300,15 +295,8 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 }
 .dailyBar b{color:var(--sand-light);}
 #dailyDoneMark{color:var(--ok);font-weight:900;margin-left:4px;}
-button#dailyReturnBtn{
-  display:none;margin:0 auto 14px;
-  background:var(--olive-dark);color:var(--sand-light);
-  border:1px solid var(--olive);padding:7px 14px;font-family:inherit;
-  letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
-}
-button#dailyReturnBtn:hover{background:var(--olive);}
 button#dailyResetBtn{
-  display:none;margin:0 auto;
+  display:none;margin:0 auto 14px;
   background:var(--olive-dark);color:var(--sand-light);
   border:1px solid var(--bad);padding:7px 14px;font-family:inherit;
   letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
@@ -392,7 +380,6 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   h1{font-size:1.35em;letter-spacing:4px;}
   .sub{font-size:.62em;letter-spacing:1.5px;}
   .crest{padding:8px 14px;}
-  .intro{font-size:.78em;}
   .mode-bar{gap:6px;}
   button.modeBtn{padding:7px 10px;font-size:.68em;}
   .dailyBar{gap:10px;font-size:.65em;}
@@ -435,8 +422,8 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
       <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
     </a>
   </div>
-  <div class="rulesIcon" id="rulesIcon">?</div>
-  <div class="colorblindIcon" id="colorblindIcon" title="Mode daltonien">◐</div>
+  <div class="rulesIcon" id="rulesIcon" role="button" tabindex="0" aria-label="Afficher les règles du jeu">?</div>
+  <div class="colorblindIcon" id="colorblindIcon" role="button" tabindex="0" aria-label="Activer ou désactiver le mode daltonien" title="Mode daltonien">◐</div>
   <header>
     <div class="crest"><h1>TANKLE</h1></div>
     <div class="sub">BY LA FRENCH TOUCH (& CLAUDE)</div>
@@ -452,10 +439,8 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     <span id="dailyStreakWrap">🔥 Série : <b id="dailyStreakLabel">0</b></span>
     <span id="dailyLiveStats">⏱ <b id="dailyTimer">00:00</b> · Tentatives : <b id="dailyTriesLabel">0</b></span>
     <span id="dailyCountdownWrap" style="display:none;">Prochain défi dans <b id="dailyCountdownLabel">--</b></span>
-    <span id="dailyReplayLabel" style="display:none;color:var(--warn);font-weight:700;">MODE ENTRAÎNEMENT</span>
   </div>
   <div style="text-align:center;">
-    <button id="dailyReturnBtn" style="display:none;">↩ Revenir au défi du jour</button>
     <button id="dailyResetBtn" style="display:none;">🔄 Réinitialiser le défi du jour</button>
   </div>
 
@@ -1300,7 +1285,6 @@ let dailyFinished = false;
 let dailyTimerHandle = null;
 let dailyCountdownHandle = null;
 let dailyDateStr = "";
-let dailyIsReplay = false;
 
 const DAILY_HISTORY_KEY = "tankle_daily_history_v1";
 
@@ -1330,7 +1314,6 @@ function formatTime(ms){
 function dailyStorageKey(dateStr){ return "tankle_daily_" + dateStr; }
 
 function saveDailyState(){
-  if(dailyIsReplay) return; // le mode entraînement ne persiste pas
   const state = {
     guessNames: dailyGuesses.map(g => g.name),
     elapsedMs: dailyElapsedMs,
@@ -1489,7 +1472,7 @@ function renderDailyHistory(){
 function setUIModeVisibility(mode){
   const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries","standardScoreboardBox","statsBox"];
   const standardOnlyClass = document.querySelector(".session-bar");
-  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyReturnBtn","dailyResetBtn"];
+  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyResetBtn"];
   if(mode === "standard"){
     if(standardOnlyClass) standardOnlyClass.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
@@ -1512,14 +1495,11 @@ function setUIModeVisibility(mode){
   }
 }
 
-function startDailyMode(dateStrOverride, isReplay){
-  isReplay = !!isReplay;
+function startDailyMode(){
   if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
   stopDailyCountdown();
 
-  dailyIsReplay = isReplay;
-  dailyDateStr = dateStrOverride || todayDateStr();
-  const isToday = dailyDateStr === todayDateStr();
+  dailyDateStr = todayDateStr();
   dailySecret = pickDailyTank(dailyDateStr);
   secret = dailySecret; // réutilise le rendu générique (renderGuess, filterPoolByConstraints...)
 
@@ -1530,17 +1510,12 @@ function startDailyMode(dateStrOverride, isReplay){
   document.getElementById("dailyResult").style.display = "none";
   document.getElementById("dailyResult").innerHTML = "";
   document.getElementById("dailyScreenshotBtn").style.display = "none";
-  document.getElementById("dailyReturnBtn").style.display = isReplay ? "block" : "none";
   document.getElementById("dailyResetBtn").style.display = "block";
-  document.getElementById("dailyReplayLabel").style.display = isReplay ? "inline" : "none";
-  document.getElementById("dailyStreakWrap").style.display = isReplay ? "none" : "inline";
-  if(!isReplay){
-    document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
-  }
+  document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
   document.getElementById("dailyHistoryBox").style.display = "block";
   renderDailyHistory();
 
-  const saved = isReplay ? null : loadDailyState(dailyDateStr); // le replay repart toujours de zéro
+  const saved = loadDailyState(dailyDateStr);
 
   if(saved){
     dailyGuesses = (saved.guessNames || []).map(n => TANKS.find(t => t.name === n)).filter(Boolean);
@@ -1600,10 +1575,8 @@ function submitDailyGuess(tank){
     if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
     document.getElementById("guessInput").disabled = true;
     saveDailyState();
-    if(!dailyIsReplay){
-      recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs, dailyGuesses.map(g => g.name));
-      refreshDailyDoneMark();
-    }
+    recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs, dailyGuesses.map(g => g.name));
+    refreshDailyDoneMark();
     showDailyResult();
   } else {
     saveDailyState();
@@ -1632,9 +1605,8 @@ function showDailyResult(){
       <td>${squares}</td>
     </tr>`;
   }).join("");
-  const title = dailyIsReplay ? "ENTRAÎNEMENT RÉUSSI" : "DÉFI DU JOUR RÉUSSI";
   box.innerHTML = `
-    <b>${title}</b>
+    <b>DÉFI DU JOUR RÉUSSI</b>
     <div class="scoreTotal">${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)</div>
     <table>
       <thead><tr><th>Essai</th><th>Résultat</th></tr></thead>
@@ -1645,19 +1617,11 @@ function showDailyResult(){
   document.getElementById("dailyScreenshotBtn").style.display = "block";
 
   document.getElementById("dailyLiveStats").style.display = "none";
-  if(dailyIsReplay){
-    document.getElementById("dailyCountdownWrap").style.display = "none";
-  } else {
-    document.getElementById("dailyCountdownWrap").style.display = "inline";
-    startDailyCountdown();
-    document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
-  }
+  document.getElementById("dailyCountdownWrap").style.display = "inline";
+  startDailyCountdown();
+  document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
   renderDailyHistory();
 }
-
-document.getElementById("dailyReturnBtn").addEventListener("click", () => {
-  startDailyMode(); // revient au défi du jour réel (aujourd'hui, hors entraînement)
-});
 
 document.getElementById("dailyResetBtn").addEventListener("click", () => {
   if(!confirm("Réinitialiser le défi du jour d'aujourd'hui ? Ta progression, ton temps et ta série du jour seront effacés.")) return;
@@ -1757,6 +1721,17 @@ document.getElementById("resetStatsBtn").addEventListener("click", () => {
 });
 
 // ---- Mode daltonien ----
+function makeKeyboardActivatable(el){
+  el.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      el.click();
+    }
+  });
+}
+makeKeyboardActivatable(document.getElementById("colorblindIcon"));
+makeKeyboardActivatable(document.getElementById("rulesIcon"));
+
 function applyColorblindPref(){
   const on = localStorage.getItem("tankle_colorblind") === "1";
   document.documentElement.classList.toggle("colorblind", on);
