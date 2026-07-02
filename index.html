@@ -219,6 +219,7 @@ select.tankSelect{
 .sessionRow{cursor:pointer;}
 .sessionRow:hover td{background:rgba(75,83,32,0.3);}
 .roundDetailRow td{padding:4px 6px 4px 24px;font-size:.85em;color:var(--sand);text-align:left;border-bottom:1px solid var(--olive-dark);}
+.dailyDetailRow td{padding:6px 8px;font-size:.85em;color:var(--sand);text-align:center;border-bottom:1px solid var(--olive-dark);}
 .hintBox3{
   display:none;text-align:center;margin:0 0 16px;padding:12px;
   border:2px dashed var(--rust);
@@ -1403,11 +1404,11 @@ function renderDailyHistory(){
     const label = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
     const detailRows = (h.cells && h.cells.length)
       ? h.cells.map((cells, i) => `
-          <tr class="roundDetailRow">
-            <td style="width:30%;">Tentative ${i+1}</td>
+          <tr class="dailyDetailRow">
+            <td style="width:35%;">Tentative ${i+1}</td>
             <td><div class="dailyResultSquares">${cells.map(c => `<span class="resultSquare ${c}"></span>`).join("")}</div></td>
           </tr>`).join("")
-      : `<tr class="roundDetailRow"><td colspan="2">Détail non disponible pour ce défi.</td></tr>`;
+      : `<tr class="dailyDetailRow"><td colspan="2">Détail non disponible pour ce défi.</td></tr>`;
     rowsHtml += `
       <tr class="sessionRow" data-daily="${idx}">
         <td>${label}</td>
