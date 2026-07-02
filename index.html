@@ -320,13 +320,6 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 }
 .dailyBar b{color:var(--sand-light);}
 #dailyDoneMark{color:var(--ok);font-weight:900;margin-left:4px;}
-button#dailyResetBtn{
-  display:none;margin:0 auto 14px;
-  background:var(--olive-dark);color:var(--sand-light);
-  border:1px solid var(--bad);padding:7px 14px;font-family:inherit;
-  letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
-}
-button#dailyResetBtn:hover{background:var(--rust);}
 .dailyResult{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -464,9 +457,6 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     <span id="dailyStreakWrap">🔥 Série : <b id="dailyStreakLabel">0</b></span>
     <span id="dailyLiveStats">⏱ <b id="dailyTimer">00:00</b> · Tentatives : <b id="dailyTriesLabel">0</b></span>
     <span id="dailyCountdownWrap" style="display:none;">Prochain défi dans <b id="dailyCountdownLabel">--</b></span>
-  </div>
-  <div style="text-align:center;">
-    <button id="dailyResetBtn" style="display:none;">🔄 Réinitialiser le défi du jour</button>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -1497,7 +1487,7 @@ function renderDailyHistory(){
 function setUIModeVisibility(mode){
   const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries","standardScoreboardBox","statsBox"];
   const standardOnlyClass = document.querySelector(".session-bar");
-  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyResetBtn"];
+  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox"];
   if(mode === "standard"){
     if(standardOnlyClass) standardOnlyClass.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
@@ -1535,7 +1525,6 @@ function startDailyMode(){
   document.getElementById("dailyResult").style.display = "none";
   document.getElementById("dailyResult").innerHTML = "";
   document.getElementById("dailyScreenshotBtn").style.display = "none";
-  document.getElementById("dailyResetBtn").style.display = "block";
   document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
   document.getElementById("dailyHistoryBox").style.display = "block";
   renderDailyHistory();
@@ -1647,16 +1636,6 @@ function showDailyResult(){
   document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
   renderDailyHistory();
 }
-
-document.getElementById("dailyResetBtn").addEventListener("click", () => {
-  if(!confirm("Réinitialiser le défi du jour d'aujourd'hui ? Ta progression, ton temps et ta série du jour seront effacés.")) return;
-  const today = todayDateStr();
-  try{ localStorage.removeItem(dailyStorageKey(today)); } catch(e){}
-  const hist = loadDailyHistory().filter(h => h.date !== today);
-  saveDailyHistoryList(hist);
-  refreshDailyDoneMark();
-  startDailyMode(); // relance le défi du jour réel, fraîchement remis à zéro
-});
 
 document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
   const canvas = document.createElement("canvas");
