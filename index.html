@@ -1656,14 +1656,17 @@ document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
   ctx.fillStyle = cssVar("--sand");
   ctx.font = "bold 26px 'Courier New', monospace";
   ctx.textAlign = "center";
-  ctx.fillText("TANKLE", W/2, 36);
-  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText("TANKLE", W/2, 34);
+  ctx.font = "9px 'Courier New', monospace";
   ctx.fillStyle = cssVar("--steel");
-  ctx.fillText("DÉFI DU JOUR", W/2, 52);
+  ctx.fillText("BY LA FRENCH TOUCH (& CLAUDE)", W/2, 48);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--rust");
+  ctx.fillText("DÉFI DU JOUR", W/2, 62);
 
   ctx.font = "bold 18px 'Courier New', monospace";
   ctx.fillStyle = cssVar("--sand-light");
-  ctx.fillText(`${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)`, W/2, 80);
+  ctx.fillText(`${formatTime(dailyElapsedMs)} — ${dailyGuesses.length} tentative(s)`, W/2, 88);
 
   const colColors = { ok: cssVar("--ok"), warn: cssVar("--warn"), bad: cssVar("--bad") };
   const sq = 14, gap = 4;
