@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c1d16">
 <title>TANKLE — Devine le char</title>
 <style>
 :root{
@@ -381,9 +383,42 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
 }
 .footnote{text-align:center;color:var(--steel);font-size:.62em;margin-top:30px;letter-spacing:1px;}
 @media(max-width:640px){
-  h1{font-size:1.5em;letter-spacing:5px;}
-  thead th{font-size:.5em;}
-  td.cell{font-size:.62em;padding:7px 2px;}
+  .wrap{padding:56px 10px 50px;}
+  .socialIcon,.rulesIcon,.colorblindIcon{width:28px;height:28px;}
+  .socialIcon svg{width:14px;height:14px;}
+  .socialIcons{top:10px;right:48px;gap:6px;}
+  .rulesIcon{top:10px;right:10px;font-size:.8em;}
+  .colorblindIcon{top:10px;left:10px;font-size:.95em;}
+  h1{font-size:1.35em;letter-spacing:4px;}
+  .sub{font-size:.62em;letter-spacing:1.5px;}
+  .crest{padding:8px 14px;}
+  .intro{font-size:.78em;}
+  .mode-bar{gap:6px;}
+  button.modeBtn{padding:7px 10px;font-size:.68em;}
+  .dailyBar{gap:10px;font-size:.65em;}
+  .searchbox{max-width:100%;}
+  input#guessInput{font-size:.9em;padding:10px 12px;}
+  thead th{font-size:.5em;padding:3px 1px;}
+  td.cell{font-size:.6em;padding:6px 2px;}
+  .name-cell{gap:3px;}
+  .hintBox button,.hintBox3 button{font-size:.68em;padding:6px 9px;}
+  .quickPickBtns button{font-size:.66em;padding:5px 9px;}
+  .statsGrid{gap:8px;}
+  .statCard{padding:8px;}
+  .statCard .sv{font-size:1.15em;}
+  .scoreTableStyle{font-size:.7em;}
+  .sortBar{gap:8px;font-size:.68em;}
+  .pager{gap:8px;font-size:.68em;}
+  .rulesPanel{padding:16px;max-width:100%;}
+  .rulesPanel p,.rulesPanel li{font-size:.76em;}
+  .legend{gap:8px;font-size:.6em;}
+  .dailyResult table,.roundDetailRow td,.dailyDetailRow td{font-size:.9em;}
+}
+@media(max-width:400px){
+  .wrap{padding:56px 6px 50px;}
+  h1{font-size:1.15em;letter-spacing:3px;}
+  td.cell{font-size:.55em;padding:5px 1px;}
+  thead th{font-size:.46em;}
 }
 </style>
 </head>
