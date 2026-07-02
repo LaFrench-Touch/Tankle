@@ -300,7 +300,7 @@ button#dailyReturnBtn{
 }
 button#dailyReturnBtn:hover{background:var(--olive);}
 .dailyHistoryBox{
-  margin:0 0 20px;padding:14px 16px;
+  margin:0 auto 20px;padding:14px 16px;max-width:360px;
   border:1px solid var(--border-color);background:rgba(75,83,32,0.08);
 }
 .dailyHistoryBox h4{
@@ -390,7 +390,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   <div class="colorblindIcon" id="colorblindIcon" title="Mode daltonien">◐</div>
   <header>
     <div class="crest"><h1>TANKLE</h1></div>
-    <div class="sub">BY LA FRENCH TOUCH</div>
+    <div class="sub">BY LA FRENCH TOUCH (& CLAUDE)</div>
   </header>
 
   <div class="mode-bar">
@@ -434,7 +434,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
         <li>Après <b>7 essais</b> : icône du char (à débloquer volontairement).</li>
       </ul>
       <h3>Score</h3>
-      <p>Barème selon le nombre d'essais utilisés pour trouver le char : 2000 / 1000 / 850 / 700 / 550 / 400 / 250 / 100 points (0 si non trouvé).</p>
+      <p>Barème selon le nombre d'essais utilisés pour trouver le char : 2000 / 1500 / 1000 / 820 / 640 / 460 / 280 / 100 points (0 si non trouvé).</p>
       <h3>Défi du jour</h3>
       <p>Un seul char, identique pour tous les joueurs, tiré au sort chaque jour. Pas de limite de tentatives, mais aucun indice disponible. Ton temps et ton nombre d'essais remplacent le score, et tu peux partager ton résultat (sans révéler le char) une fois trouvé.</p>
       <h3>Astuce recherche</h3>
@@ -525,7 +525,7 @@ let finished = false;
 
 const ROUNDS_PER_GAME = 5;
 // 1er essai : 2000, 2e : 1000, puis dégressif jusqu'à 100 au 8e essai
-const SCORE_TABLE = [2000, 1000, 850, 700, 550, 400, 250, 100]; // index = tries-1
+const SCORE_TABLE = [2000, 1500, 1000, 820, 640, 460, 280, 100]; // index = tries-1
 let round = 1;
 let roundResults = []; // {name, flag, tries, score, win}
 let sessionScore = 0;
@@ -844,9 +844,9 @@ function finishSession(){
     return `
     <tr>
       <td style="${style}">Manche ${i+1}${stars}</td>
-      <td>${r.name}</td>
-      <td>${r.win ? r.tries : "—"}</td>
-      <td>${r.score}</td>
+      <td style="${style}">${r.name}</td>
+      <td style="${style}">${r.win ? r.tries : "—"}</td>
+      <td style="${style}">${r.score}</td>
     </tr>`;
   }).join("");
   box.innerHTML = `
@@ -1027,15 +1027,18 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   ctx.fillStyle = cssVar("--sand");
   ctx.font = "bold 28px 'Courier New', monospace";
   ctx.textAlign = "center";
-  ctx.fillText("TANKLE", W/2, 38);
-  ctx.font = "11px 'Courier New', monospace";
+  ctx.fillText("TANKLE", W/2, 36);
+  ctx.font = "10px 'Courier New', monospace";
   ctx.fillStyle = cssVar("--steel");
-  ctx.fillText("BY LA FRENCH TOUCH", W/2, 54);
+  ctx.fillText("BY LA FRENCH TOUCH (& CLAUDE)", W/2, 51);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--rust");
+  ctx.fillText("MODE STANDARD", W/2, 66);
 
   // Score total
   ctx.font = "bold 22px 'Courier New', monospace";
   ctx.fillStyle = cssVar("--sand-light");
-  ctx.fillText(`${sessionScore} PTS`, W/2, 84);
+  ctx.fillText(`${sessionScore} PTS`, W/2, 92);
 
   // Lignes
   rows.forEach((r, i) => {
@@ -1099,7 +1102,7 @@ function loadHistory(){
   renderStats();
 }
 
-const SCOREBOARD_PAGE_SIZE = 10;
+const SCOREBOARD_PAGE_SIZE = 5;
 let scoreboardPage = 0;
 
 function renderScoreboard(){
@@ -1133,8 +1136,8 @@ function renderScoreboard(){
               return `
               <tr class="roundDetailRow">
                 <td style="width:20%;${style}">Manche ${i+1}${stars}</td>
-                <td>${r.name}</td>
-                <td style="width:32%;text-align:right;">${r.tries ? `${r.tries} essai(s) — ` : "non trouvé — "}${r.score} pts</td>
+                <td style="${style}">${r.name}</td>
+                <td style="width:32%;text-align:right;${style}">${r.tries ? `${r.tries} essai(s) — ` : "non trouvé — "}${r.score} pts</td>
               </tr>`;
             }).join("")}
           </table>
