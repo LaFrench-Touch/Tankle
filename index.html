@@ -175,20 +175,27 @@ button#nextRound:hover{background:var(--olive-hover);}
   text-align:center;font-size:.9em;letter-spacing:3px;color:var(--sand);
   text-transform:uppercase;margin-bottom:12px;
 }
-table#scoreTable{width:100%;border-collapse:collapse;font-size:.78em;}
-table#scoreTable th{
+.scoreTableStyle{width:100%;border-collapse:collapse;font-size:.78em;}
+.scoreTableStyle th{
   text-align:center;color:var(--steel);text-transform:uppercase;
   font-size:.72em;letter-spacing:1px;padding:6px 4px;border-bottom:2px solid var(--olive);
 }
-table#scoreTable td{
+.scoreTableStyle td{
   text-align:center;padding:7px 4px;border-bottom:1px solid var(--olive-dark);
 }
-table#scoreTable tr:hover td{background:rgba(75,83,32,0.25);}
+.scoreTableStyle tr:hover td{background:rgba(75,83,32,0.25);}
 select.tankSelect{
   width:100%;background:var(--olive-dark);color:var(--sand-light);
   border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px;
 }
 .scoreEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:14px;}
+.sortBar{display:flex;justify-content:center;gap:16px;margin-bottom:12px;font-size:.75em;color:var(--sand);flex-wrap:wrap;}
+.sortBar select{
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px 6px;
+}
+.dailyResultSquares{display:flex;gap:3px;justify-content:center;}
+.dailyResultSquares .resultSquare{width:11px;height:11px;}
 .pager{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:12px;font-size:.75em;color:var(--sand);}
 .pager button{
   background:var(--olive-dark);color:var(--sand-light);
@@ -299,28 +306,6 @@ button#dailyReturnBtn{
   letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
 }
 button#dailyReturnBtn:hover{background:var(--olive);}
-.dailyHistoryBox{
-  margin:0 auto 20px;padding:14px 16px;max-width:360px;
-  border:1px solid var(--border-color);background:rgba(75,83,32,0.08);
-}
-.dailyHistoryBox h4{
-  font-size:.72em;letter-spacing:2px;color:var(--steel);text-transform:uppercase;
-  margin:0 0 10px;text-align:center;
-}
-.dailyHistRow{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:6px 4px;border-bottom:1px solid var(--olive-dark);font-size:.8em;
-}
-.dailyHistRow:last-child{border-bottom:none;}
-.dailyHistRow .dhDate{color:var(--sand);width:80px;}
-.dailyHistRow .dhStat{color:var(--sand-light);flex:1;text-align:center;}
-.dailyHistRow button{
-  background:var(--olive-dark);color:var(--sand-light);
-  border:1px solid var(--olive);padding:4px 10px;
-  font-family:inherit;font-size:.72em;cursor:pointer;text-transform:uppercase;
-}
-.dailyHistRow button:hover{background:var(--olive);}
-.dailyHistEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:8px;}
 .dailyResult{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -350,6 +335,18 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   background:var(--olive-dark);font-size:.9em;
 }
 .rulesIcon:hover{background:var(--olive);}
+.socialIcons{
+  position:absolute;top:16px;right:60px;
+  display:flex;gap:8px;align-items:center;
+}
+.socialIcon{
+  width:34px;height:34px;border:2px solid var(--sand);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--sand);cursor:pointer;background:var(--olive-dark);
+  text-decoration:none;
+}
+.socialIcon svg{width:17px;height:17px;fill:currentColor;}
+.socialIcon:hover{background:var(--olive);color:var(--sand-light);}
 .colorblindIcon{
   position:absolute;top:16px;left:16px;
   width:34px;height:34px;border:2px solid var(--sand);border-radius:50%;
@@ -386,6 +383,17 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
 </head>
 <body>
 <div class="wrap" style="position:relative;">
+  <div class="socialIcons">
+    <a class="socialIcon" href="https://www.youtube.com/@la_frenchtouch" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a2.999 2.999 0 0 0-2.112-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.386.505A2.999 2.999 0 0 0 .502 6.186 31.26 31.26 0 0 0 0 12a31.26 31.26 0 0 0 .502 5.814 2.999 2.999 0 0 0 2.112 2.136c1.881.505 9.386.505 9.386.505s7.505 0 9.386-.505a2.999 2.999 0 0 0 2.112-2.136A31.26 31.26 0 0 0 24 12a31.26 31.26 0 0 0-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+    <a class="socialIcon" href="https://www.twitch.tv/lafrench_touch" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
+      <svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0 1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+    </a>
+    <a class="socialIcon" href="https://discord.com/invite/Vssx48HeXd" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+      <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+    </a>
+  </div>
   <div class="rulesIcon" id="rulesIcon">?</div>
   <div class="colorblindIcon" id="colorblindIcon" title="Mode daltonien">◐</div>
   <header>
@@ -407,11 +415,6 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </div>
   <div style="text-align:center;">
     <button id="dailyReturnBtn" style="display:none;">↩ Revenir au défi du jour</button>
-  </div>
-
-  <div class="dailyHistoryBox" id="dailyHistoryBox" style="display:none;">
-    <h4 id="dailyHistoryToggle" style="cursor:pointer;">Historique (30 derniers jours) <span id="dailyHistoryChevron">▾</span></h4>
-    <div id="dailyHistoryList" style="display:none;"></div>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -495,13 +498,30 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     <span>↑ / ↓ Tier ou Dégâts réels plus haut / plus bas</span>
   </div>
 
-  <div class="scoreboard">
-    <h2>Tableau des scores personnels</h2>
+  <div class="scoreboard" id="standardScoreboardBox">
+    <h2>Tableau des scores</h2>
+    <div class="sortBar" id="sortBar">
+      <label>Trier par
+        <select id="sortField">
+          <option value="date">Date</option>
+          <option value="score">Score</option>
+        </select>
+      </label>
+      <select id="sortDir">
+        <option value="desc">Plus récent / plus haut</option>
+        <option value="asc">Plus ancien / plus bas</option>
+      </select>
+    </div>
     <div id="scoreboardContent"></div>
   </div>
 
+  <div class="scoreboard" id="dailyHistoryBox" style="display:none;">
+    <h2>Historique du défi du jour</h2>
+    <div id="dailyHistoryContent"></div>
+  </div>
+
   <div class="statsBox" id="statsBox" style="display:none;">
-    <h3>Statistiques personnelles</h3>
+    <h3>Etats de service</h3>
     <div class="statsGrid" id="statsGrid"></div>
     <div class="top5">
       <h4>Top 5 chars les plus proposés</h4>
@@ -1076,6 +1096,7 @@ const STORAGE_KEY = "tankle_history_v1";
 function saveSessionToHistory(){
   const entry = {
     date: new Date().toLocaleString("fr-FR"),
+    timestamp: Date.now(),
     total: sessionScore,
     rounds: roundResults.map(r => ({name:r.name, flag:r.flag, tries:r.win?r.tries:null, score:r.score})),
     allGuesses: window._sessionAllGuesses || [], // TOUS les chars proposés (tentatives) durant la partie
@@ -1105,21 +1126,33 @@ function loadHistory(){
 const SCOREBOARD_PAGE_SIZE = 5;
 let scoreboardPage = 0;
 
+function getSortedHistory(){
+  const field = document.getElementById("sortField").value;
+  const dir = document.getElementById("sortDir").value === "asc" ? 1 : -1;
+  return [...history].sort((a,b) => {
+    let av, bv;
+    if(field === "score"){ av = a.total; bv = b.total; }
+    else { av = a.timestamp || 0; bv = b.timestamp || 0; }
+    return (av - bv) * dir;
+  });
+}
+
 function renderScoreboard(){
   const wrap = document.getElementById("scoreboardContent");
   if(!history.length){
     wrap.innerHTML = `<div class="scoreEmpty">Aucune partie terminée pour l'instant. Termine une partie de 5 manches pour l'ajouter ici.</div>`;
     return;
   }
-  const totalPages = Math.max(1, Math.ceil(history.length / SCOREBOARD_PAGE_SIZE));
+  const sorted = getSortedHistory();
+  const totalPages = Math.max(1, Math.ceil(sorted.length / SCOREBOARD_PAGE_SIZE));
   if(scoreboardPage >= totalPages) scoreboardPage = totalPages - 1;
   if(scoreboardPage < 0) scoreboardPage = 0;
   const start = scoreboardPage * SCOREBOARD_PAGE_SIZE;
-  const pageItems = history.slice(start, start + SCOREBOARD_PAGE_SIZE);
+  const pageItems = sorted.slice(start, start + SCOREBOARD_PAGE_SIZE);
 
   let rowsHtml = "";
   pageItems.forEach((session, localIdx) => {
-    const idx = start + localIdx; // index réel dans history
+    const idx = start + localIdx; // identifiant unique pour cette page rendue
     rowsHtml += `
       <tr class="sessionRow" data-session="${idx}">
         <td>${session.date}</td>
@@ -1153,7 +1186,7 @@ function renderScoreboard(){
     </div>` : "";
 
   wrap.innerHTML = `
-    <table id="scoreTable">
+    <table class="scoreTableStyle">
       <thead><tr><th>Date</th><th>Score total</th><th></th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
@@ -1173,6 +1206,9 @@ function renderScoreboard(){
   if(prevBtn) prevBtn.addEventListener("click", () => { scoreboardPage--; renderScoreboard(); });
   if(nextBtn) nextBtn.addEventListener("click", () => { scoreboardPage++; renderScoreboard(); });
 }
+
+document.getElementById("sortField").addEventListener("change", () => { scoreboardPage = 0; renderScoreboard(); });
+document.getElementById("sortDir").addEventListener("change", () => { scoreboardPage = 0; renderScoreboard(); });
 
 function renderStats(){
   if(!history.length){
@@ -1278,13 +1314,14 @@ function loadDailyHistory(){
 function saveDailyHistoryList(list){
   try{ localStorage.setItem(DAILY_HISTORY_KEY, JSON.stringify(list)); } catch(e){}
 }
-function recordDailyCompletion(dateStr, tries, elapsedMs){
+function recordDailyCompletion(dateStr, tries, elapsedMs, cells){
   const hist = loadDailyHistory();
   const idx = hist.findIndex(h => h.date === dateStr);
-  const entry = { date: dateStr, tries, elapsedMs };
+  const entry = { date: dateStr, tries, elapsedMs, cells: cells || [] };
   if(idx >= 0) hist[idx] = entry; else hist.push(entry);
   hist.sort((a,b) => a.date < b.date ? 1 : -1); // du plus récent au plus ancien
   saveDailyHistoryList(hist);
+  dailyHistoryPage = 0;
   return hist;
 }
 function computeStreak(hist){
@@ -1334,34 +1371,81 @@ function stopDailyCountdown(){
   if(dailyCountdownHandle){ clearInterval(dailyCountdownHandle); dailyCountdownHandle = null; }
 }
 
+const DAILY_HISTORY_PAGE_SIZE = 5;
+let dailyHistoryPage = 0;
+
 function renderDailyHistory(){
-  const hist = loadDailyHistory().slice(0, 30);
-  const wrap = document.getElementById("dailyHistoryList");
+  const wrap = document.getElementById("dailyHistoryContent");
+  if(!wrap) return;
+  const hist = loadDailyHistory();
   if(!hist.length){
-    wrap.innerHTML = `<div class="dailyHistEmpty">Aucun défi terminé pour l'instant.</div>`;
+    wrap.innerHTML = `<div class="scoreEmpty">Aucun défi terminé pour l'instant.</div>`;
     return;
   }
-  wrap.innerHTML = hist.map(h => {
+  const totalPages = Math.max(1, Math.ceil(hist.length / DAILY_HISTORY_PAGE_SIZE));
+  if(dailyHistoryPage >= totalPages) dailyHistoryPage = totalPages - 1;
+  if(dailyHistoryPage < 0) dailyHistoryPage = 0;
+  const start = dailyHistoryPage * DAILY_HISTORY_PAGE_SIZE;
+  const pageItems = hist.slice(start, start + DAILY_HISTORY_PAGE_SIZE);
+
+  let rowsHtml = "";
+  pageItems.forEach((h, localIdx) => {
+    const idx = start + localIdx;
     const d = new Date(h.date + "T00:00:00");
-    const label = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
-    return `
-      <div class="dailyHistRow">
-        <span class="dhDate">${label}</span>
-        <span class="dhStat">${formatTime(h.elapsedMs)} — ${h.tries} essai(s)</span>
-      </div>`;
-  }).join("");
+    const label = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+    const detailRows = (h.cells && h.cells.length)
+      ? h.cells.map((cells, i) => `
+          <tr class="roundDetailRow">
+            <td style="width:30%;">Tentative ${i+1}</td>
+            <td><div class="dailyResultSquares">${cells.map(c => `<span class="resultSquare ${c}"></span>`).join("")}</div></td>
+          </tr>`).join("")
+      : `<tr class="roundDetailRow"><td colspan="2">Détail non disponible pour ce défi.</td></tr>`;
+    rowsHtml += `
+      <tr class="sessionRow" data-daily="${idx}">
+        <td>${label}</td>
+        <td><b>${formatTime(h.elapsedMs)} — ${h.tries} essai(s)</b></td>
+        <td style="color:var(--steel);font-size:.75em;">▾ voir le détail</td>
+      </tr>
+      <tr class="roundDetailRows" id="dailyDetailRows-${idx}" style="display:none;">
+        <td colspan="3" style="padding:0;">
+          <table style="width:100%;border-collapse:collapse;">
+            ${detailRows}
+          </table>
+        </td>
+      </tr>`;
+  });
+
+  const pagerHtml = totalPages > 1 ? `
+    <div class="pager">
+      <button id="dailyPagerPrev" ${dailyHistoryPage === 0 ? "disabled" : ""}>◀ Précédent</button>
+      <span>Page ${dailyHistoryPage+1} / ${totalPages}</span>
+      <button id="dailyPagerNext" ${dailyHistoryPage >= totalPages-1 ? "disabled" : ""}>Suivant ▶</button>
+    </div>` : "";
+
+  wrap.innerHTML = `
+    <table class="scoreTableStyle">
+      <thead><tr><th>Date</th><th>Résultat</th><th></th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    ${pagerHtml}
+  `;
+  wrap.querySelectorAll(".sessionRow").forEach(row => {
+    row.addEventListener("click", () => {
+      const idx = row.dataset.daily;
+      const detail = document.getElementById(`dailyDetailRows-${idx}`);
+      const isOpen = detail.style.display !== "none";
+      detail.style.display = isOpen ? "none" : "table-row";
+      row.querySelector("td:last-child").textContent = isOpen ? "▾ voir le détail" : "▴ masquer";
+    });
+  });
+  const prevBtn = document.getElementById("dailyPagerPrev");
+  const nextBtn = document.getElementById("dailyPagerNext");
+  if(prevBtn) prevBtn.addEventListener("click", () => { dailyHistoryPage--; renderDailyHistory(); });
+  if(nextBtn) nextBtn.addEventListener("click", () => { dailyHistoryPage++; renderDailyHistory(); });
 }
 
-document.getElementById("dailyHistoryToggle").addEventListener("click", () => {
-  const list = document.getElementById("dailyHistoryList");
-  const chevron = document.getElementById("dailyHistoryChevron");
-  const isOpen = list.style.display !== "none";
-  list.style.display = isOpen ? "none" : "block";
-  chevron.textContent = isOpen ? "▾" : "▴";
-});
-
 function setUIModeVisibility(mode){
-  const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries"];
+  const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries","standardScoreboardBox","statsBox"];
   const standardOnlyClass = document.querySelector(".session-bar");
   const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyReturnBtn"];
   if(mode === "standard"){
@@ -1373,6 +1457,7 @@ function setUIModeVisibility(mode){
     document.getElementById("nextRound").style.display = "none";
     document.getElementById("message").style.display = "";
     stopDailyCountdown();
+    renderStats(); // réaffirme la visibilité data-driven (masqué si aucun historique)
   } else {
     if(standardOnlyClass) standardOnlyClass.style.display = "none";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = "none"; });
@@ -1381,6 +1466,7 @@ function setUIModeVisibility(mode){
     document.getElementById("dailyHistoryBox").style.display = "block";
     document.getElementById("message").style.display = "none";
     document.getElementById("message").innerHTML = "";
+    renderDailyHistory();
   }
 }
 
@@ -1472,7 +1558,8 @@ function submitDailyGuess(tank){
     document.getElementById("guessInput").disabled = true;
     saveDailyState();
     if(!dailyIsReplay){
-      recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs);
+      const cellsPerGuess = dailyGuesses.map(g => guessResultCells(g));
+      recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs, cellsPerGuess);
       refreshDailyDoneMark();
     }
     showDailyResult();
