@@ -175,7 +175,7 @@ button#nextRound:hover{background:var(--olive-hover);}
   text-align:center;font-size:.9em;letter-spacing:3px;color:var(--sand);
   text-transform:uppercase;margin-bottom:12px;
 }
-.scoreTableStyle{width:100%;border-collapse:collapse;font-size:.78em;}
+.scoreTableStyle{width:100%;table-layout:fixed;border-collapse:collapse;font-size:.78em;}
 .scoreTableStyle th{
   text-align:center;color:var(--steel);text-transform:uppercase;
   font-size:.72em;letter-spacing:1px;padding:6px 4px;border-bottom:2px solid var(--olive);
@@ -194,8 +194,6 @@ select.tankSelect{
   background:var(--olive-dark);color:var(--sand-light);
   border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px 6px;
 }
-.dailyResultSquares{display:flex;gap:3px;justify-content:center;}
-.dailyResultSquares .resultSquare{width:11px;height:11px;}
 .pager{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:12px;font-size:.75em;color:var(--sand);}
 .pager button{
   background:var(--olive-dark);color:var(--sand-light);
@@ -1196,7 +1194,7 @@ function renderScoreboard(){
 
   wrap.innerHTML = `
     <table class="scoreTableStyle">
-      <thead><tr><th>Date</th><th>Score total</th><th></th></tr></thead>
+      <thead><tr><th style="width:34%;">Date</th><th style="width:36%;">Score total</th><th style="width:30%;"></th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
     ${pagerHtml}
@@ -1323,10 +1321,10 @@ function loadDailyHistory(){
 function saveDailyHistoryList(list){
   try{ localStorage.setItem(DAILY_HISTORY_KEY, JSON.stringify(list)); } catch(e){}
 }
-function recordDailyCompletion(dateStr, tries, elapsedMs, cells){
+function recordDailyCompletion(dateStr, tries, elapsedMs, guessNames){
   const hist = loadDailyHistory();
   const idx = hist.findIndex(h => h.date === dateStr);
-  const entry = { date: dateStr, tries, elapsedMs, cells: cells || [] };
+  const entry = { date: dateStr, tries, elapsedMs, guessNames: guessNames || [] };
   if(idx >= 0) hist[idx] = entry; else hist.push(entry);
   hist.sort((a,b) => a.date < b.date ? 1 : -1); // du plus récent au plus ancien
   saveDailyHistoryList(hist);
@@ -1402,11 +1400,11 @@ function renderDailyHistory(){
     const idx = start + localIdx;
     const d = new Date(h.date + "T00:00:00");
     const label = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
-    const detailRows = (h.cells && h.cells.length)
-      ? h.cells.map((cells, i) => `
+    const detailRows = (h.guessNames && h.guessNames.length)
+      ? h.guessNames.map((name, i) => `
           <tr class="dailyDetailRow">
             <td style="width:35%;">Tentative ${i+1}</td>
-            <td><div class="dailyResultSquares">${cells.map(c => `<span class="resultSquare ${c}"></span>`).join("")}</div></td>
+            <td>${name}</td>
           </tr>`).join("")
       : `<tr class="dailyDetailRow"><td colspan="2">Détail non disponible pour ce défi.</td></tr>`;
     rowsHtml += `
@@ -1433,7 +1431,7 @@ function renderDailyHistory(){
 
   wrap.innerHTML = `
     <table class="scoreTableStyle">
-      <thead><tr><th>Date</th><th>Résultat</th><th></th></tr></thead>
+      <thead><tr><th style="width:30%;">Date</th><th style="width:40%;">Résultat</th><th style="width:30%;"></th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
     ${pagerHtml}
@@ -1568,8 +1566,7 @@ function submitDailyGuess(tank){
     document.getElementById("guessInput").disabled = true;
     saveDailyState();
     if(!dailyIsReplay){
-      const cellsPerGuess = dailyGuesses.map(g => guessResultCells(g));
-      recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs, cellsPerGuess);
+      recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs, dailyGuesses.map(g => g.name));
       refreshDailyDoneMark();
     }
     showDailyResult();
