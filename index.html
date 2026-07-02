@@ -1073,15 +1073,15 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   rows.forEach((r, i) => {
     const y = HEADERH + i * ROWH + 24;
     const stars = r.tries === 1 ? " ★★" : r.tries === 2 ? " ★" : "";
-    const col = r.tries === 1 ? cssVar("--rust") : (r.tries === 2 ? cssVar("--ok") : cssVar("--steel"));
-    ctx.fillStyle = col;
+    const col = r.tries === 1 ? cssVar("--rust") : (r.tries === 2 ? cssVar("--ok") : null);
+    ctx.fillStyle = col || cssVar("--steel");
     ctx.font = "bold 13px 'Courier New', monospace";
     ctx.textAlign = "left";
     ctx.fillText(`Manche ${i+1}${stars}`, PAD, y);
-    ctx.fillStyle = cssVar("--sand");
+    ctx.fillStyle = col || cssVar("--sand");
     ctx.font = "13px 'Courier New', monospace";
     ctx.fillText(`${r.name}`, PAD + 110, y);
-    ctx.fillStyle = cssVar("--sand-light");
+    ctx.fillStyle = col || cssVar("--sand-light");
     ctx.textAlign = "right";
     ctx.fillText(r.win ? `${r.tries} essai(s) — ${r.score} pts` : `non trouvé — 0 pt`, W - PAD, y);
   });
