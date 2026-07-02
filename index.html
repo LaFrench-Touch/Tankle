@@ -306,6 +306,13 @@ button#dailyReturnBtn{
   letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
 }
 button#dailyReturnBtn:hover{background:var(--olive);}
+button#dailyResetBtn{
+  display:none;margin:0 auto;
+  background:var(--olive-dark);color:var(--sand-light);
+  border:1px solid var(--bad);padding:7px 14px;font-family:inherit;
+  letter-spacing:1px;font-size:.75em;cursor:pointer;text-transform:uppercase;
+}
+button#dailyResetBtn:hover{background:var(--rust);}
 .dailyResult{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -415,6 +422,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </div>
   <div style="text-align:center;">
     <button id="dailyReturnBtn" style="display:none;">↩ Revenir au défi du jour</button>
+    <button id="dailyResetBtn" style="display:none;">🔄 Réinitialiser le défi du jour</button>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -1447,7 +1455,7 @@ function renderDailyHistory(){
 function setUIModeVisibility(mode){
   const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries","standardScoreboardBox","statsBox"];
   const standardOnlyClass = document.querySelector(".session-bar");
-  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyReturnBtn"];
+  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox","dailyReturnBtn","dailyResetBtn"];
   if(mode === "standard"){
     if(standardOnlyClass) standardOnlyClass.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
@@ -1489,6 +1497,7 @@ function startDailyMode(dateStrOverride, isReplay){
   document.getElementById("dailyResult").innerHTML = "";
   document.getElementById("dailyScreenshotBtn").style.display = "none";
   document.getElementById("dailyReturnBtn").style.display = isReplay ? "block" : "none";
+  document.getElementById("dailyResetBtn").style.display = "block";
   document.getElementById("dailyReplayLabel").style.display = isReplay ? "inline" : "none";
   document.getElementById("dailyStreakWrap").style.display = isReplay ? "none" : "inline";
   if(!isReplay){
@@ -1615,6 +1624,16 @@ function showDailyResult(){
 
 document.getElementById("dailyReturnBtn").addEventListener("click", () => {
   startDailyMode(); // revient au défi du jour réel (aujourd'hui, hors entraînement)
+});
+
+document.getElementById("dailyResetBtn").addEventListener("click", () => {
+  if(!confirm("Réinitialiser le défi du jour d'aujourd'hui ? Ta progression, ton temps et ta série du jour seront effacés.")) return;
+  const today = todayDateStr();
+  try{ localStorage.removeItem(dailyStorageKey(today)); } catch(e){}
+  const hist = loadDailyHistory().filter(h => h.date !== today);
+  saveDailyHistoryList(hist);
+  refreshDailyDoneMark();
+  startDailyMode(); // relance le défi du jour réel, fraîchement remis à zéro
 });
 
 document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
