@@ -1,0 +1,37 @@
+{
+  "name": "TANKLE — Un jeu WORDLE façon World Of Tanks",
+  "short_name": "TANKLE",
+  "description": "Devine le char World of Tanks du jour, en mode Standard, Défi du jour ou Challenge infini.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1c1d16",
+  "theme_color": "#1c1d16",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

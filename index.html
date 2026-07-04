@@ -12,6 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
 
 <!-- Open Graph (Discord, WhatsApp, Facebook, Slack...) -->
 <meta property="og:type" content="website">
@@ -167,6 +168,22 @@ button#newGame{
   text-transform:uppercase;
 }
 button#newGame:hover{background:var(--rust-hover);}
+.btnPrimary{
+  display:block;margin:18px auto 0;
+  background:var(--rust);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;
+  text-transform:uppercase;
+}
+.btnPrimary:hover{background:var(--rust-hover);}
+.btnSecondary{
+  display:none;margin:18px auto 0;
+  background:var(--olive);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;
+  text-transform:uppercase;
+}
+.btnSecondary:hover{background:var(--olive-hover);}
 .session-bar{
   display:flex;justify-content:center;gap:24px;
   font-size:.72em;letter-spacing:1px;color:var(--sand);
@@ -196,34 +213,6 @@ button#nextRound:hover{background:var(--olive-hover);}
 #sessionSummary .scoreTotal{font-size:1.6em;color:var(--sand-light);margin:6px 0 12px;}
 #sessionSummary table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.78em;}
 #sessionSummary td,#sessionSummary th{padding:5px 4px;border-bottom:1px solid var(--olive);text-align:center;}
-.scoreboard{margin-top:36px;}
-.scoreboard h2{
-  text-align:center;font-size:.9em;letter-spacing:3px;color:var(--sand);
-  text-transform:uppercase;margin-bottom:12px;
-}
-.scoreTableStyle{width:100%;table-layout:fixed;border-collapse:collapse;font-size:.78em;}
-.scoreTableStyle th{
-  text-align:center;color:var(--steel);text-transform:uppercase;
-  font-size:.72em;letter-spacing:1px;padding:6px 4px;border-bottom:2px solid var(--olive);
-}
-.scoreTableStyle td{
-  text-align:center;padding:7px 4px;border-bottom:1px solid var(--olive-dark);
-}
-.scoreTableStyle tr:hover td{background:rgba(75,83,32,0.25);}
-.scoreEmpty{text-align:center;color:var(--steel);font-size:.78em;padding:14px;}
-.sortBar{display:flex;justify-content:center;gap:16px;margin-bottom:12px;font-size:.75em;color:var(--sand);flex-wrap:wrap;}
-.sortBar select{
-  background:var(--olive-dark);color:var(--sand-light);
-  border:1px solid var(--olive);font-family:inherit;font-size:.85em;padding:4px 6px;
-}
-.pager{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:12px;font-size:.75em;color:var(--sand);}
-.pager button{
-  background:var(--olive-dark);color:var(--sand-light);
-  border:1px solid var(--olive);padding:6px 12px;
-  font-family:inherit;font-size:.9em;cursor:pointer;text-transform:uppercase;letter-spacing:1px;
-}
-.pager button:hover:not(:disabled){background:var(--olive);}
-.pager button:disabled{opacity:.35;cursor:default;}
 .hintBox{
   display:none;text-align:center;margin:0 0 16px;padding:10px;
   border:1px dashed var(--border-color);
@@ -236,10 +225,6 @@ button#nextRound:hover{background:var(--olive-hover);}
 }
 .hintBox button:hover{background:var(--olive);}
 .hintBox .hintResult{margin-top:8px;font-size:.85em;color:var(--sand-light);}
-.sessionRow{cursor:pointer;}
-.sessionRow:hover td{background:rgba(75,83,32,0.3);}
-.roundDetailRow td{padding:4px 6px 4px 24px;font-size:.85em;color:var(--sand);text-align:left;border-bottom:1px solid var(--olive-dark);}
-.dailyDetailRow td{padding:6px 8px;font-size:.85em;color:var(--sand);text-align:center;border-bottom:1px solid var(--olive-dark);}
 .hintBox3{
   display:none;text-align:center;margin:0 0 16px;padding:12px;
   border:2px dashed var(--rust);
@@ -267,6 +252,20 @@ button#resetStatsBtn{
   font-family:inherit;font-size:.7em;letter-spacing:1px;cursor:pointer;text-transform:uppercase;
 }
 button#resetStatsBtn:hover{background:var(--rust);}
+button#challengeResetStatsBtn{
+  display:block;margin:16px auto 0;
+  background:var(--bad);color:var(--sand-light);
+  border:1px solid var(--border-color);padding:8px 16px;
+  font-family:inherit;font-size:.7em;letter-spacing:1px;cursor:pointer;text-transform:uppercase;
+}
+button#challengeResetStatsBtn:hover{background:var(--rust);}
+button#dailyResetStatsBtn{
+  display:block;margin:16px auto 0;
+  background:var(--bad);color:var(--sand-light);
+  border:1px solid var(--border-color);padding:8px 16px;
+  font-family:inherit;font-size:.7em;letter-spacing:1px;cursor:pointer;text-transform:uppercase;
+}
+button#dailyResetStatsBtn:hover{background:var(--rust);}
 .iconReveal{margin-top:10px;}
 .iconReveal img{width:160px;height:60px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 0 6px var(--rust));}
 .iconReveal .iconName{font-size:.9em;color:var(--sand-light);margin-top:6px;letter-spacing:1px;}
@@ -277,6 +276,13 @@ button#screenshotBtn{
   letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
 }
 button#screenshotBtn:hover{background:var(--olive-hover);}
+.btnScreenshot{
+  display:none;margin:14px auto 0;
+  background:var(--olive);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
+}
+.btnScreenshot:hover{background:var(--olive-hover);}
 .statsBox{
   margin-top:28px;padding:16px;
   border:1px solid var(--border-color);background:rgba(75,83,32,0.1);
@@ -320,6 +326,18 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 }
 .dailyBar b{color:var(--sand-light);}
 #dailyDoneMark{color:var(--ok);font-weight:900;margin-left:4px;}
+.challengeBar{
+  display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+  font-size:.75em;letter-spacing:1px;color:var(--sand);
+  margin-bottom:16px;text-transform:uppercase;
+}
+.challengeBar b{color:var(--sand-light);}
+.challengeResult{
+  display:none;text-align:center;margin-top:18px;padding:18px;
+  border:2px solid var(--ok);background:rgba(92,122,58,0.12);
+}
+.challengeResult b{display:block;letter-spacing:3px;font-size:1.2em;margin-bottom:10px;}
+.challengeResult .scoreTotal{font-size:1.6em;color:var(--sand-light);margin:6px 0 12px;}
 .dailyResult{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -368,6 +386,14 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   font-family:inherit;font-weight:900;color:var(--sand);cursor:pointer;
   background:var(--olive-dark);font-size:1.1em;
 }
+.badgesIcon{
+  position:absolute;top:16px;left:58px;
+  width:34px;height:34px;border:2px solid var(--sand);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:inherit;font-weight:900;color:var(--sand);cursor:pointer;
+  background:var(--olive-dark);font-size:1em;
+}
+.badgesIcon:hover{background:var(--olive);}
 .colorblindIcon:hover{background:var(--olive);}
 .colorblindIcon.active{background:var(--rust);color:var(--ink);border-color:var(--rust);}
 .rulesOverlay{
@@ -387,14 +413,52 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   position:absolute;top:14px;right:14px;background:none;border:none;
   color:var(--sand);font-size:1.3em;cursor:pointer;
 }
+.badgesPanel{
+  background:var(--ink);border:2px solid var(--border-color);max-width:560px;width:100%;
+  max-height:80vh;overflow-y:auto;padding:22px;position:relative;
+}
+.badgesPanel h2{letter-spacing:3px;font-size:1em;color:var(--sand-light);margin:0 0 6px;text-transform:uppercase;}
+.badgesCounter{
+  text-align:center;color:var(--steel);font-size:.78em;letter-spacing:1px;
+  margin-bottom:16px;text-transform:uppercase;
+}
+.badgesCounter b{color:var(--sand-light);}
+.badgeItem{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:10px 6px;border-bottom:1px solid var(--olive-dark);
+}
+.badgeItem:last-child{border-bottom:none;}
+.badgeIcon{
+  flex:0 0 34px;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1em;border:2px solid var(--olive-dark);
+  background:var(--olive-dark);color:var(--steel);
+}
+.badgeItem.unlocked .badgeIcon{
+  border-color:var(--ok);background:rgba(92,122,58,0.2);color:var(--ok);
+}
+.badgeText b{display:block;color:var(--steel);font-size:.85em;letter-spacing:.5px;}
+.badgeItem.unlocked .badgeText b{color:var(--sand-light);}
+.badgeText span{display:block;color:var(--steel);font-size:.72em;line-height:1.4;margin-top:2px;}
+.badgeItem.unlocked .badgeText span{color:var(--sand);}
+.badgeUnlockToast{
+  position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);border:2px solid var(--ok);color:var(--sand-light);
+  padding:12px 20px;font-family:inherit;font-size:.8em;letter-spacing:.5px;
+  z-index:200;opacity:0;transition:opacity .3s ease, transform .3s ease;
+  pointer-events:none;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,0.5);
+}
+.badgeUnlockToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.badgeUnlockToast b{display:block;color:var(--ok);letter-spacing:2px;font-size:.85em;margin-bottom:2px;text-transform:uppercase;}
 .footnote{text-align:center;color:var(--steel);font-size:.62em;margin-top:30px;letter-spacing:1px;}
 @media(max-width:640px){
   .wrap{padding:56px 10px 50px;}
-  .socialIcon,.rulesIcon,.colorblindIcon{width:28px;height:28px;}
+  .socialIcon,.rulesIcon,.colorblindIcon,.badgesIcon{width:28px;height:28px;}
   .socialIcon svg{width:14px;height:14px;}
   .socialIcons{top:10px;right:48px;gap:6px;}
   .rulesIcon{top:10px;right:10px;font-size:.8em;}
   .colorblindIcon{top:10px;left:10px;font-size:.95em;}
+  .badgesIcon{top:10px;left:46px;font-size:.85em;}
   h1{font-size:1.35em;letter-spacing:4px;}
   .sub{font-size:.62em;letter-spacing:1.5px;}
   .crest{padding:8px 14px;}
@@ -442,6 +506,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </div>
   <div class="rulesIcon" id="rulesIcon" role="button" tabindex="0" aria-label="Afficher les règles du jeu">?</div>
   <div class="colorblindIcon" id="colorblindIcon" role="button" tabindex="0" aria-label="Activer ou désactiver le mode daltonien" title="Mode daltonien">◐</div>
+  <div class="badgesIcon" id="badgesIcon" role="button" tabindex="0" aria-label="Afficher mes badges" title="Mes badges">🎖</div>
   <header>
     <div class="crest"><h1>TANKLE</h1></div>
     <div class="sub">BY LA FRENCH TOUCH (& CLAUDE)</div>
@@ -450,6 +515,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   <div class="mode-bar">
     <button class="modeBtn" data-mode="daily">Défi du jour <span id="dailyDoneMark" style="display:none;">✓</span></button>
     <button class="modeBtn active" data-mode="standard">Mode Standard</button>
+    <button class="modeBtn" data-mode="challenge">Mode Challenge</button>
   </div>
 
   <div class="dailyBar" id="dailyBar" style="display:none;">
@@ -457,6 +523,11 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     <span id="dailyStreakWrap">🔥 Série : <b id="dailyStreakLabel">0</b></span>
     <span id="dailyLiveStats">⏱ <b id="dailyTimer">00:00</b> · Tentatives : <b id="dailyTriesLabel">0</b></span>
     <span id="dailyCountdownWrap" style="display:none;">Prochain défi dans <b id="dailyCountdownLabel">--</b></span>
+  </div>
+
+  <div class="challengeBar" id="challengeBar" style="display:none;">
+    <span>Manche <b id="challengeRoundLabel">1</b></span>
+    <span>Score : <b id="challengeScoreLabel">0</b></span>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -473,7 +544,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
       </ul>
       <h3>Panne d'inspiration ?</h3>
       <p>Avant ta toute première tentative, 3 chars totalement aléatoires te sont proposés en raccourci. Ils peuvent, par hasard, être le char à trouver !</p>
-      <h3>Indices</h3>
+      <h3>Indices (Mode Standard)</h3>
       <ul>
         <li>Après <b>4 essais</b> : choix entre Dispersion à 100m et Vitesse maximale.</li>
         <li>Après <b>7 essais</b> : icône du char (à débloquer volontairement).</li>
@@ -481,9 +552,20 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
       <h3>Score</h3>
       <p>Barème selon le nombre d'essais utilisés pour trouver le char : 2000 / 1500 / 1000 / 820 / 640 / 460 / 280 / 100 points (0 si non trouvé).</p>
       <h3>Défi du jour</h3>
-      <p>Un seul char, identique pour tous les joueurs, tiré au sort chaque jour. Pas de limite de tentatives, mais aucun indice disponible. Ton temps et ton nombre d'essais remplacent le score, et tu peux partager ton résultat (sans révéler le char) une fois trouvé.</p>
+      <p>Un seul char, identique pour tous les joueurs, tiré au sort chaque jour. Pas de limite de tentatives, mais aucun indice disponible. Ton temps et ton nombre d'essais remplacent le score.</p>
+      <h3>Mode Challenge</h3>
+      <p>Enchaîne les manches sans limite tant que tu trouves le char (toujours 8 tentatives max par manche). Un seul échec met fin à la série et te ramène à la manche 1. Aucun indice disponible. La recherche ne filtre pas automatiquement selon les informations déjà révélées.</p>
       <h3>Astuce recherche</h3>
-      <p>La barre de recherche ignore les accents, les tirets, les points et les espaces ("is 7" = "is-7"), filtre automatiquement la liste selon les informations déjà révélées en vert, et retire un char de la recherche une fois qu'il a été proposé (anti-doublon). Navigation possible au clavier (↑ / ↓ / Entrée).</p>
+      <p>La barre de recherche filtre automatiquement la liste selon les informations déjà révélées en vert, et retire un char de la recherche une fois qu'il a été proposé (anti-doublon).</p>
+    </div>
+  </div>
+
+  <div class="rulesOverlay" id="badgesOverlay">
+    <div class="badgesPanel">
+      <button class="rulesClose" id="badgesClose">×</button>
+      <h2>Mes badges</h2>
+      <div class="badgesCounter"><b id="badgesCount">0</b> / <b id="badgesTotal">0</b> badges débloqués</div>
+      <div id="badgesList"></div>
     </div>
   </div>
 
@@ -524,42 +606,25 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </table>
 
   <div id="message"></div>
-  <button id="nextRound">Manche suivante</button>
-  <button id="newGame">Nouvelle partie</button>
+  <button id="nextRound" class="btnSecondary">Manche suivante</button>
+  <button id="newGame" class="btnPrimary">Nouvelle partie</button>
+  <button id="challengeNextRound" class="btnSecondary">Manche suivante</button>
+  <button id="challengeNewGame" class="btnPrimary" style="display:none;">Nouvelle partie</button>
 
   <div id="sessionSummary"></div>
-  <button id="screenshotBtn">📷 Enregistrer le score</button>
+  <button id="screenshotBtn" class="btnScreenshot">📷 Enregistrer le score</button>
 
   <div class="dailyResult" id="dailyResult"></div>
-  <button id="dailyScreenshotBtn">📷 Enregistrer mon résultat</button>
+  <button id="dailyScreenshotBtn" class="btnScreenshot">📷 Enregistrer mon résultat</button>
+
+  <div class="challengeResult" id="challengeResult"></div>
+  <button id="challengeScreenshotBtn" class="btnScreenshot">📷 Enregistrer le score</button>
 
   <div class="legend">
     <span><span class="swatch" style="background:var(--ok);"></span> Correct</span>
     <span><span class="swatch" style="background:var(--warn);"></span> Dégâts à ±50 de la cible</span>
     <span><span class="swatch" style="background:var(--bad);"></span> Faux</span>
     <span>↑ / ↓ Tier ou Dégâts réels plus haut / plus bas</span>
-  </div>
-
-  <div class="scoreboard" id="standardScoreboardBox">
-    <h2>Tableau des scores</h2>
-    <div class="sortBar" id="sortBar">
-      <label>Trier par
-        <select id="sortField">
-          <option value="date">Date</option>
-          <option value="score">Score</option>
-        </select>
-      </label>
-      <select id="sortDir">
-        <option value="desc">Plus récent / plus haut</option>
-        <option value="asc">Plus ancien / plus bas</option>
-      </select>
-    </div>
-    <div id="scoreboardContent"></div>
-  </div>
-
-  <div class="scoreboard" id="dailyHistoryBox" style="display:none;">
-    <h2>Historique du défi du jour</h2>
-    <div id="dailyHistoryContent"></div>
   </div>
 
   <div class="statsBox" id="statsBox" style="display:none;">
@@ -571,6 +636,20 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     </div>
     <button id="resetStatsBtn">Réinitialiser mes statistiques</button>
   </div>
+
+  <div class="statsBox" id="dailyStatsBox" style="display:none;">
+    <h3>Etats de service</h3>
+    <div class="statsGrid" id="dailyStatsGrid"></div>
+    <button id="dailyResetStatsBtn">Réinitialiser mes statistiques</button>
+  </div>
+
+  <div class="statsBox" id="challengeStatsBox" style="display:none;">
+    <h3>Etats de service</h3>
+    <div class="statsGrid" id="challengeStatsGrid"></div>
+    <button id="challengeResetStatsBtn">Réinitialiser mes statistiques</button>
+  </div>
+
+  <div class="badgeUnlockToast" id="badgeUnlockToast"></div>
 
   <div class="footnote">Jeu fan-made non officiel — données indicatives inspirées de la Tankopedia World of Tanks (api.worldoftanks.eu)</div>
 </div>
@@ -593,6 +672,190 @@ let roundResults = []; // {name, flag, tries, score, win}
 let sessionScore = 0;
 let usedTanksThisSession = [];
 let history = [];
+
+// ---- Mode Challenge : manches infinies, un échec remet à zéro ----
+let challengeRound = 1;
+let challengeScore = 0;
+let challengeRoundResults = []; // {name, tries, score} de la série en cours
+let challengeUsedTanks = [];
+let challengeHistory = [];
+
+// ==== Système de badges ====
+const BADGES = [
+  {id:"curieux", name:"Curieux", desc:"Ouvrir le panneau des règles (au-delà de la première visite automatique)."},
+  {id:"as_du_tir", name:"As du tir", desc:"Trouver un char en 1 tentative (ONE SHOT !)."},
+  {id:"oeil_de_lynx", name:"Œil de lynx", desc:"Trouver 5 chars en 1 tentative (tous modes confondus)."},
+  {id:"tir_de_precision", name:"Tir de précision", desc:"Trouver 10 chars en 2 tentatives ou moins."},
+  {id:"survivant", name:"Survivant", desc:"Gagner une manche à la 8e et dernière tentative."},
+  {id:"veteran", name:"Vétéran", desc:"Atteindre une série de 7 jours sur le Défi du jour."},
+  {id:"legende_du_front", name:"Légende du front", desc:"Atteindre une série de 20 jours sur le Défi du jour."},
+  {id:"general_de_guerre", name:"Général de guerre", desc:"Atteindre une série de 30 jours sur le Défi du jour."},
+  {id:"invincible", name:"Invincible", desc:"Atteindre la manche 10 en Mode Challenge sans perdre."},
+  {id:"increvable", name:"Increvable", desc:"Atteindre la manche 25 en Mode Challenge."},
+  {id:"terminator", name:"Terminator", desc:"Atteindre la manche 50 en Mode Challenge."},
+  {id:"chef", name:"Chef ?", desc:"Atteindre la manche 100 en Mode Challenge."},
+  {id:"recrue", name:"Recrue", desc:"Terminer ta 1re partie (tous modes confondus)."},
+  {id:"officier", name:"Officier", desc:"Jouer 25 parties au total."},
+  {id:"commandant", name:"Commandant", desc:"Jouer 50 parties au total."},
+  {id:"general", name:"Général", desc:"Jouer 100 parties au total."},
+  {id:"explorateur", name:"Explorateur", desc:"Avoir joué au moins une fois dans les 3 modes."},
+  {id:"polyglotte", name:"Polyglotte", desc:"Avoir trouvé au moins un char de chaque nation disponible."},
+  {id:"specialiste_blindes", name:"Spécialiste blindés", desc:"Avoir trouvé un char de chaque type (Léger/Moyen/Lourd/TD/Artillerie)."},
+  {id:"chasseur_de_primes", name:"Chasseur de primes", desc:"Trouver 20 chars premium différents."},
+  {id:"archeologue", name:"Archéologue", desc:"Trouver un char tier 6 ET un char tier 11 dans la même partie Standard."},
+  {id:"as", name:"As", desc:"Dépasser 5000 points sur une partie Standard."},
+  {id:"topgun", name:"TopGun", desc:"Dépasser 6000 points sur une partie Standard."},
+  {id:"maitre_du_jeu", name:"Maître du jeu", desc:"Dépasser 8000 points sur une partie Standard."},
+  {id:"rngesus", name:"RNGesus", desc:"Atteindre 10000 points sur une partie Standard."},
+  {id:"autonome", name:"Autonome", desc:"Terminer une partie Standard complète sans utiliser un seul indice."},
+  {id:"dernier_recours", name:"Dernier recours", desc:"Débloquer l'icône du char et quand même trouver le char à la 8e tentative."},
+  {id:"revisions", name:"Révisions", desc:"Activer l'indice icône du char, mais ne pas trouver le char."},
+  {id:"pas_de_stress", name:"Pas de stress", desc:"Trouver le char à la 8e tentative deux fois dans la même partie Standard."},
+  {id:"inspire", name:"Inspiré", desc:"Gagner 5 manches Challenge d'affilée sans utiliser \"Panne d'inspiration ?\"."},
+  {id:"eclair", name:"Éclair", desc:"Terminer le Défi du jour en moins de 30 secondes."},
+  {id:"jour_j", name:"Jour J", desc:"Terminer le Défi du jour en 1 tentative."},
+  {id:"marathonien", name:"Marathonien", desc:"Terminer le Défi du jour en plus de 15 tentatives."},
+  {id:"matinal", name:"Matinal", desc:"Jouer le Défi du jour avant 8h du matin."},
+  {id:"couche_tard", name:"Couche-tard", desc:"Jouer le Défi du jour après minuit."},
+  {id:"daltonien", name:"Daltonien", desc:"Activer le mode daltonien au moins une fois."},
+  {id:"record_personnel", name:"Record personnel", desc:"Battre ton propre record de score en Mode Standard."},
+  {id:"revanche", name:"Revanche", desc:"Battre ton propre record de manches en Mode Challenge."},
+  {id:"chanceux", name:"Chanceux", desc:"Trouver le char proposé par \"Panne d'inspiration ?\" du premier coup."},
+  {id:"gros_calibre", name:"Gros calibre", desc:"Trouver un char avec un canon de 150mm ou plus."},
+  {id:"kolobanov", name:"Kolobanov", desc:"Trouver les 5 chars d'une partie Standard, chacun à la 8e et dernière tentative."},
+  {id:"pascucci", name:"Pascucci", desc:"Trouver deux artilleries dans la même partie Standard."},
+  {id:"cest_lequel", name:"C'est lequel ?", desc:"Proposer un char aux stats identiques au char à trouver, sauf le nom."},
+  {id:"frenchie", name:"Frenchie", desc:"Trouver 10 chars français différents."},
+];
+
+const BADGE_STORAGE_KEY = "tankle_badges_v1";
+let badgeState = null;
+
+function defaultBadgeState(){
+  return {
+    unlocked: {},
+    oneShotCount: 0,
+    twoOrLessCount: 0,
+    totalGamesPlayed: 0,
+    modesPlayed: {},
+    nationsFound: [],
+    typesFound: [],
+    premiumFound: [],
+    frenchFound: [],
+    challengeNoQuickPickStreak: 0,
+  };
+}
+
+function loadBadgeState(){
+  try{
+    const raw = localStorage.getItem(BADGE_STORAGE_KEY);
+    badgeState = raw ? JSON.parse(raw) : defaultBadgeState();
+  } catch(e){
+    badgeState = defaultBadgeState();
+  }
+  // Filet de sécurité si la structure évolue plus tard
+  const def = defaultBadgeState();
+  for(const k in def){
+    if(!(k in badgeState)) badgeState[k] = def[k];
+  }
+}
+
+function saveBadgeState(){
+  try{ localStorage.setItem(BADGE_STORAGE_KEY, JSON.stringify(badgeState)); } catch(e){}
+}
+
+function showBadgeToast(badge){
+  const toast = document.getElementById("badgeUnlockToast");
+  if(!toast) return;
+  toast.innerHTML = `<b>🎖 Badge débloqué</b>${badge.name}`;
+  toast.classList.add("show");
+  clearTimeout(showBadgeToast._t);
+  showBadgeToast._t = setTimeout(() => { toast.classList.remove("show"); }, 3200);
+}
+
+function unlockBadge(id){
+  if(!badgeState) loadBadgeState();
+  if(badgeState.unlocked[id]) return false;
+  badgeState.unlocked[id] = new Date().toISOString();
+  saveBadgeState();
+  const badge = BADGES.find(b => b.id === id);
+  if(badge) showBadgeToast(badge);
+  renderBadgesList();
+  return true;
+}
+
+function addToSet(arrKey, value){
+  if(!badgeState[arrKey].includes(value)){
+    badgeState[arrKey].push(value);
+  }
+}
+
+function renderBadgesList(){
+  const list = document.getElementById("badgesList");
+  if(!list) return;
+  if(!badgeState) loadBadgeState();
+  const unlockedCount = Object.keys(badgeState.unlocked).length;
+  document.getElementById("badgesCount").textContent = unlockedCount;
+  document.getElementById("badgesTotal").textContent = BADGES.length;
+  list.innerHTML = BADGES.map(b => {
+    const isUnlocked = !!badgeState.unlocked[b.id];
+    return `
+      <div class="badgeItem ${isUnlocked ? "unlocked" : ""}">
+        <div class="badgeIcon">${isUnlocked ? "🎖" : "🔒"}</div>
+        <div class="badgeText">
+          <b>${b.name}</b>
+          <span>${b.desc}</span>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+// ---- Hooks de déblocage partagés entre les 3 modes ----
+
+function badgeOnTankFound(tank, tries){
+  if(!badgeState) loadBadgeState();
+  if(tries === 1){
+    badgeState.oneShotCount++;
+    unlockBadge("as_du_tir");
+    if(badgeState.oneShotCount >= 5) unlockBadge("oeil_de_lynx");
+    if(lastGuessViaQuickPick) unlockBadge("chanceux");
+  }
+  if(tries <= 2){
+    badgeState.twoOrLessCount++;
+    if(badgeState.twoOrLessCount >= 10) unlockBadge("tir_de_precision");
+  }
+  if(tries === 8){
+    unlockBadge("survivant");
+  }
+  addToSet("nationsFound", tank.nation);
+  addToSet("typesFound", tank.type);
+  if(tank.premium) addToSet("premiumFound", tank.name);
+  if(tank.nation === "France") addToSet("frenchFound", tank.name);
+
+  const allNations = [...new Set(TANKS.map(t => t.nation))];
+  const allTypes = [...new Set(TANKS.map(t => t.type))];
+  if(allNations.length && allNations.every(n => badgeState.nationsFound.includes(n))) unlockBadge("polyglotte");
+  if(allTypes.length && allTypes.every(t => badgeState.typesFound.includes(t))) unlockBadge("specialiste_blindes");
+  if(badgeState.premiumFound.length >= 20) unlockBadge("chasseur_de_primes");
+  if(badgeState.frenchFound.length >= 10) unlockBadge("frenchie");
+  if(tank.caliber != null && tank.caliber >= 150) unlockBadge("gros_calibre");
+
+  saveBadgeState();
+}
+
+function badgeOnGameCompleted(mode){
+  if(!badgeState) loadBadgeState();
+  badgeState.totalGamesPlayed++;
+  badgeState.modesPlayed[mode] = true;
+  unlockBadge("recrue");
+  if(badgeState.totalGamesPlayed >= 25) unlockBadge("officier");
+  if(badgeState.totalGamesPlayed >= 50) unlockBadge("commandant");
+  if(badgeState.totalGamesPlayed >= 100) unlockBadge("general");
+  if(badgeState.modesPlayed.standard && badgeState.modesPlayed.daily && badgeState.modesPlayed.challenge){
+    unlockBadge("explorateur");
+  }
+  saveBadgeState();
+}
 
 function pickSecret(){
   // évite de retomber sur un char déjà sorti dans la même partie
@@ -633,6 +896,8 @@ function startSession(){
   sessionScore = 0;
   usedTanksThisSession = [];
   window._sessionAllGuesses = [];
+  sessionAnyHintUsed = false;
+  sessionEighthTryWins = 0;
   clearRoundProgress();
   document.getElementById("sessionSummary").style.display = "none";
   document.getElementById("sessionSummary").innerHTML = "";
@@ -674,13 +939,17 @@ function renderQuickPick(){
   shuffled.forEach(t => {
     const b = document.createElement("button");
     b.textContent = t.name;
-    b.onclick = () => submitGuess(t.name);
+    b.onclick = () => { lastGuessViaQuickPick = true; submitGuess(t.name); };
     btnsWrap.appendChild(b);
   });
 }
 
 let hintUsed1 = false;
 let hintUsed3 = false;
+let lastGuessViaQuickPick = false;
+let challengeQuickPickUsedThisRound = false;
+let sessionAnyHintUsed = false;
+let sessionEighthTryWins = 0;
 
 function updateHintBoxes(){
   const b1 = document.getElementById("hintBox1");
@@ -745,6 +1014,15 @@ function renderGuess(tank){
   tdName.innerHTML = `<div class="name-cell">${tank.name}</div>`;
   tr.appendChild(tdName);
 
+  if(!nameFound
+    && tank.nation === secret.nation
+    && tank.type === secret.type
+    && tank.tier === secret.tier
+    && tank.dmg === secret.dmg
+    && tank.premium === secret.premium){
+    unlockBadge("cest_lequel");
+  }
+
   const tdNation = document.createElement("td");
   tdNation.className = "cell " + (tank.nation === secret.nation ? "ok" : "bad");
   tdNation.textContent = tank.nation;
@@ -786,6 +1064,18 @@ function endRound(win){
   sessionScore += points;
   roundResults.push({name: secret.name, flag: secret.flag, tries: win ? tries : MAX_TRIES, score: points, win});
 
+  if(hintUsed1 || hintUsed3) sessionAnyHintUsed = true;
+  if(win){
+    badgeOnTankFound(secret, tries);
+    if(tries === 8){
+      sessionEighthTryWins++;
+      if(sessionEighthTryWins >= 2) unlockBadge("pas_de_stress");
+      if(hintUsed3) unlockBadge("dernier_recours");
+    }
+  } else if(hintUsed3){
+    unlockBadge("revisions");
+  }
+
   const msg = document.getElementById("message");
   msg.className = win ? "win" : "lose";
   if(win){
@@ -813,6 +1103,158 @@ function endRound(win){
 function goToNextRound(){
   round += 1;
   startRound();
+}
+
+// ---- Mode Challenge : manches infinies, un échec remet à zéro ----
+
+function startChallengeSession(){
+  challengeRound = 1;
+  challengeScore = 0;
+  challengeRoundResults = [];
+  challengeUsedTanks = [];
+  clearChallengeRoundProgress();
+  document.getElementById("challengeResult").style.display = "none";
+  document.getElementById("challengeResult").innerHTML = "";
+  document.getElementById("challengeScreenshotBtn").style.display = "none";
+  startChallengeRound();
+}
+
+function startChallengeRound(){
+  const pool = TANKS.filter(t => !challengeUsedTanks.includes(t.name));
+  const source = pool.length ? pool : TANKS;
+  secret = source[Math.floor(Math.random()*source.length)];
+  challengeUsedTanks.push(secret.name);
+  guesses = [];
+  finished = false;
+  challengeQuickPickUsedThisRound = false;
+  document.getElementById("boardBody").innerHTML = "";
+  document.getElementById("message").className = "";
+  document.getElementById("message").innerHTML = "";
+  document.getElementById("challengeNextRound").style.display = "none";
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").disabled = false;
+  document.getElementById("suggest").innerHTML = "";
+  renderChallengeQuickPick();
+  updateChallengeTries();
+  updateChallengeBar();
+  document.getElementById("guessInput").focus();
+  saveChallengeRoundProgress();
+}
+
+function updateChallengeTries(){
+  document.getElementById("tries").textContent = `TENTATIVES : ${guesses.length} / ${MAX_TRIES}`;
+}
+
+function updateChallengeBar(){
+  document.getElementById("challengeRoundLabel").textContent = challengeRound;
+  document.getElementById("challengeScoreLabel").textContent = challengeScore;
+}
+
+function renderChallengeQuickPick(){
+  // "Panne d'inspiration ?" n'est proposée qu'avant la toute première tentative de chaque manche
+  const box = document.getElementById("quickPick");
+  const btnsWrap = document.getElementById("quickPickBtns");
+  box.style.display = "block";
+  const shuffled = [...TANKS].sort(() => Math.random() - 0.5).slice(0, 3);
+  btnsWrap.innerHTML = "";
+  shuffled.forEach(t => {
+    const b = document.createElement("button");
+    b.textContent = t.name;
+    b.onclick = () => { lastGuessViaQuickPick = true; submitGuess(t.name); };
+    btnsWrap.appendChild(b);
+  });
+}
+
+function submitChallengeGuess(tank){
+  guesses.push(tank);
+  if(guesses.length === 1 && lastGuessViaQuickPick) challengeQuickPickUsedThisRound = true;
+  renderGuess(tank);
+  updateChallengeTries();
+  document.getElementById("guessInput").value = "";
+  document.getElementById("suggest").innerHTML = "";
+  document.getElementById("guessInput").focus();
+  document.getElementById("quickPick").style.display = "none"; // uniquement disponible à la 1ère tentative
+
+  if(tank.name === secret.name){
+    endChallengeRound(true);
+  } else if(guesses.length >= MAX_TRIES){
+    endChallengeRound(false);
+  } else {
+    saveChallengeRoundProgress();
+  }
+}
+
+function endChallengeRound(win){
+  finished = true;
+  document.getElementById("guessInput").disabled = true;
+  const tries = guesses.length;
+  const msg = document.getElementById("message");
+  msg.className = win ? "win" : "lose";
+
+  if(win){
+    const points = scoreForTries(tries);
+    challengeScore += points;
+    challengeRoundResults.push({name: secret.name, tries, score: points});
+    badgeOnTankFound(secret, tries);
+    const wonCount = challengeRoundResults.filter(r => r.tries !== null).length;
+    if(wonCount >= 10) unlockBadge("invincible");
+    if(wonCount >= 25) unlockBadge("increvable");
+    if(wonCount >= 50) unlockBadge("terminator");
+    if(wonCount >= 100) unlockBadge("chef");
+    if(challengeQuickPickUsedThisRound){
+      badgeState.challengeNoQuickPickStreak = 0;
+    } else {
+      badgeState.challengeNoQuickPickStreak++;
+      if(badgeState.challengeNoQuickPickStreak >= 5) unlockBadge("inspire");
+    }
+    saveBadgeState();
+    let title;
+    if(tries === 1) title = "ONE SHOT !";
+    else if(tries === 2) title = "SNAP SHOT !";
+    else if(tries === 3) title = "EASY KILL";
+    else if(tries <= 7) title = "CIBLE NEUTRALISÉE";
+    else title = "C'ÉTAIT MOINS UNE";
+    msg.innerHTML = `<b>${title} — +${points} PTS</b>Bravo, c'était bien le <b style="display:inline">${secret.name}</b>, en ${tries} tentative(s).`;
+    updateChallengeBar();
+    document.getElementById("challengeNextRound").style.display = "block";
+    saveChallengeRoundProgress();
+  } else {
+    challengeRoundResults.push({name: secret.name, tries: null, score: 0});
+    msg.innerHTML = `<b>SÉRIE TERMINÉE</b>Le char recherché était le <b style="display:inline">${secret.name}</b> (Tier ${secret.tier}, ${secret.type}).`;
+    finishChallengeRun();
+  }
+}
+
+function goToNextChallengeRound(){
+  challengeRound += 1;
+  startChallengeRound();
+}
+
+function finishChallengeRun(){
+  const prevMax = challengeHistory.length ? Math.max(...challengeHistory.map(s => s.roundsPlayed)) : null;
+  badgeState.challengeNoQuickPickStreak = 0;
+  saveBadgeState();
+
+  document.getElementById("quickPick").style.display = "none";
+  const box = document.getElementById("challengeResult");
+  const wonRounds = challengeRoundResults.filter(r => r.tries !== null);
+  const avgTries = wonRounds.length
+    ? (wonRounds.reduce((a,r) => a + r.tries, 0) / wonRounds.length).toFixed(1)
+    : "—";
+  box.innerHTML = `
+    <b>SÉRIE TERMINÉE</b>
+    <div class="scoreTotal">${challengeScore} PTS</div>
+    <div style="font-size:.85em;color:var(--sand);margin-top:6px;">
+      ${wonRounds.length} manche(s) réussie(s) — ${avgTries} essai(s) en moyenne
+    </div>
+  `;
+  box.style.display = "block";
+  document.getElementById("challengeScreenshotBtn").style.display = "block";
+  clearChallengeRoundProgress();
+  saveChallengeToHistory(wonRounds.length, avgTries);
+
+  if(prevMax !== null && wonRounds.length > prevMax) unlockBadge("revanche");
+  badgeOnGameCompleted("challenge");
 }
 
 // ---- Sauvegarde de la manche en cours (mode Standard uniquement) ----
@@ -897,7 +1339,80 @@ function restoreRoundProgress(){
   return true;
 }
 
+// ---- Sauvegarde de la manche Challenge en cours ----
+const CHALLENGE_ROUND_SAVE_KEY = "tankle_active_challenge_round_v1";
+
+function saveChallengeRoundProgress(){
+  if(currentMode !== "challenge" || !secret) return;
+  const state = {
+    challengeRound, challengeScore, challengeRoundResults, challengeUsedTanks,
+    secretName: secret.name,
+    guessNames: guesses.map(g => g.name),
+    finished,
+  };
+  try{ localStorage.setItem(CHALLENGE_ROUND_SAVE_KEY, JSON.stringify(state)); } catch(e){}
+}
+
+function clearChallengeRoundProgress(){
+  try{ localStorage.removeItem(CHALLENGE_ROUND_SAVE_KEY); } catch(e){}
+}
+
+function restoreChallengeRoundProgress(){
+  if(currentMode !== "challenge") return false;
+  let raw;
+  try{ raw = localStorage.getItem(CHALLENGE_ROUND_SAVE_KEY); } catch(e){ return false; }
+  if(!raw) return false;
+  let st;
+  try{ st = JSON.parse(raw); } catch(e){ return false; }
+  if(!st || !st.secretName) return false;
+  const foundSecret = TANKS.find(t => t.name === st.secretName);
+  if(!foundSecret) return false;
+
+  challengeRound = st.challengeRound;
+  challengeScore = st.challengeScore;
+  challengeRoundResults = st.challengeRoundResults || [];
+  challengeUsedTanks = st.challengeUsedTanks || [];
+  secret = foundSecret;
+  guesses = (st.guessNames || []).map(n => TANKS.find(t => t.name === n)).filter(Boolean);
+  finished = !!st.finished;
+
+  document.getElementById("boardBody").innerHTML = "";
+  guesses.forEach(g => renderGuess(g));
+  updateChallengeTries();
+  updateChallengeBar();
+  document.getElementById("challengeNextRound").style.display = "none";
+  document.getElementById("guessInput").disabled = finished;
+  document.getElementById("suggest").innerHTML = "";
+
+  if(guesses.length === 0 && !finished){
+    renderChallengeQuickPick();
+  } else {
+    document.getElementById("quickPick").style.display = "none";
+  }
+
+  if(finished && challengeRoundResults.length){
+    const r = challengeRoundResults[challengeRoundResults.length-1];
+    if(r.tries !== null){
+      const msg = document.getElementById("message");
+      msg.className = "win";
+      const tries = r.tries;
+      let title;
+      if(tries === 1) title = "ONE SHOT !";
+      else if(tries === 2) title = "SNAP SHOT !";
+      else if(tries === 3) title = "EASY KILL";
+      else if(tries <= 7) title = "CIBLE NEUTRALISÉE";
+      else title = "C'ÉTAIT MOINS UNE";
+      msg.innerHTML = `<b>${title} — +${r.score} PTS</b>Bravo, c'était bien le <b style="display:inline">${secret.name}</b>, en ${tries} tentative(s).`;
+      document.getElementById("challengeNextRound").style.display = "block";
+    }
+  }
+
+  return true;
+}
+
 function finishSession(){
+  const prevBest = history.length ? Math.max(...history.map(s => s.total)) : null;
+
   const box = document.getElementById("sessionSummary");
   const rows = roundResults.map((r,i) => {
     let style = ""; let stars = "";
@@ -923,6 +1438,25 @@ function finishSession(){
   document.getElementById("screenshotBtn").style.display = "block";
   clearRoundProgress();
   saveSessionToHistory();
+
+  // ---- Badges de fin de partie Standard ----
+  if(sessionScore > 5000) unlockBadge("as");
+  if(sessionScore > 6000) unlockBadge("topgun");
+  if(sessionScore > 8000) unlockBadge("maitre_du_jeu");
+  if(sessionScore >= 10000) unlockBadge("rngesus");
+  if(!sessionAnyHintUsed) unlockBadge("autonome");
+  if(prevBest !== null && sessionScore > prevBest) unlockBadge("record_personnel");
+
+  const wonEntries = roundResults.filter(r => r.win);
+  const wonTiers = wonEntries.map(r => (TANKS.find(t => t.name === r.name) || {}).tier);
+  const wonTypes = wonEntries.map(r => (TANKS.find(t => t.name === r.name) || {}).type);
+  if(wonTiers.includes(6) && wonTiers.includes(11)) unlockBadge("archeologue");
+  if(wonTypes.filter(t => t === "Artillerie").length >= 2) unlockBadge("pascucci");
+  if(roundResults.length === ROUNDS_PER_GAME && roundResults.every(r => r.win && r.tries === MAX_TRIES)){
+    unlockBadge("kolobanov");
+  }
+
+  badgeOnGameCompleted("standard");
 }
 
 function normalize(str){
@@ -938,10 +1472,17 @@ function submitGuess(name){
   const tank = TANKS.find(t => normalize(t.name) === target);
   if(!tank){
     flashInput();
+    lastGuessViaQuickPick = false;
     return;
   }
   if(currentMode === "daily"){
     submitDailyGuess(tank);
+    lastGuessViaQuickPick = false;
+    return;
+  }
+  if(currentMode === "challenge"){
+    submitChallengeGuess(tank);
+    lastGuessViaQuickPick = false;
     return;
   }
   guesses.push(tank);
@@ -961,6 +1502,7 @@ function submitGuess(name){
   } else {
     saveRoundProgress();
   }
+  lastGuessViaQuickPick = false;
 }
 
 function flashInput(){
@@ -981,9 +1523,13 @@ function getKnownConstraints(){
   return c;
 }
 
-function filterPoolByConstraints(pool){
-  const c = getKnownConstraints();
+function filterPoolByConstraints(pool, applyConstraints = true){
   const alreadyGuessed = new Set(guesses.map(g => g.name));
+  if(!applyConstraints){
+    // Mode Challenge : recherche classique, seul l'anti-doublon s'applique
+    return pool.filter(t => !alreadyGuessed.has(t.name));
+  }
+  const c = getKnownConstraints();
   return pool.filter(t =>
     !alreadyGuessed.has(t.name) && // anti-doublon : un char déjà proposé disparaît de la recherche
     (c.nation===undefined || t.nation===c.nation) &&
@@ -1004,7 +1550,7 @@ function renderSuggestions(){
   suggestBox.innerHTML = "";
   activeSuggestIndex = -1;
   if(!v) return;
-  const pool = filterPoolByConstraints(TANKS);
+  const pool = filterPoolByConstraints(TANKS, currentMode !== "challenge");
   const matches = pool
     .filter(t => normalize(t.name).includes(nv))
     .sort((a,b) => a.name.length - b.name.length || a.name.localeCompare(b.name))
@@ -1060,6 +1606,30 @@ document.getElementById("newGame").addEventListener("click", startSession);
 // Lit la valeur actuelle d'une variable CSS (respecte le mode daltonien pour les captures d'écran)
 function cssVar(name){
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+// Partage direct (mobile, Web Share API) si possible, sinon téléchargement classique
+async function shareOrDownloadCanvas(canvas, filename){
+  const dataUrl = canvas.toDataURL("image/png");
+
+  if(navigator.share){
+    try{
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], filename, { type: "image/png" });
+      if(!navigator.canShare || navigator.canShare({ files: [file] })){
+        await navigator.share({ files: [file], title: "TANKLE" });
+        return;
+      }
+    } catch(e){
+      // L'utilisateur a annulé le partage, ou le navigateur ne supporte pas
+      // le partage de fichiers : on retombe sur le téléchargement classique.
+    }
+  }
+
+  const a = document.createElement("a");
+  a.download = filename;
+  a.href = dataUrl;
+  a.click();
 }
 
 document.getElementById("screenshotBtn").addEventListener("click", async () => {
@@ -1125,11 +1695,58 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   ctx.font = "10px 'Courier New', monospace";
   ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, H - 12);
 
-  // Téléchargement
-  const a = document.createElement("a");
-  a.download = `tankle_score_${Date.now()}.png`;
-  a.href = canvas.toDataURL("image/png");
-  a.click();
+  // Partage ou téléchargement
+  shareOrDownloadCanvas(canvas, `tankle_score_${Date.now()}.png`);
+});
+
+document.getElementById("challengeScreenshotBtn").addEventListener("click", () => {
+  const wonRounds = challengeRoundResults.filter(r => r.tries !== null);
+  const avgTries = wonRounds.length
+    ? (wonRounds.reduce((a,r) => a + r.tries, 0) / wonRounds.length).toFixed(1)
+    : "—";
+
+  const canvas = document.createElement("canvas");
+  const W = 460, H = 220;
+  const SCALE = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+  canvas.width = W * SCALE;
+  canvas.height = H * SCALE;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(SCALE, SCALE);
+
+  // Fond
+  ctx.fillStyle = cssVar("--ink");
+  ctx.fillRect(0, 0, W, H);
+  // Cadre VERT uniquement pour ce mode
+  ctx.strokeStyle = cssVar("--ok");
+  ctx.lineWidth = 3;
+  ctx.strokeRect(2, 2, W-4, H-4);
+
+  ctx.fillStyle = cssVar("--sand");
+  ctx.font = "bold 26px 'Courier New', monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("TANKLE", W/2, 40);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--steel");
+  ctx.fillText("BY LA FRENCH TOUCH (& CLAUDE)", W/2, 56);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--ok");
+  ctx.fillText("MODE CHALLENGE", W/2, 71);
+
+  ctx.font = "bold 22px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--sand-light");
+  ctx.fillText(`${challengeScore} PTS`, W/2, 108);
+
+  ctx.font = "14px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--sand");
+  ctx.fillText(`${wonRounds.length} manche(s) réussie(s)`, W/2, 140);
+  ctx.fillText(`${avgTries} essai(s) en moyenne`, W/2, 163);
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = cssVar("--olive");
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, H - 12);
+
+  shareOrDownloadCanvas(canvas, `tankle_challenge_${Date.now()}.png`);
 });
 
 // ---- Tableau des scores personnels (persistant via localStorage du navigateur) ----
@@ -1144,13 +1761,11 @@ function saveSessionToHistory(){
     allGuesses: window._sessionAllGuesses || [], // TOUS les chars proposés (tentatives) durant la partie
   };
   history.unshift(entry);
-  scoreboardPage = 0;
   try{
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   } catch(e){
     console.error("Impossible de sauvegarder l'historique:", e);
   }
-  renderScoreboard();
   renderStats();
 }
 
@@ -1161,96 +1776,8 @@ function loadHistory(){
   } catch(e){
     history = [];
   }
-  renderScoreboard();
   renderStats();
 }
-
-const SCOREBOARD_PAGE_SIZE = 5;
-let scoreboardPage = 0;
-
-function getSortedHistory(){
-  const field = document.getElementById("sortField").value;
-  const dir = document.getElementById("sortDir").value === "asc" ? 1 : -1;
-  return [...history].sort((a,b) => {
-    let av, bv;
-    if(field === "score"){ av = a.total; bv = b.total; }
-    else { av = a.timestamp || 0; bv = b.timestamp || 0; }
-    return (av - bv) * dir;
-  });
-}
-
-function renderScoreboard(){
-  const wrap = document.getElementById("scoreboardContent");
-  if(!history.length){
-    wrap.innerHTML = `<div class="scoreEmpty">Aucune partie terminée pour l'instant. Termine une partie de 5 manches pour l'ajouter ici.</div>`;
-    return;
-  }
-  const sorted = getSortedHistory();
-  const totalPages = Math.max(1, Math.ceil(sorted.length / SCOREBOARD_PAGE_SIZE));
-  if(scoreboardPage >= totalPages) scoreboardPage = totalPages - 1;
-  if(scoreboardPage < 0) scoreboardPage = 0;
-  const start = scoreboardPage * SCOREBOARD_PAGE_SIZE;
-  const pageItems = sorted.slice(start, start + SCOREBOARD_PAGE_SIZE);
-
-  let rowsHtml = "";
-  pageItems.forEach((session, localIdx) => {
-    const idx = start + localIdx; // identifiant unique pour cette page rendue
-    rowsHtml += `
-      <tr class="sessionRow" data-session="${idx}">
-        <td>${session.date}</td>
-        <td><b>${session.total}</b></td>
-        <td style="color:var(--steel);font-size:.75em;">▾ voir le détail</td>
-      </tr>
-      <tr class="roundDetailRows" id="detailRows-${idx}" style="display:none;">
-        <td colspan="3" style="padding:0;">
-          <table style="width:100%;border-collapse:collapse;">
-            ${session.rounds.map((r,i) => {
-              let style = ""; let stars = "";
-              if(r.tries === 1){ style = "color:var(--rust);font-weight:700;"; stars = " ★★"; }
-              else if(r.tries === 2){ style = "color:var(--ok);font-weight:700;"; stars = " ★"; }
-              return `
-              <tr class="roundDetailRow">
-                <td style="width:20%;${style}">Manche ${i+1}${stars}</td>
-                <td style="${style}">${r.name}</td>
-                <td style="width:32%;text-align:right;${style}">${r.tries ? `${r.tries} essai(s) — ` : "non trouvé — "}${r.score} pts</td>
-              </tr>`;
-            }).join("")}
-          </table>
-        </td>
-      </tr>`;
-  });
-
-  const pagerHtml = totalPages > 1 ? `
-    <div class="pager">
-      <button id="pagerPrev" ${scoreboardPage === 0 ? "disabled" : ""}>◀ Précédent</button>
-      <span>Page ${scoreboardPage+1} / ${totalPages}</span>
-      <button id="pagerNext" ${scoreboardPage >= totalPages-1 ? "disabled" : ""}>Suivant ▶</button>
-    </div>` : "";
-
-  wrap.innerHTML = `
-    <table class="scoreTableStyle">
-      <thead><tr><th style="width:34%;">Date</th><th style="width:36%;">Score total</th><th style="width:30%;"></th></tr></thead>
-      <tbody>${rowsHtml}</tbody>
-    </table>
-    ${pagerHtml}
-  `;
-  wrap.querySelectorAll(".sessionRow").forEach(row => {
-    row.addEventListener("click", () => {
-      const idx = row.dataset.session;
-      const detail = document.getElementById(`detailRows-${idx}`);
-      const isOpen = detail.style.display !== "none";
-      detail.style.display = isOpen ? "none" : "table-row";
-      row.querySelector("td:last-child").textContent = isOpen ? "▾ voir le détail" : "▴ masquer";
-    });
-  });
-  const prevBtn = document.getElementById("pagerPrev");
-  const nextBtn = document.getElementById("pagerNext");
-  if(prevBtn) prevBtn.addEventListener("click", () => { scoreboardPage--; renderScoreboard(); });
-  if(nextBtn) nextBtn.addEventListener("click", () => { scoreboardPage++; renderScoreboard(); });
-}
-
-document.getElementById("sortField").addEventListener("change", () => { scoreboardPage = 0; renderScoreboard(); });
-document.getElementById("sortDir").addEventListener("change", () => { scoreboardPage = 0; renderScoreboard(); });
 
 function renderStats(){
   if(!history.length){
@@ -1270,9 +1797,9 @@ function renderStats(){
 
   document.getElementById("statsGrid").innerHTML = `
     <div class="statCard"><div class="sv">${played}</div><div class="sl">Parties jouées</div></div>
+    <div class="statCard"><div class="sv">${avgTries}</div><div class="sl">Moy. tentatives</div></div>
     <div class="statCard"><div class="sv">${bestScore}</div><div class="sl">Meilleur score</div></div>
     <div class="statCard"><div class="sv">${avgScore}</div><div class="sl">Score moyen</div></div>
-    <div class="statCard"><div class="sv">${avgTries}</div><div class="sl">Moy. tentatives</div></div>
   `;
 
   // Top 5 chars les plus PROPOSÉS par le joueur (chaque tentative compte, pas seulement les chars secrets)
@@ -1291,6 +1818,71 @@ function renderStats(){
       }).join("")
     : `<div style="color:var(--steel);font-size:.8em;padding:8px;">Pas encore assez de données.</div>`;
 }
+
+// ---- Mode Challenge : historique, tableau des scores, stats ----
+const CHALLENGE_STORAGE_KEY = "tankle_challenge_history_v1";
+
+function saveChallengeToHistory(roundsPlayed, avgTries){
+  const entry = {
+    date: new Date().toLocaleString("fr-FR"),
+    timestamp: Date.now(),
+    total: challengeScore,
+    roundsPlayed: roundsPlayed,
+    rounds: challengeRoundResults.map(r => ({name:r.name, tries:r.tries, score:r.score})),
+  };
+  challengeHistory.unshift(entry);
+  try{
+    localStorage.setItem(CHALLENGE_STORAGE_KEY, JSON.stringify(challengeHistory));
+  } catch(e){
+    console.error("Impossible de sauvegarder l'historique Challenge:", e);
+  }
+  renderChallengeStats();
+}
+
+function loadChallengeHistory(){
+  try{
+    const raw = localStorage.getItem(CHALLENGE_STORAGE_KEY);
+    challengeHistory = raw ? JSON.parse(raw) : [];
+  } catch(e){
+    challengeHistory = [];
+  }
+  renderChallengeStats();
+}
+
+function renderChallengeStats(){
+  if(!challengeHistory.length){
+    document.getElementById("challengeStatsBox").style.display = "none";
+    return;
+  }
+  document.getElementById("challengeStatsBox").style.display = "block";
+
+  const played = challengeHistory.length;
+  const bestScore = Math.max(...challengeHistory.map(s => s.total));
+  const avgScore = Math.round(challengeHistory.reduce((a,s) => a + s.total, 0) / played);
+  const allRounds = challengeHistory.flatMap(s => s.rounds);
+  const wonRounds = allRounds.filter(r => r.tries !== null);
+  const avgTries = wonRounds.length
+    ? (wonRounds.reduce((a,r) => a + r.tries, 0) / wonRounds.length).toFixed(1)
+    : "—";
+  const maxRound = Math.max(...challengeHistory.map(s => s.roundsPlayed));
+  const avgRounds = (challengeHistory.reduce((a,s) => a + s.roundsPlayed, 0) / played).toFixed(1);
+
+  document.getElementById("challengeStatsGrid").innerHTML = `
+    <div class="statCard"><div class="sv">${played}</div><div class="sl">Parties jouées</div></div>
+    <div class="statCard"><div class="sv">${avgTries}</div><div class="sl">Moy. tentatives</div></div>
+    <div class="statCard"><div class="sv">${bestScore}</div><div class="sl">Meilleur score</div></div>
+    <div class="statCard"><div class="sv">${avgScore}</div><div class="sl">Score moyen</div></div>
+    <div class="statCard"><div class="sv">${maxRound}</div><div class="sl">Manche max</div></div>
+    <div class="statCard"><div class="sv">${avgRounds}</div><div class="sl">Moy. manches</div></div>
+  `;
+}
+
+document.getElementById("challengeResetStatsBtn").addEventListener("click", () => {
+  if(!confirm("Réinitialiser toutes tes statistiques et ton historique du Mode Challenge ? Cette action est irréversible.")) return;
+  challengeHistory = [];
+  try{ localStorage.removeItem(CHALLENGE_STORAGE_KEY); } catch(e){}
+  renderChallengeStats();
+});
 
 // ---- Défi du jour : sélection déterministe, timer, sauvegarde, partage ----
 let dailySecret = null;
@@ -1411,102 +2003,63 @@ function stopDailyCountdown(){
   if(dailyCountdownHandle){ clearInterval(dailyCountdownHandle); dailyCountdownHandle = null; }
 }
 
-const DAILY_HISTORY_PAGE_SIZE = 5;
-let dailyHistoryPage = 0;
-
-function renderDailyHistory(){
-  const wrap = document.getElementById("dailyHistoryContent");
-  if(!wrap) return;
+function renderDailyStats(){
   const hist = loadDailyHistory();
   if(!hist.length){
-    wrap.innerHTML = `<div class="scoreEmpty">Aucun défi terminé pour l'instant.</div>`;
+    document.getElementById("dailyStatsBox").style.display = "none";
     return;
   }
-  const totalPages = Math.max(1, Math.ceil(hist.length / DAILY_HISTORY_PAGE_SIZE));
-  if(dailyHistoryPage >= totalPages) dailyHistoryPage = totalPages - 1;
-  if(dailyHistoryPage < 0) dailyHistoryPage = 0;
-  const start = dailyHistoryPage * DAILY_HISTORY_PAGE_SIZE;
-  const pageItems = hist.slice(start, start + DAILY_HISTORY_PAGE_SIZE);
+  document.getElementById("dailyStatsBox").style.display = "block";
 
-  let rowsHtml = "";
-  pageItems.forEach((h, localIdx) => {
-    const idx = start + localIdx;
-    const d = new Date(h.date + "T00:00:00");
-    const label = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
-    const detailRows = (h.guessNames && h.guessNames.length)
-      ? h.guessNames.map((name, i) => `
-          <tr class="dailyDetailRow">
-            <td style="width:35%;">Tentative ${i+1}</td>
-            <td>${name}</td>
-          </tr>`).join("")
-      : `<tr class="dailyDetailRow"><td colspan="2">Détail non disponible pour ce défi.</td></tr>`;
-    rowsHtml += `
-      <tr class="sessionRow" data-daily="${idx}">
-        <td>${label}</td>
-        <td><b>${formatTime(h.elapsedMs)} — ${h.tries} essai(s)</b></td>
-        <td style="color:var(--steel);font-size:.75em;">▾ voir le détail</td>
-      </tr>
-      <tr class="roundDetailRows" id="dailyDetailRows-${idx}" style="display:none;">
-        <td colspan="3" style="padding:0;">
-          <table style="width:100%;border-collapse:collapse;">
-            ${detailRows}
-          </table>
-        </td>
-      </tr>`;
-  });
+  const streak = computeStreak(hist);
+  const avgTries = (hist.reduce((a,h) => a + h.tries, 0) / hist.length).toFixed(1);
+  const bestTime = Math.min(...hist.map(h => h.elapsedMs));
+  const minTries = Math.min(...hist.map(h => h.tries));
 
-  const pagerHtml = totalPages > 1 ? `
-    <div class="pager">
-      <button id="dailyPagerPrev" ${dailyHistoryPage === 0 ? "disabled" : ""}>◀ Précédent</button>
-      <span>Page ${dailyHistoryPage+1} / ${totalPages}</span>
-      <button id="dailyPagerNext" ${dailyHistoryPage >= totalPages-1 ? "disabled" : ""}>Suivant ▶</button>
-    </div>` : "";
-
-  wrap.innerHTML = `
-    <table class="scoreTableStyle">
-      <thead><tr><th style="width:30%;">Date</th><th style="width:40%;">Résultat</th><th style="width:30%;"></th></tr></thead>
-      <tbody>${rowsHtml}</tbody>
-    </table>
-    ${pagerHtml}
+  document.getElementById("dailyStatsGrid").innerHTML = `
+    <div class="statCard"><div class="sv">🔥 ${streak}</div><div class="sl">Série</div></div>
+    <div class="statCard"><div class="sv">${avgTries}</div><div class="sl">Moy. tentatives</div></div>
+    <div class="statCard"><div class="sv">${formatTime(bestTime)}</div><div class="sl">Meilleur temps</div></div>
+    <div class="statCard"><div class="sv">${minTries}</div><div class="sl">Tentatives minimum</div></div>
   `;
-  wrap.querySelectorAll(".sessionRow").forEach(row => {
-    row.addEventListener("click", () => {
-      const idx = row.dataset.daily;
-      const detail = document.getElementById(`dailyDetailRows-${idx}`);
-      const isOpen = detail.style.display !== "none";
-      detail.style.display = isOpen ? "none" : "table-row";
-      row.querySelector("td:last-child").textContent = isOpen ? "▾ voir le détail" : "▴ masquer";
-    });
-  });
-  const prevBtn = document.getElementById("dailyPagerPrev");
-  const nextBtn = document.getElementById("dailyPagerNext");
-  if(prevBtn) prevBtn.addEventListener("click", () => { dailyHistoryPage--; renderDailyHistory(); });
-  if(nextBtn) nextBtn.addEventListener("click", () => { dailyHistoryPage++; renderDailyHistory(); });
 }
 
 function setUIModeVisibility(mode){
-  const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries","standardScoreboardBox","statsBox"];
-  const standardOnlyClass = document.querySelector(".session-bar");
-  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox"];
+  const standardOnly = ["roundDots","hintBox1","hintBox3","nextRound","newGame","sessionSummary","screenshotBtn","statsBox"];
+  const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyStatsBox"];
+  const challengeOnly = ["challengeBar","challengeResult","challengeScreenshotBtn","challengeNextRound","challengeNewGame","challengeStatsBox"];
+  const shared = ["tries","quickPick"]; // partagés entre Standard et Challenge, masqués en Défi du jour
+  const sessionBarEl = document.querySelector(".session-bar");
+
+  // Réinitialise tout à masqué, puis réaffiche sélectivement selon le mode
+  [...standardOnly, ...dailyOnly, ...challengeOnly, ...shared].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = "none";
+  });
+  if(sessionBarEl) sessionBarEl.style.display = "none";
+  document.getElementById("message").style.display = "none";
+  document.getElementById("message").innerHTML = "";
+  stopDailyCountdown();
+
   if(mode === "standard"){
-    if(standardOnlyClass) standardOnlyClass.style.display = "flex";
+    if(sessionBarEl) sessionBarEl.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
-    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; });
-    document.getElementById("hintBox1").style.display = "none"; // sera réaffiché par updateHintBoxes si pertinent
+    document.getElementById("hintBox1").style.display = "none"; // réaffiché par updateHintBoxes si pertinent
     document.getElementById("hintBox3").style.display = "none";
     document.getElementById("nextRound").style.display = "none";
+    document.getElementById("tries").style.display = "";
     document.getElementById("message").style.display = "";
-    stopDailyCountdown();
     renderStats(); // réaffirme la visibilité data-driven (masqué si aucun historique)
+  } else if(mode === "challenge"){
+    document.getElementById("challengeBar").style.display = "flex";
+    document.getElementById("challengeNewGame").style.display = "block";
+    document.getElementById("tries").style.display = "";
+    document.getElementById("message").style.display = "";
+    renderChallengeStats();
   } else {
-    if(standardOnlyClass) standardOnlyClass.style.display = "none";
-    standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = "none"; });
-    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; }); // réaffichés sélectivement ensuite
     document.getElementById("dailyBar").style.display = "flex";
-    document.getElementById("dailyHistoryBox").style.display = "block";
-    document.getElementById("message").style.display = "none";
-    document.getElementById("message").innerHTML = "";
-    renderDailyHistory();
+    document.getElementById("dailyStatsBox").style.display = "block";
+    renderDailyStats();
   }
 }
 
@@ -1526,8 +2079,8 @@ function startDailyMode(){
   document.getElementById("dailyResult").innerHTML = "";
   document.getElementById("dailyScreenshotBtn").style.display = "none";
   document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
-  document.getElementById("dailyHistoryBox").style.display = "block";
-  renderDailyHistory();
+  document.getElementById("dailyStatsBox").style.display = "block";
+  renderDailyStats();
 
   const saved = loadDailyState(dailyDateStr);
 
@@ -1592,6 +2145,17 @@ function submitDailyGuess(tank){
     recordDailyCompletion(dailyDateStr, dailyGuesses.length, dailyElapsedMs, dailyGuesses.map(g => g.name));
     refreshDailyDoneMark();
     showDailyResult();
+
+    // ---- Badges du Défi du jour ----
+    const dTries = dailyGuesses.length;
+    badgeOnTankFound(dailySecret, dTries);
+    if(dailyElapsedMs < 30000) unlockBadge("eclair");
+    if(dTries === 1) unlockBadge("jour_j");
+    if(dTries > 15) unlockBadge("marathonien");
+    const hour = new Date().getHours();
+    if(hour >= 4 && hour < 8) unlockBadge("matinal");
+    if(hour >= 0 && hour < 4) unlockBadge("couche_tard");
+    badgeOnGameCompleted("daily");
   } else {
     saveDailyState();
   }
@@ -1633,8 +2197,12 @@ function showDailyResult(){
   document.getElementById("dailyLiveStats").style.display = "none";
   document.getElementById("dailyCountdownWrap").style.display = "inline";
   startDailyCountdown();
-  document.getElementById("dailyStreakLabel").textContent = computeStreak(loadDailyHistory());
-  renderDailyHistory();
+  const currentStreak = computeStreak(loadDailyHistory());
+  document.getElementById("dailyStreakLabel").textContent = currentStreak;
+  if(currentStreak >= 7) unlockBadge("veteran");
+  if(currentStreak >= 20) unlockBadge("legende_du_front");
+  if(currentStreak >= 30) unlockBadge("general_de_guerre");
+  renderDailyStats();
 }
 
 document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
@@ -1688,10 +2256,7 @@ document.getElementById("dailyScreenshotBtn").addEventListener("click", () => {
   ctx.font = "10px 'Courier New', monospace";
   ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, H - 10);
 
-  const a = document.createElement("a");
-  a.download = `tankle_defi_du_jour_${Date.now()}.png`;
-  a.href = canvas.toDataURL("image/png");
-  a.click();
+  shareOrDownloadCanvas(canvas, `tankle_defi_du_jour_${Date.now()}.png`);
 });
 
 // ---- Sélecteur de mode ----
@@ -1703,11 +2268,17 @@ document.querySelectorAll(".modeBtn").forEach(btn => {
     btn.classList.add("active");
     currentMode = btn.dataset.mode;
 
+    if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
+
     if(currentMode === "daily"){
       setUIModeVisibility("daily");
       startDailyMode();
+    } else if(currentMode === "challenge"){
+      setUIModeVisibility("challenge");
+      if(!restoreChallengeRoundProgress()){
+        startChallengeSession();
+      }
     } else {
-      if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
       setUIModeVisibility("standard");
       if(!restoreRoundProgress()){
         startSession();
@@ -1716,11 +2287,13 @@ document.querySelectorAll(".modeBtn").forEach(btn => {
   });
 });
 
+document.getElementById("challengeNextRound").addEventListener("click", goToNextChallengeRound);
+document.getElementById("challengeNewGame").addEventListener("click", startChallengeSession);
+
 document.getElementById("resetStatsBtn").addEventListener("click", () => {
   if(!confirm("Réinitialiser toutes tes statistiques et ton historique de scores ? Cette action est irréversible.")) return;
   history = [];
   try{ localStorage.removeItem(STORAGE_KEY); } catch(e){}
-  renderScoreboard();
   renderStats();
 });
 
@@ -1745,6 +2318,7 @@ document.getElementById("colorblindIcon").addEventListener("click", () => {
   const currentlyOn = document.documentElement.classList.contains("colorblind");
   localStorage.setItem("tankle_colorblind", currentlyOn ? "0" : "1");
   applyColorblindPref();
+  if(!currentlyOn) unlockBadge("daltonien");
 });
 applyColorblindPref();
 
@@ -1760,10 +2334,53 @@ function closeRulesPanel(){
     rulesLastFocused.focus();
   }
 }
-document.getElementById("rulesIcon").addEventListener("click", openRulesPanel);
+document.getElementById("rulesIcon").addEventListener("click", () => {
+  openRulesPanel();
+  unlockBadge("curieux");
+});
 document.getElementById("rulesClose").addEventListener("click", closeRulesPanel);
 document.getElementById("rulesOverlay").addEventListener("click", (e) => {
   if(e.target.id === "rulesOverlay") closeRulesPanel();
+});
+
+let badgesLastFocused = null;
+function openBadgesPanel(){
+  badgesLastFocused = document.activeElement;
+  renderBadgesList();
+  document.getElementById("badgesOverlay").classList.add("open");
+  document.getElementById("badgesClose").focus();
+}
+function closeBadgesPanel(){
+  document.getElementById("badgesOverlay").classList.remove("open");
+  if(badgesLastFocused && typeof badgesLastFocused.focus === "function"){
+    badgesLastFocused.focus();
+  }
+}
+document.getElementById("badgesIcon").addEventListener("click", openBadgesPanel);
+document.getElementById("badgesClose").addEventListener("click", closeBadgesPanel);
+document.getElementById("badgesOverlay").addEventListener("click", (e) => {
+  if(e.target.id === "badgesOverlay") closeBadgesPanel();
+});
+document.getElementById("badgesOverlay").addEventListener("keydown", (e) => {
+  if(!document.getElementById("badgesOverlay").classList.contains("open")) return;
+  if(e.key === "Escape"){
+    closeBadgesPanel();
+    return;
+  }
+  if(e.key === "Tab"){
+    const panel = document.querySelector("#badgesOverlay .badgesPanel");
+    const focusables = panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if(focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if(e.shiftKey && document.activeElement === first){
+      e.preventDefault();
+      last.focus();
+    } else if(!e.shiftKey && document.activeElement === last){
+      e.preventDefault();
+      first.focus();
+    }
+  }
 });
 document.getElementById("rulesOverlay").addEventListener("keydown", (e) => {
   if(!document.getElementById("rulesOverlay").classList.contains("open")) return;
@@ -1788,6 +2405,21 @@ document.getElementById("rulesOverlay").addEventListener("keydown", (e) => {
 });
 
 // ---- Initialisation : charge le dataset externe puis démarre le jeu ----
+// ---- Première visite : ouvre les règles automatiquement une seule fois ----
+try{
+  if(!localStorage.getItem("tankle_visited_v1")){
+    localStorage.setItem("tankle_visited_v1", "1");
+    openRulesPanel();
+  }
+} catch(e){}
+
+// ---- Enregistrement du service worker (site installable en PWA) ----
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}
+
 async function init(){
   try{
     const res = await fetch("tanks.json");
@@ -1799,6 +2431,8 @@ async function init(){
     return;
   }
   loadHistory();
+  loadChallengeHistory();
+  loadBadgeState();
   refreshDailyDoneMark();
   if(!restoreRoundProgress()){
     startSession();
