@@ -167,6 +167,22 @@ button#newGame{
   text-transform:uppercase;
 }
 button#newGame:hover{background:var(--rust-hover);}
+.btnPrimary{
+  display:block;margin:18px auto 0;
+  background:var(--rust);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;
+  text-transform:uppercase;
+}
+.btnPrimary:hover{background:var(--rust-hover);}
+.btnSecondary{
+  display:none;margin:18px auto 0;
+  background:var(--olive);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;
+  text-transform:uppercase;
+}
+.btnSecondary:hover{background:var(--olive-hover);}
 .session-bar{
   display:flex;justify-content:center;gap:24px;
   font-size:.72em;letter-spacing:1px;color:var(--sand);
@@ -277,6 +293,13 @@ button#screenshotBtn{
   letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
 }
 button#screenshotBtn:hover{background:var(--olive-hover);}
+.btnScreenshot{
+  display:none;margin:14px auto 0;
+  background:var(--olive);color:var(--sand-light);
+  border:none;padding:10px 22px;font-family:inherit;
+  letter-spacing:2px;font-size:.8em;cursor:pointer;text-transform:uppercase;
+}
+.btnScreenshot:hover{background:var(--olive-hover);}
 .statsBox{
   margin-top:28px;padding:16px;
   border:1px solid var(--border-color);background:rgba(75,83,32,0.1);
@@ -320,6 +343,18 @@ button.modeBtn.active{background:var(--rust);color:var(--sand-light);border-colo
 }
 .dailyBar b{color:var(--sand-light);}
 #dailyDoneMark{color:var(--ok);font-weight:900;margin-left:4px;}
+.challengeBar{
+  display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+  font-size:.75em;letter-spacing:1px;color:var(--sand);
+  margin-bottom:16px;text-transform:uppercase;
+}
+.challengeBar b{color:var(--sand-light);}
+.challengeResult{
+  display:none;text-align:center;margin-top:18px;padding:18px;
+  border:2px solid var(--ok);background:rgba(92,122,58,0.12);
+}
+.challengeResult b{display:block;letter-spacing:3px;font-size:1.2em;margin-bottom:10px;}
+.challengeResult .scoreTotal{font-size:1.6em;color:var(--sand-light);margin:6px 0 12px;}
 .dailyResult{
   display:none;text-align:center;margin-top:18px;padding:18px;
   border:2px solid var(--rust);background:rgba(168,70,44,0.12);
@@ -450,6 +485,7 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   <div class="mode-bar">
     <button class="modeBtn" data-mode="daily">Défi du jour <span id="dailyDoneMark" style="display:none;">✓</span></button>
     <button class="modeBtn active" data-mode="standard">Mode Standard</button>
+    <button class="modeBtn" data-mode="challenge">Mode Challenge</button>
   </div>
 
   <div class="dailyBar" id="dailyBar" style="display:none;">
@@ -457,6 +493,11 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     <span id="dailyStreakWrap">🔥 Série : <b id="dailyStreakLabel">0</b></span>
     <span id="dailyLiveStats">⏱ <b id="dailyTimer">00:00</b> · Tentatives : <b id="dailyTriesLabel">0</b></span>
     <span id="dailyCountdownWrap" style="display:none;">Prochain défi dans <b id="dailyCountdownLabel">--</b></span>
+  </div>
+
+  <div class="challengeBar" id="challengeBar" style="display:none;">
+    <span>Manche <b id="challengeRoundLabel">1</b></span>
+    <span>Score : <b id="challengeScoreLabel">0</b></span>
   </div>
 
   <div class="rulesOverlay" id="rulesOverlay">
@@ -482,6 +523,8 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
       <p>Barème selon le nombre d'essais utilisés pour trouver le char : 2000 / 1500 / 1000 / 820 / 640 / 460 / 280 / 100 points (0 si non trouvé).</p>
       <h3>Défi du jour</h3>
       <p>Un seul char, identique pour tous les joueurs, tiré au sort chaque jour. Pas de limite de tentatives, mais aucun indice disponible. Ton temps et ton nombre d'essais remplacent le score, et tu peux partager ton résultat (sans révéler le char) une fois trouvé.</p>
+      <h3>Mode Challenge</h3>
+      <p>Enchaîne les manches sans limite tant que tu trouves le char (toujours 8 tentatives max par manche). Un seul échec met fin à la série et te ramène à la manche 1. Aucun indice disponible, mais "Panne d'inspiration ?" reste accessible à tout moment. La recherche est classique, sans aide ni suggestion.</p>
       <h3>Astuce recherche</h3>
       <p>La barre de recherche ignore les accents, les tirets, les points et les espaces ("is 7" = "is-7"), filtre automatiquement la liste selon les informations déjà révélées en vert, et retire un char de la recherche une fois qu'il a été proposé (anti-doublon). Navigation possible au clavier (↑ / ↓ / Entrée).</p>
     </div>
@@ -524,14 +567,19 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
   </table>
 
   <div id="message"></div>
-  <button id="nextRound">Manche suivante</button>
-  <button id="newGame">Nouvelle partie</button>
+  <button id="nextRound" class="btnSecondary">Manche suivante</button>
+  <button id="newGame" class="btnPrimary">Nouvelle partie</button>
+  <button id="challengeNextRound" class="btnSecondary">Manche suivante</button>
+  <button id="challengeNewGame" class="btnPrimary" style="display:none;">Nouvelle partie</button>
 
   <div id="sessionSummary"></div>
-  <button id="screenshotBtn">📷 Enregistrer le score</button>
+  <button id="screenshotBtn" class="btnScreenshot">📷 Enregistrer le score</button>
 
   <div class="dailyResult" id="dailyResult"></div>
-  <button id="dailyScreenshotBtn">📷 Enregistrer mon résultat</button>
+  <button id="dailyScreenshotBtn" class="btnScreenshot">📷 Enregistrer mon résultat</button>
+
+  <div class="challengeResult" id="challengeResult"></div>
+  <button id="challengeScreenshotBtn" class="btnScreenshot">📷 Enregistrer le score</button>
 
   <div class="legend">
     <span><span class="swatch" style="background:var(--ok);"></span> Correct</span>
@@ -562,6 +610,23 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
     <div id="dailyHistoryContent"></div>
   </div>
 
+  <div class="scoreboard" id="challengeScoreboardBox" style="display:none;">
+    <h2>Tableau des scores</h2>
+    <div class="sortBar" id="challengeSortBar">
+      <label>Trier par
+        <select id="challengeSortField">
+          <option value="date">Date</option>
+          <option value="score">Score</option>
+        </select>
+      </label>
+      <select id="challengeSortDir">
+        <option value="desc">Plus récent / plus haut</option>
+        <option value="asc">Plus ancien / plus bas</option>
+      </select>
+    </div>
+    <div id="challengeScoreboardContent"></div>
+  </div>
+
   <div class="statsBox" id="statsBox" style="display:none;">
     <h3>Etats de service</h3>
     <div class="statsGrid" id="statsGrid"></div>
@@ -570,6 +635,12 @@ button#dailyScreenshotBtn:hover{background:var(--olive-hover);}
       <div id="top5List"></div>
     </div>
     <button id="resetStatsBtn">Réinitialiser mes statistiques</button>
+  </div>
+
+  <div class="statsBox" id="challengeStatsBox" style="display:none;">
+    <h3>Etats de service</h3>
+    <div class="statsGrid" id="challengeStatsGrid"></div>
+    <button id="challengeResetStatsBtn">Réinitialiser mes statistiques</button>
   </div>
 
   <div class="footnote">Jeu fan-made non officiel — données indicatives inspirées de la Tankopedia World of Tanks (api.worldoftanks.eu)</div>
@@ -593,6 +664,14 @@ let roundResults = []; // {name, flag, tries, score, win}
 let sessionScore = 0;
 let usedTanksThisSession = [];
 let history = [];
+
+// ---- Mode Challenge : manches infinies, un échec remet à zéro ----
+let challengeRound = 1;
+let challengeScore = 0;
+let challengeRoundResults = []; // {name, tries, score} de la série en cours
+let challengeUsedTanks = [];
+let challengeHistory = [];
+let challengeScoreboardPage = 0;
 
 function pickSecret(){
   // évite de retomber sur un char déjà sorti dans la même partie
@@ -815,6 +894,131 @@ function goToNextRound(){
   startRound();
 }
 
+// ---- Mode Challenge : manches infinies, un échec remet à zéro ----
+
+function startChallengeSession(){
+  challengeRound = 1;
+  challengeScore = 0;
+  challengeRoundResults = [];
+  challengeUsedTanks = [];
+  document.getElementById("challengeResult").style.display = "none";
+  document.getElementById("challengeResult").innerHTML = "";
+  document.getElementById("challengeScreenshotBtn").style.display = "none";
+  startChallengeRound();
+}
+
+function startChallengeRound(){
+  const pool = TANKS.filter(t => !challengeUsedTanks.includes(t.name));
+  const source = pool.length ? pool : TANKS;
+  secret = source[Math.floor(Math.random()*source.length)];
+  challengeUsedTanks.push(secret.name);
+  guesses = [];
+  finished = false;
+  document.getElementById("boardBody").innerHTML = "";
+  document.getElementById("message").className = "";
+  document.getElementById("message").innerHTML = "";
+  document.getElementById("challengeNextRound").style.display = "none";
+  document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").disabled = false;
+  document.getElementById("suggest").innerHTML = "";
+  renderChallengeQuickPick();
+  updateChallengeTries();
+  updateChallengeBar();
+  document.getElementById("guessInput").focus();
+}
+
+function updateChallengeTries(){
+  document.getElementById("tries").textContent = `TENTATIVES : ${guesses.length} / ${MAX_TRIES}`;
+}
+
+function updateChallengeBar(){
+  document.getElementById("challengeRoundLabel").textContent = challengeRound;
+  document.getElementById("challengeScoreLabel").textContent = challengeScore;
+}
+
+function renderChallengeQuickPick(){
+  // "Panne d'inspiration ?" reste toujours disponible dans ce mode (pas d'indices)
+  const box = document.getElementById("quickPick");
+  const btnsWrap = document.getElementById("quickPickBtns");
+  box.style.display = "block";
+  const shuffled = [...TANKS].sort(() => Math.random() - 0.5).slice(0, 3);
+  btnsWrap.innerHTML = "";
+  shuffled.forEach(t => {
+    const b = document.createElement("button");
+    b.textContent = t.name;
+    b.onclick = () => submitGuess(t.name);
+    btnsWrap.appendChild(b);
+  });
+}
+
+function submitChallengeGuess(tank){
+  guesses.push(tank);
+  renderGuess(tank);
+  updateChallengeTries();
+  document.getElementById("guessInput").value = "";
+  document.getElementById("suggest").innerHTML = "";
+  document.getElementById("guessInput").focus();
+
+  if(tank.name === secret.name){
+    endChallengeRound(true);
+  } else if(guesses.length >= MAX_TRIES){
+    endChallengeRound(false);
+  } else {
+    renderChallengeQuickPick(); // rafraîchit les 3 suggestions à chaque tentative
+  }
+}
+
+function endChallengeRound(win){
+  finished = true;
+  document.getElementById("guessInput").disabled = true;
+  const tries = guesses.length;
+  const msg = document.getElementById("message");
+  msg.className = win ? "win" : "lose";
+
+  if(win){
+    const points = scoreForTries(tries);
+    challengeScore += points;
+    challengeRoundResults.push({name: secret.name, tries, score: points});
+    let title;
+    if(tries === 1) title = "ONE SHOT !";
+    else if(tries === 2) title = "SNAP SHOT !";
+    else if(tries === 3) title = "EASY KILL";
+    else if(tries <= 7) title = "CIBLE NEUTRALISÉE";
+    else title = "C'ÉTAIT MOINS UNE";
+    msg.innerHTML = `<b>${title} — +${points} PTS</b>Bravo, c'était bien le <b style="display:inline">${secret.name}</b>, en ${tries} tentative(s).`;
+    updateChallengeBar();
+    document.getElementById("challengeNextRound").style.display = "block";
+  } else {
+    challengeRoundResults.push({name: secret.name, tries: null, score: 0});
+    msg.innerHTML = `<b>SÉRIE TERMINÉE</b>Le char recherché était le <b style="display:inline">${secret.name}</b> (Tier ${secret.tier}, ${secret.type}).`;
+    finishChallengeRun();
+  }
+}
+
+function goToNextChallengeRound(){
+  challengeRound += 1;
+  startChallengeRound();
+}
+
+function finishChallengeRun(){
+  document.getElementById("quickPick").style.display = "none";
+  const box = document.getElementById("challengeResult");
+  const wonRounds = challengeRoundResults.filter(r => r.tries !== null);
+  const avgTries = wonRounds.length
+    ? (wonRounds.reduce((a,r) => a + r.tries, 0) / wonRounds.length).toFixed(1)
+    : "—";
+  box.innerHTML = `
+    <b>SÉRIE TERMINÉE</b>
+    <div class="scoreTotal">${challengeScore} PTS</div>
+    <div style="font-size:.85em;color:var(--sand);margin-top:6px;">
+      ${wonRounds.length} manche(s) réussie(s) — ${avgTries} essai(s) en moyenne
+    </div>
+  `;
+  box.style.display = "block";
+  document.getElementById("challengeScreenshotBtn").style.display = "block";
+  saveChallengeToHistory(wonRounds.length, avgTries);
+}
+
 // ---- Sauvegarde de la manche en cours (mode Standard uniquement) ----
 const ROUND_SAVE_KEY = "tankle_active_round_v1";
 
@@ -944,6 +1148,10 @@ function submitGuess(name){
     submitDailyGuess(tank);
     return;
   }
+  if(currentMode === "challenge"){
+    submitChallengeGuess(tank);
+    return;
+  }
   guesses.push(tank);
   if(!window._sessionAllGuesses) window._sessionAllGuesses = [];
   window._sessionAllGuesses.push(tank.name);
@@ -999,6 +1207,12 @@ const suggestBox = document.getElementById("suggest");
 let activeSuggestIndex = -1;
 
 function renderSuggestions(){
+  if(currentMode === "challenge"){
+    // Recherche classique en mode Challenge : aucune aide/suggestion
+    suggestBox.innerHTML = "";
+    activeSuggestIndex = -1;
+    return;
+  }
   const v = input.value.trim();
   const nv = normalize(v);
   suggestBox.innerHTML = "";
@@ -1130,6 +1344,59 @@ document.getElementById("screenshotBtn").addEventListener("click", async () => {
   a.download = `tankle_score_${Date.now()}.png`;
   a.href = canvas.toDataURL("image/png");
   a.click();
+});
+
+document.getElementById("challengeScreenshotBtn").addEventListener("click", () => {
+  const wonRounds = challengeRoundResults.filter(r => r.tries !== null);
+  const avgTries = wonRounds.length
+    ? (wonRounds.reduce((a,r) => a + r.tries, 0) / wonRounds.length).toFixed(1)
+    : "—";
+
+  const canvas = document.createElement("canvas");
+  const W = 460, H = 220;
+  const SCALE = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+  canvas.width = W * SCALE;
+  canvas.height = H * SCALE;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(SCALE, SCALE);
+
+  // Fond
+  ctx.fillStyle = cssVar("--ink");
+  ctx.fillRect(0, 0, W, H);
+  // Cadre VERT uniquement pour ce mode
+  ctx.strokeStyle = cssVar("--ok");
+  ctx.lineWidth = 3;
+  ctx.strokeRect(2, 2, W-4, H-4);
+
+  ctx.fillStyle = cssVar("--sand");
+  ctx.font = "bold 26px 'Courier New', monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("TANKLE", W/2, 40);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--steel");
+  ctx.fillText("BY LA FRENCH TOUCH (& CLAUDE)", W/2, 56);
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--ok");
+  ctx.fillText("MODE CHALLENGE", W/2, 71);
+
+  ctx.font = "bold 22px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--sand-light");
+  ctx.fillText(`${challengeScore} PTS`, W/2, 108);
+
+  ctx.font = "14px 'Courier New', monospace";
+  ctx.fillStyle = cssVar("--sand");
+  ctx.fillText(`${wonRounds.length} manche(s) réussie(s)`, W/2, 140);
+  ctx.fillText(`${avgTries} essai(s) en moyenne`, W/2, 163);
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = cssVar("--olive");
+  ctx.font = "10px 'Courier New', monospace";
+  ctx.fillText(new Date().toLocaleString("fr-FR"), W/2, H - 12);
+
+  const a2 = document.createElement("a");
+  a2.download = `tankle_challenge_${Date.now()}.png`;
+  a2.href = canvas.toDataURL("image/png");
+  a2.click();
 });
 
 // ---- Tableau des scores personnels (persistant via localStorage du navigateur) ----
@@ -1291,6 +1558,159 @@ function renderStats(){
       }).join("")
     : `<div style="color:var(--steel);font-size:.8em;padding:8px;">Pas encore assez de données.</div>`;
 }
+
+// ---- Mode Challenge : historique, tableau des scores, stats ----
+const CHALLENGE_STORAGE_KEY = "tankle_challenge_history_v1";
+
+function saveChallengeToHistory(roundsPlayed, avgTries){
+  const entry = {
+    date: new Date().toLocaleString("fr-FR"),
+    timestamp: Date.now(),
+    total: challengeScore,
+    roundsPlayed: roundsPlayed,
+    rounds: challengeRoundResults.map(r => ({name:r.name, tries:r.tries, score:r.score})),
+  };
+  challengeHistory.unshift(entry);
+  challengeScoreboardPage = 0;
+  try{
+    localStorage.setItem(CHALLENGE_STORAGE_KEY, JSON.stringify(challengeHistory));
+  } catch(e){
+    console.error("Impossible de sauvegarder l'historique Challenge:", e);
+  }
+  renderChallengeScoreboard();
+  renderChallengeStats();
+}
+
+function loadChallengeHistory(){
+  try{
+    const raw = localStorage.getItem(CHALLENGE_STORAGE_KEY);
+    challengeHistory = raw ? JSON.parse(raw) : [];
+  } catch(e){
+    challengeHistory = [];
+  }
+  renderChallengeScoreboard();
+  renderChallengeStats();
+}
+
+function getSortedChallengeHistory(){
+  const field = document.getElementById("challengeSortField").value;
+  const dir = document.getElementById("challengeSortDir").value === "asc" ? 1 : -1;
+  return [...challengeHistory].sort((a,b) => {
+    let av, bv;
+    if(field === "score"){ av = a.total; bv = b.total; }
+    else { av = a.timestamp || 0; bv = b.timestamp || 0; }
+    return (av - bv) * dir;
+  });
+}
+
+function renderChallengeScoreboard(){
+  const wrap = document.getElementById("challengeScoreboardContent");
+  if(!challengeHistory.length){
+    wrap.innerHTML = `<div class="scoreEmpty">Aucune série terminée pour l'instant. Perds une manche pour l'enregistrer ici.</div>`;
+    return;
+  }
+  const sorted = getSortedChallengeHistory();
+  const totalPages = Math.max(1, Math.ceil(sorted.length / SCOREBOARD_PAGE_SIZE));
+  if(challengeScoreboardPage >= totalPages) challengeScoreboardPage = totalPages - 1;
+  if(challengeScoreboardPage < 0) challengeScoreboardPage = 0;
+  const start = challengeScoreboardPage * SCOREBOARD_PAGE_SIZE;
+  const pageItems = sorted.slice(start, start + SCOREBOARD_PAGE_SIZE);
+
+  let rowsHtml = "";
+  pageItems.forEach((session, localIdx) => {
+    const idx = start + localIdx;
+    rowsHtml += `
+      <tr class="sessionRow" data-challenge="${idx}">
+        <td>${session.date}</td>
+        <td><b>${session.total}</b></td>
+        <td style="color:var(--steel);font-size:.75em;">▾ voir le détail</td>
+      </tr>
+      <tr class="roundDetailRows" id="challengeDetailRows-${idx}" style="display:none;">
+        <td colspan="3" style="padding:0;">
+          <table style="width:100%;border-collapse:collapse;">
+            ${session.rounds.map((r,i) => {
+              let style = ""; let stars = "";
+              if(r.tries === 1){ style = "color:var(--rust);font-weight:700;"; stars = " ★★"; }
+              else if(r.tries === 2){ style = "color:var(--ok);font-weight:700;"; stars = " ★"; }
+              return `
+              <tr class="roundDetailRow">
+                <td style="width:20%;${style}">Manche ${i+1}${stars}</td>
+                <td style="${style}">${r.name}</td>
+                <td style="width:32%;text-align:right;${style}">${r.tries ? `${r.tries} essai(s) — ` : "non trouvé — "}${r.score} pts</td>
+              </tr>`;
+            }).join("")}
+          </table>
+        </td>
+      </tr>`;
+  });
+
+  const pagerHtml = totalPages > 1 ? `
+    <div class="pager">
+      <button id="challengePagerPrev" ${challengeScoreboardPage === 0 ? "disabled" : ""}>◀ Précédent</button>
+      <span>Page ${challengeScoreboardPage+1} / ${totalPages}</span>
+      <button id="challengePagerNext" ${challengeScoreboardPage >= totalPages-1 ? "disabled" : ""}>Suivant ▶</button>
+    </div>` : "";
+
+  wrap.innerHTML = `
+    <table class="scoreTableStyle">
+      <thead><tr><th style="width:34%;">Date</th><th style="width:36%;">Score total</th><th style="width:30%;"></th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    ${pagerHtml}
+  `;
+  wrap.querySelectorAll(".sessionRow").forEach(row => {
+    row.addEventListener("click", () => {
+      const idx = row.dataset.challenge;
+      const detail = document.getElementById(`challengeDetailRows-${idx}`);
+      const isOpen = detail.style.display !== "none";
+      detail.style.display = isOpen ? "none" : "table-row";
+      row.querySelector("td:last-child").textContent = isOpen ? "▾ voir le détail" : "▴ masquer";
+    });
+  });
+  const prevBtn = document.getElementById("challengePagerPrev");
+  const nextBtn = document.getElementById("challengePagerNext");
+  if(prevBtn) prevBtn.addEventListener("click", () => { challengeScoreboardPage--; renderChallengeScoreboard(); });
+  if(nextBtn) nextBtn.addEventListener("click", () => { challengeScoreboardPage++; renderChallengeScoreboard(); });
+}
+
+document.getElementById("challengeSortField").addEventListener("change", () => { challengeScoreboardPage = 0; renderChallengeScoreboard(); });
+document.getElementById("challengeSortDir").addEventListener("change", () => { challengeScoreboardPage = 0; renderChallengeScoreboard(); });
+
+function renderChallengeStats(){
+  if(!challengeHistory.length){
+    document.getElementById("challengeStatsBox").style.display = "none";
+    return;
+  }
+  document.getElementById("challengeStatsBox").style.display = "block";
+
+  const played = challengeHistory.length;
+  const bestScore = Math.max(...challengeHistory.map(s => s.total));
+  const avgScore = Math.round(challengeHistory.reduce((a,s) => a + s.total, 0) / played);
+  const allRounds = challengeHistory.flatMap(s => s.rounds);
+  const wonRounds = allRounds.filter(r => r.tries !== null);
+  const avgTries = wonRounds.length
+    ? (wonRounds.reduce((a,r) => a + r.tries, 0) / wonRounds.length).toFixed(1)
+    : "—";
+  const maxRound = Math.max(...challengeHistory.map(s => s.roundsPlayed));
+  const avgRounds = (challengeHistory.reduce((a,s) => a + s.roundsPlayed, 0) / played).toFixed(1);
+
+  document.getElementById("challengeStatsGrid").innerHTML = `
+    <div class="statCard"><div class="sv">${played}</div><div class="sl">Parties jouées</div></div>
+    <div class="statCard"><div class="sv">${bestScore}</div><div class="sl">Meilleur score</div></div>
+    <div class="statCard"><div class="sv">${avgScore}</div><div class="sl">Score moyen</div></div>
+    <div class="statCard"><div class="sv">${avgTries}</div><div class="sl">Moy. tentatives</div></div>
+    <div class="statCard"><div class="sv">${maxRound}</div><div class="sl">Manche max</div></div>
+    <div class="statCard"><div class="sv">${avgRounds}</div><div class="sl">Moy. manches</div></div>
+  `;
+}
+
+document.getElementById("challengeResetStatsBtn").addEventListener("click", () => {
+  if(!confirm("Réinitialiser toutes tes statistiques et ton historique du Mode Challenge ? Cette action est irréversible.")) return;
+  challengeHistory = [];
+  try{ localStorage.removeItem(CHALLENGE_STORAGE_KEY); } catch(e){}
+  renderChallengeScoreboard();
+  renderChallengeStats();
+});
 
 // ---- Défi du jour : sélection déterministe, timer, sauvegarde, partage ----
 let dailySecret = null;
@@ -1485,27 +1905,42 @@ function renderDailyHistory(){
 }
 
 function setUIModeVisibility(mode){
-  const standardOnly = ["roundDots","hintBox1","hintBox3","quickPick","nextRound","newGame","sessionSummary","screenshotBtn","tries","standardScoreboardBox","statsBox"];
-  const standardOnlyClass = document.querySelector(".session-bar");
+  const standardOnly = ["roundDots","hintBox1","hintBox3","nextRound","newGame","sessionSummary","screenshotBtn","standardScoreboardBox","statsBox"];
   const dailyOnly = ["dailyBar","dailyResult","dailyScreenshotBtn","dailyHistoryBox"];
+  const challengeOnly = ["challengeBar","challengeResult","challengeScreenshotBtn","challengeNextRound","challengeNewGame","challengeScoreboardBox","challengeStatsBox"];
+  const shared = ["tries","quickPick"]; // partagés entre Standard et Challenge, masqués en Défi du jour
+  const sessionBarEl = document.querySelector(".session-bar");
+
+  // Réinitialise tout à masqué, puis réaffiche sélectivement selon le mode
+  [...standardOnly, ...dailyOnly, ...challengeOnly, ...shared].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = "none";
+  });
+  if(sessionBarEl) sessionBarEl.style.display = "none";
+  document.getElementById("message").style.display = "none";
+  document.getElementById("message").innerHTML = "";
+  stopDailyCountdown();
+
   if(mode === "standard"){
-    if(standardOnlyClass) standardOnlyClass.style.display = "flex";
+    if(sessionBarEl) sessionBarEl.style.display = "flex";
     standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = ""; });
-    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; });
-    document.getElementById("hintBox1").style.display = "none"; // sera réaffiché par updateHintBoxes si pertinent
+    document.getElementById("hintBox1").style.display = "none"; // réaffiché par updateHintBoxes si pertinent
     document.getElementById("hintBox3").style.display = "none";
     document.getElementById("nextRound").style.display = "none";
+    document.getElementById("tries").style.display = "";
     document.getElementById("message").style.display = "";
-    stopDailyCountdown();
     renderStats(); // réaffirme la visibilité data-driven (masqué si aucun historique)
+  } else if(mode === "challenge"){
+    document.getElementById("challengeBar").style.display = "flex";
+    document.getElementById("challengeNewGame").style.display = "block";
+    document.getElementById("challengeScoreboardBox").style.display = "block";
+    document.getElementById("tries").style.display = "";
+    document.getElementById("message").style.display = "";
+    renderChallengeScoreboard();
+    renderChallengeStats();
   } else {
-    if(standardOnlyClass) standardOnlyClass.style.display = "none";
-    standardOnly.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = "none"; });
-    dailyOnly.forEach(id => { document.getElementById(id).style.display = "none"; }); // réaffichés sélectivement ensuite
     document.getElementById("dailyBar").style.display = "flex";
     document.getElementById("dailyHistoryBox").style.display = "block";
-    document.getElementById("message").style.display = "none";
-    document.getElementById("message").innerHTML = "";
     renderDailyHistory();
   }
 }
@@ -1703,11 +2138,15 @@ document.querySelectorAll(".modeBtn").forEach(btn => {
     btn.classList.add("active");
     currentMode = btn.dataset.mode;
 
+    if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
+
     if(currentMode === "daily"){
       setUIModeVisibility("daily");
       startDailyMode();
+    } else if(currentMode === "challenge"){
+      setUIModeVisibility("challenge");
+      startChallengeSession();
     } else {
-      if(dailyTimerHandle){ clearInterval(dailyTimerHandle); dailyTimerHandle = null; }
       setUIModeVisibility("standard");
       if(!restoreRoundProgress()){
         startSession();
@@ -1715,6 +2154,9 @@ document.querySelectorAll(".modeBtn").forEach(btn => {
     }
   });
 });
+
+document.getElementById("challengeNextRound").addEventListener("click", goToNextChallengeRound);
+document.getElementById("challengeNewGame").addEventListener("click", startChallengeSession);
 
 document.getElementById("resetStatsBtn").addEventListener("click", () => {
   if(!confirm("Réinitialiser toutes tes statistiques et ton historique de scores ? Cette action est irréversible.")) return;
@@ -1799,6 +2241,7 @@ async function init(){
     return;
   }
   loadHistory();
+  loadChallengeHistory();
   refreshDailyDoneMark();
   if(!restoreRoundProgress()){
     startSession();
