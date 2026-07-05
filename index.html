@@ -1627,10 +1627,14 @@ function cssVar(name){
 }
 
 // Partage direct (mobile, Web Share API) si possible, sinon téléchargement classique
+function isMobileDevice(){
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
+
 async function shareOrDownloadCanvas(canvas, filename){
   const dataUrl = canvas.toDataURL("image/png");
 
-  if(navigator.share){
+  if(isMobileDevice() && navigator.share){
     try{
       const blob = await (await fetch(dataUrl)).blob();
       const file = new File([blob], filename, { type: "image/png" });
@@ -1644,6 +1648,7 @@ async function shareOrDownloadCanvas(canvas, filename){
     }
   }
 
+  // Sur PC (ou si le partage mobile échoue/est indisponible) : téléchargement direct
   const a = document.createElement("a");
   a.download = filename;
   a.href = dataUrl;
